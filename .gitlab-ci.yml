@@ -13,6 +13,7 @@ deploy:
   stage: deploy
   script:
     - apt-get update -qy
+    - gem install faraday -v 1.9.3
     - apt-get install -y ruby-dev
     - gem install dpl
     - dpl --provider=heroku --app=meeting-organizer-diploma --api-key=b18ea140-f0f4-4947-ab80-80f7bc1c3738

@@ -31,7 +31,7 @@ yarn-error.log*
 .husky/_
 
 #Ignor package-lock.json
-**/package-lock.json
+frontend/src/main/meeting-prganizer/package-lock.json
 
 # Outputs
 bazel-*

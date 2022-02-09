@@ -13,6 +13,7 @@ deploy:
   stage: deploy
   script:
     - apt-get update -qy
+    - apt-get install rubygems
     - gem install faraday -v 1.9.3
     - apt-get install -y ruby-dev
     - gem install dpl

@@ -1,7 +1,13 @@
 package com.meeting.organizer.repository;
 
 import com.meeting.organizer.model.Stream;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface StreamRepository extends JpaRepository<Stream, Long> {
+import java.util.List;
+
+public interface StreamRepository extends PagingAndSortingRepository<Stream, Long> {
+
+    List<Stream> findByLibrary_LibraryId(Long libraryId, Pageable pageable);
 }

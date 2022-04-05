@@ -63,7 +63,8 @@ public class RoleServiceImpl extends AbstractService<Role, RoleRepository> imple
         log.debug("roleId={} was deleted from userId={}", roleId, userId);
     }
 
-    private Role findById(Long id) {
+    @Override
+    public Role findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(RoleCanNotFindException::new);
     }

@@ -2,6 +2,7 @@ package com.meeting.organizer.repository;
 
 import com.meeting.organizer.model.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface TagRepository extends JpaRepository<Tag, Long> {
+public interface TagRepository extends PagingAndSortingRepository<Tag, Long> {
 }

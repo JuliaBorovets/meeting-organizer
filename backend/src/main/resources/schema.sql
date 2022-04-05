@@ -101,6 +101,8 @@ CREATE TABLE events
     photo                   BYTEA,
     event_type              VARCHAR(255),
     state                   VARCHAR(255),
+    meeting_type            VARCHAR(255),
+    external_meeting_id     BIGINT,
     library_id              BIGINT,
     location_id             BIGINT,
     stream_id               BIGINT,

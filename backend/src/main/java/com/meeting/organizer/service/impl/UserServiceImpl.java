@@ -1,6 +1,7 @@
 package com.meeting.organizer.service.impl;
 
 import com.meeting.organizer.exception.custom.RegistrationException;
+import com.meeting.organizer.exception.custom.UserNotFoundException;
 import com.meeting.organizer.model.user.Role;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.repository.user.UserRepository;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 @Service
 @Slf4j
@@ -34,6 +37,7 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
 
     }
 
+    @Transactional
     @Override
     public UserDto saveNewUserDto(UserCreateDto userDto) {
         User user = userMapper.createDtoToUser(userDto);
@@ -49,5 +53,11 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
         }
 
         return userMapper.userToUserDto(savedUser);
+    }
+
+    @Override
+    public User findById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id=" + id));
     }
 }

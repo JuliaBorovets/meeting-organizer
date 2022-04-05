@@ -1,7 +1,6 @@
 package com.meeting.organizer.web.api.v1;
 
 import com.meeting.organizer.service.AuthorizationService;
-import com.meeting.organizer.service.RoleService;
 import com.meeting.organizer.service.UserService;
 import com.meeting.organizer.web.dto.v1.user.UserCreateDto;
 import com.meeting.organizer.web.dto.v1.user.UserDto;

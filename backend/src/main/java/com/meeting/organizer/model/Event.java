@@ -39,6 +39,11 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private State state;
 
+    @Enumerated(EnumType.STRING)
+    private MeetingType meetingType;
+
+    private Long externalMeetingId;
+
     @Builder.Default
     @ManyToMany(mappedBy = "events")
     private List<Tag> tags = new ArrayList<>();

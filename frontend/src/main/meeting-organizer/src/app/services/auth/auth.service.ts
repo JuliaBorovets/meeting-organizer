@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {UserModel} from '../../models/user/user.model';
 // import {UserLoginResponseModel} from '../../models/user/user-login-response.model';
 import {StorageService} from './storage.service';
+import {UserLoginResponseModel} from "../../models/user/user-login-response.model";
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -21,9 +22,9 @@ export class AuthService {
     return this.http.post('/api/v1/user', user, {responseType: 'text'});
   }
 
-  // login(user: UserModel): Observable<UserLoginResponseModel> {
-  //   return this.http.post<UserLoginResponseModel>('/api/v1/user/login', user, httpOptions);
-  // }
+  login(user: UserModel): Observable<UserLoginResponseModel> {
+    return this.http.post<UserLoginResponseModel>('/api/v1/user/login', user, httpOptions);
+  }
 
   logout(): void {
     window.sessionStorage.removeItem('token');

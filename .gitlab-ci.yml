@@ -20,3 +20,4 @@ deploy:
     - dpl --provider=heroku --app=meeting-organizer-diploma --api-key=b18ea140-f0f4-4947-ab80-80f7bc1c3738
   only:
     - master
+    - dev

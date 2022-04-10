@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {AuthGuard} from './services/auth/auth.guard';
+import {NotFoundComponent} from './modules/shared/not-found/not-found.component';
 
 const routes: Routes = [
   {
@@ -12,21 +12,21 @@ const routes: Routes = [
         pathMatch: 'full'
       },
       {
+        path: 'library',
+        loadChildren: () => import('src/app/modules/library/library.module').then(m => m.LibraryModule)
+      },
+      {
         path: 'main-page',
-        loadChildren: 'src/app/modules/shared/shared.module#SharedModule',
+        loadChildren: () => import('src/app/modules/shared/shared.module').then(m => m.SharedModule)
+      },
+      {
+        path: '404',
+        component: NotFoundComponent
       },
       // {
-      //   path: 'projects-menu',
-      //   loadChildren: 'src/app/modules/projects-menu/projects-menu.module#ProjectsMenuModule',
-      //   canActivate: [AuthGuard],
-      //   data: {
-      //     roles: ['ADMIN', 'MANAGER', 'ENGINEER']
-      //   }
-      // },
-      {
-        path: '**',
-        redirectTo: '404'
-      }
+      //   path: '**',
+      //   redirectTo: '404'
+      // }
     ]
   }
 ];

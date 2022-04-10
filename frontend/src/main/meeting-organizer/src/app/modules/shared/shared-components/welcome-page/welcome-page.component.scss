@@ -1,0 +1,66 @@
+.welcome-image {
+  width: 100%;
+}
+
+
+.text-base {
+  font-size: 4vh;
+  line-height: 1.5rem;
+}
+
+.mb-11 {
+  margin-bottom: 2.75rem;
+}
+
+
+.font-medium {
+  font-weight: 500;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.text-body-color {
+  --tw-text-opacity: 1;
+  color: rgb(99 115 129 / var(--tw-text-opacity));
+}
+
+.text-xl {
+  font-size: 6vh;
+  line-height: 1.75rem;
+  justify-content: center;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-dark {
+  --tw-text-opacity: 1;
+  color: rgb(9 14 52 / var(--tw-text-opacity));
+}
+
+.w-full {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20vh;
+  padding-top: 20vh;
+  text-align: center;
+}
+
+
+.welcome-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 10px;
+    width: 10%;
+}

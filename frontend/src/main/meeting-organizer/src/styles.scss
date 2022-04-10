@@ -1,4 +1,105 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import '~ngx-toastr/toastr.css';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html {
+  height: 100%;
+  min-height: 100%;
+}
+body {
+  margin: 0px;
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
+  min-height: 100%;
+  /* background: #303030; */
+}
+
+.mat-sidenav-container {
+  background-color: #F2F2F2;
+  height: 100%;
+}
+
+.mat-toolbar {
+  background-color: #F2F2F2;
+}
+
+.mat-paginator {
+  background-color: #F2F2F2;
+}
+
+.mat-button, .mat-stroked-button {
+  color: #5C6BC0;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  border: 2px solid #5C6BC0 !important;
+}
+
+mat-card {
+  //display: flex;
+  //justify-content: center;
+  //align-items: center;
+  height: auto;
+  width: 40%;
+  margin: 50px auto;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.14), 0 2px 1px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  background-color: #FFFFFF !important;
+}
+
+
+mat-card-content {
+  //display: flex;
+  //justify-content: center;
+
+  .mat-form-field {
+    width: 100%;
+    min-width: 300px;
+
+    .mat-error {
+      display: flex;
+      font-size: 13px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+}
+
+.create-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 35px;
+  width: 30%;
+}
+
+.step-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px !important;
+  width: 40% !important;
+}
+
+
+.full-width-input {
+  width: 100%;
+  min-width: 60vh;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+}

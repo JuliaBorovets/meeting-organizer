@@ -1,0 +1,34 @@
+<div class="create-button">
+  <button mat-stroked-button color="primary" (click)="openCreateDialog()">Create library</button>
+</div>
+
+<div class="select-organisation">
+  <nav mat-tab-nav-bar class="toolbar-buttons">
+    <a mat-tab-link class="projects_button" *ngFor="let link of links"
+       (click)="activeLink = link; searchLibraries()"
+       [active]="activeLink === link"> {{link.label}} </a>
+  </nav>
+</div>
+
+<div *ngIf="isLoading; else content" class="spinner">
+  <mat-spinner></mat-spinner>
+</div>
+
+<ng-template #content>
+
+  <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
+    <app-view *ngFor="let result of resultList"
+              [libraryItem]="result"
+    >
+    </app-view>
+  </div>
+
+</ng-template>
+
+<mat-paginator [pageSizeOptions]="pageSizeOptions"
+               [length]="libraryCount"
+               [pageSize]="filter.pageSize"
+               (page)="pageEvent = $event; onPaginateChange($event)">
+
+</mat-paginator>
+

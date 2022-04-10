@@ -1,2 +1,134 @@
-<app-header></app-header>
-<router-outlet></router-outlet>
+<div *ngIf="!user; else content" class="welcome">
+  <router-outlet></router-outlet>
+</div>
+
+
+<ng-template #content>
+  <div id="page-top">
+    <div id="wrapper">
+      <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+        <div class="container-fluid d-flex flex-column p-0">
+          <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+            <div class="sidebar-brand-text mx-3">
+              <!--          <span>Meeting</span>-->
+            </div>
+          </a>
+          <hr class="sidebar-divider my-0">
+          <ul class="navbar-nav text-light" id="accordionSidebar">
+
+            <li class="nav-item">
+              <a class="nav-link active" style="text-align: center;" [routerLink]="''">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Profile</span>
+              </a>
+            </li>
+
+            <div class="dropdown-divider"></div>
+
+            <li class="nav-item">
+              <a class="nav-link active" style="text-align: center;" [routerLink]="'main-page'">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+
+            <div class="dropdown-divider"></div>
+
+            <li class="nav-item">
+              <a class="nav-link active" style="text-align: center;" [routerLink]="'library'">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Libraries</span>
+              </a>
+            </li>
+
+            <div class="dropdown-divider"></div>
+
+            <li class="nav-item">
+              <a class="nav-link active" style="text-align: center;" [routerLink]="''">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Meetings</span>
+              </a>
+            </li>
+
+            <div class="dropdown-divider"></div>
+
+            <li class="nav-item">
+              <a class="nav-link active" style="text-align: center;">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Notifications</span>
+              </a>
+            </li>
+
+            <div class="dropdown-divider"></div>
+
+            <li class="nav-item">
+              <a class="nav-link active" style="text-align: center;">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Contact us</span>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+      <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+          <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+            <div class="container-fluid">
+              <b><span class="project-name">Meeting Project</span></b>
+              <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i
+                class="fas fa-bars"></i></button>
+              <ul class="navbar-nav flex-nowrap ms-auto">
+                <li class="nav-item dropdown no-arrow mx-1">
+                  <div class="nav-item dropdown no-arrow">
+                    <a class="dropdown-toggle nav-link" aria-expanded="false"
+                       data-bs-toggle="dropdown" href="#">
+                      <span class="badge bg-danger badge-counter" style="font-size: 10px;">1</span>
+                      <i class="fas fa-bell fa-fw"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+                      <h6 class="dropdown-header">alerts center</h6><a class="dropdown-item d-flex align-items-center"
+                                                                       href="#">
+                    </a><a class="dropdown-item d-flex align-items-center" href="#">
+                      <div class="me-3">
+                        <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i></div>
+                      </div>
+                      <div><span class="small text-gray-500">December 2, 2019</span>
+                        <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                      </div>
+                    </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                    </div>
+                  </div>
+                </li>
+                <div class="d-none d-sm-block topbar-divider"></div>
+                <li class="nav-item dropdown no-arrow">
+                  <div class="nav-item dropdown no-arrow">
+                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                      <span class="d-none d-lg-inline me-2 text-gray-600 small">{{user.firstName}} {{user.lastName}}</span>
+                      <img class="border rounded-circle img-profile" src="assets/test.svg">
+                    </a>
+                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                      <a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" (click)="logout()"><i
+                        class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          <div class="container-fluid">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+      <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/chart.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/theme.js"></script>
+  </div>
+
+</ng-template>

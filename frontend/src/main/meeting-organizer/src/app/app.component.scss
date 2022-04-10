@@ -1,3 +1,49 @@
 li {
   display: inline;
 }
+
+p {
+  font-family: Lato;
+}
+
+.main_content {
+  width:100%;
+  height: calc(100vh - 70px);
+  background: #efefef;
+}
+
+#sidenavContainer {
+  margin-top: 64px;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+#sidenav.menu-close {
+  width: 70px;
+  background: #2d2d2d;
+}
+
+#sidenav.menu-open {
+  width: 240px
+}
+
+span {
+  font-size: 16px;
+}
+
+
+.project-name {
+  margin-left: 10px;
+
+  width: 104px;
+  height: 24px;
+  left: 72px;
+  top: 24px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 24px;
+  letter-spacing: 0.14px;
+  color: inherit;
+}

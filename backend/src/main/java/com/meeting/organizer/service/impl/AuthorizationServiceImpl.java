@@ -47,7 +47,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 .map(Role::getName)
                 .collect(Collectors.toList());
 
-        return new UserLoginDto(user.getUserId(), user.getUsername(), user.getEmail(), bearer + jwt, roles);
+        return new UserLoginDto(user.getUserId(), user.getUsername(), user.getFirstName(),
+                user.getLastName(), user.getEmail(), bearer + jwt, roles);
     }
 
 }

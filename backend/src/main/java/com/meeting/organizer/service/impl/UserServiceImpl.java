@@ -4,19 +4,21 @@ import com.meeting.organizer.exception.custom.RegistrationException;
 import com.meeting.organizer.exception.custom.UserNotFoundException;
 import com.meeting.organizer.model.user.Role;
 import com.meeting.organizer.model.user.User;
+import com.meeting.organizer.model.user.VerificationToken;
 import com.meeting.organizer.repository.user.UserRepository;
-import com.meeting.organizer.service.AbstractService;
-import com.meeting.organizer.service.RoleService;
-import com.meeting.organizer.service.UserService;
+import com.meeting.organizer.service.*;
 import com.meeting.organizer.web.dto.v1.user.UserCreateDto;
 import com.meeting.organizer.web.dto.v1.user.UserDto;
 import com.meeting.organizer.web.mapper.v1.UserMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -25,16 +27,24 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
     private final UserMapper userMapper;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
+    private final VerificationTokenService verificationTokenService;
+
+    @Value("${registration.confirm.link}")
+    private String registrationConfirmLink;
 
     public UserServiceImpl(UserRepository repository,
                            UserMapper userMapper,
                            RoleService roleService,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           MailService mailService,
+                           @Lazy VerificationTokenService verificationTokenService) {
         super(repository);
         this.userMapper = userMapper;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
-
+        this.mailService = mailService;
+        this.verificationTokenService = verificationTokenService;
     }
 
     @Transactional
@@ -52,7 +62,16 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
             throw new RegistrationException("username or email exists");
         }
 
+        VerificationToken token = verificationTokenService.createVerificationToken(savedUser, UUID.randomUUID().toString());
+        mailService.sendRegistrationConfirmLinkMail(savedUser, String.format(registrationConfirmLink, token.getToken()));
+
         return userMapper.userToUserDto(savedUser);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email=" + email));
     }
 
     @Override
@@ -60,4 +79,19 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
         return repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id=" + id));
     }
+
+    @Override
+    public void confirmRegistration(String token) {
+
+        VerificationToken verificationToken = verificationTokenService.validateVerificationToken(token);
+        mailService.sendRegistrationCredentials(verificationToken.getUser());
+    }
+
+    @Override
+    public void resendRegistrationConfirmLink(String token) {
+
+        VerificationToken verificationToken = verificationTokenService.generateNewVerificationToken(token);
+        mailService.sendResetPasswordLinkMail(verificationToken.getUser(), String.format(registrationConfirmLink, token));
+    }
+
 }

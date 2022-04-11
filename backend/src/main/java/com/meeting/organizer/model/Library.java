@@ -29,6 +29,9 @@ public class Library {
     @Lob
     private Byte[] image;
 
+    @Builder.Default
+    private Boolean isPrivate = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

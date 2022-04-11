@@ -14,6 +14,12 @@ import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {FlexModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatInputModule} from "@angular/material/input";
+import {MatMenuModule} from "@angular/material/menu";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [ListComponent, CreateComponent, UpdateComponent, ViewComponent, SearchComponent, InfoComponent],
@@ -26,7 +32,13 @@ import {MatButtonModule} from "@angular/material/button";
     MatCardModule,
     MatIconModule,
     FlexModule,
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatSlideToggleModule,
+    MatInputModule,
+    MatMenuModule,
+    RouterModule
   ],
   entryComponents: [CreateComponent, InfoComponent]
 })

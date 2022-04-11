@@ -40,6 +40,16 @@ public class LibraryController {
         return libraryService.getLibraryDtoById(id);
     }
 
+    @GetMapping
+    public LibraryResponse getLibraryList(
+            @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        return libraryService.getLibraryListPaginated(pageable);
+    }
+
     @GetMapping("/list")
     public LibraryResponse getLibraryListByUser(
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
@@ -48,6 +58,6 @@ public class LibraryController {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return libraryService.getLibraryListPaginated(userId, pageable);
+        return libraryService.getUserLibraryListPaginated(userId, pageable);
     }
 }

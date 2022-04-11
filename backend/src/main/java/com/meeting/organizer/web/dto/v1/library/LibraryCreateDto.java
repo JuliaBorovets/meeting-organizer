@@ -18,4 +18,6 @@ public class LibraryCreateDto {
     private Byte[] image;
 
     private Long userId;
+
+    private Boolean isPrivate = false;
 }

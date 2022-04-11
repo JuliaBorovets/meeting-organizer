@@ -1,10 +1,10 @@
 package com.meeting.organizer.security;
 
 import com.meeting.organizer.exception.custom.DisabledUserException;
+import com.meeting.organizer.exception.custom.UnauthorizedException;
 import com.meeting.organizer.service.impl.JpaUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
@@ -30,17 +31,19 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JpaUserDetailsService userDetailsService;
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
-
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+            if (jwt != null) {
+                if (!jwtUtils.validateJwtToken(jwt)) {
+                    throw new UnauthorizedException("Cannot set user authentication");
+                }
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                String email = jwtUtils.getEmailFromJwtToken(jwt);
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -51,11 +54,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                     throw new DisabledUserException("User is deactivated!");
                 }
             }
-        } catch (Exception e) {
-            logger.error("Cannot set user authentication");
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Cannot set user authentication");
+            log.error("Cannot set user authentication");
+        }
     }
 
     private String parseJwt(HttpServletRequest request) {

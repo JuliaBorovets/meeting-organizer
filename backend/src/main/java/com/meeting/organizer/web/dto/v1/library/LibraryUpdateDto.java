@@ -17,4 +17,6 @@ public class LibraryUpdateDto {
     private String description;
 
     private Byte[] image;
+
+    private Boolean isPrivate = false;
 }

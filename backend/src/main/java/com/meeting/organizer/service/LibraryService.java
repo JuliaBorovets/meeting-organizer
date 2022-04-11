@@ -16,6 +16,8 @@ public interface LibraryService {
 
     LibraryDto getLibraryDtoById(Long id);
 
-    LibraryResponse getLibraryListPaginated(Long userId, Pageable pageable);
+    LibraryResponse getUserLibraryListPaginated(Long userId, Pageable pageable);
+
+    LibraryResponse getLibraryListPaginated(Pageable pageable);
 
 }

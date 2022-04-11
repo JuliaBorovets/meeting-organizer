@@ -76,23 +76,37 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
 
     @Override
     public LibraryDto getLibraryDtoById(Long id) {
-        return libraryMapper.libraryToLibraryDto(
+        return convertToDto(
                 findById(id)
         );
     }
 
     @Override
-    public LibraryResponse getLibraryListPaginated(Long userId, Pageable pageable) {
+    public LibraryResponse getUserLibraryListPaginated(Long userId, Pageable pageable) {
         LibraryResponse response = new LibraryResponse();
 
         List<LibraryDto> libraryDtoList = repository.findByUser_UserId(userId, pageable)
                 .stream()
-                .map(libraryMapper::libraryToLibraryDto)
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
 
         response.setList(libraryDtoList);
-        response.setTotalItems(calculateTotalLibraryCount(userId));
+        response.setTotalItems(calculateTotalUserLibraryCount(userId));
 
+        return response;
+    }
+
+    @Override
+    public LibraryResponse getLibraryListPaginated(Pageable pageable) {
+        LibraryResponse response = new LibraryResponse();
+
+        List<LibraryDto> libraryDtoList = repository.findAll(pageable)
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        response.setList(libraryDtoList);
+        response.setTotalItems(calculateTotalLibraryCount());
         return response;
     }
 
@@ -102,7 +116,17 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
                 .orElseThrow(() -> new LibraryNotFoundException("Library not found with id=" + id));
     }
 
-    private Long calculateTotalLibraryCount(Long userId) {
+    private Long calculateTotalUserLibraryCount(Long userId) {
         return repository.countByUser_UserId(userId);
+    }
+
+    private Long calculateTotalLibraryCount() {
+        return repository.count();
+    }
+
+    private LibraryDto convertToDto(Library library) {
+        LibraryDto dto = libraryMapper.libraryToLibraryDto(library);
+        dto.setUserId(library.getUser().getUserId());
+        return dto;
     }
 }

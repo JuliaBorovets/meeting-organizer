@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {LibraryModel} from '../../../models/library/library.model';
 
 @Component({
   selector: 'app-info',
@@ -7,7 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InfoComponent implements OnInit {
 
-  constructor() { }
+  public libraryItem: LibraryModel;
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+    this.libraryItem = data.libraryItem;
+  }
 
   ngOnInit(): void {
   }

@@ -13,4 +13,5 @@ public interface LibraryRepository extends PagingAndSortingRepository<Library, L
     List<Library> findByUser_UserId(Long userId, Pageable pageable);
 
     Long countByUser_UserId(Long userId);
+
 }

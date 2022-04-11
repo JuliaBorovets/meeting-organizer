@@ -19,6 +19,7 @@
   <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
     <app-view *ngFor="let result of resultList"
               [libraryItem]="result"
+              (updateLibraryEvent)="searchLibraries()"
     >
     </app-view>
   </div>

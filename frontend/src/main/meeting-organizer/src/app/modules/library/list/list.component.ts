@@ -41,46 +41,38 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(private libraryService: LibraryService,
               public dialog: MatDialog,
               private storageService: StorageService) {
-   // this.userId = this.storageService.getUser.userId;
+    this.userId = this.storageService.getUser.userId;
   }
 
   ngOnInit(): void {
-  //  this.filter.userId = this.storageService.getUser.userId;
+    this.filter.userId = this.storageService.getUser.userId;
     this.searchLibraries();
   }
 
   searchLibraries() {
     this.isLoading = true;
     this.libraryCount = 0;
-    // const observable: Observable<LibraryResponseModel> = this.activeLink.findAll
-    //   ? this.libraryService.findAll(this.filter)
-    //   : this.libraryService.findAll(this.filter);
-    //
-    // this.subscription.add(
-    //   observable.subscribe(
-    //     result => {
-    //       this.resultList = result.list;
-    //       this.libraryCount = result.totalItems;
-    //       this.isLoading = false;
-    //     },
-    //     () => this.isError = true
-    //   )
-    // );
+    const observable: Observable<LibraryResponseModel> = this.activeLink.findAll
+      ? this.libraryService.findAll(this.filter)
+      : this.libraryService.findAllUser(this.filter);
 
-    const test: LibraryModel = {
-      name: 'name',
-      description: 'desc'
-    };
-    this.isLoading = false;
-    this.resultList.push(test);
-    this.libraryCount = 1;
+    this.subscription.add(
+      observable.subscribe(
+        result => {
+          this.resultList = result.list;
+          this.libraryCount = result.totalItems;
+          this.isLoading = false;
+        },
+        () => this.isError = true
+      )
+    );
   }
 
   openCreateDialog(): void {
 
     const createDialogRef = this.dialog.open(CreateComponent, {
       height: 'auto',
-      width: '70%',
+      width: '65vh',
       data: {creator: this.storageService.getUser}
     });
 

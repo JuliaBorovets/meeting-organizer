@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {StorageService} from '../../../../services/auth/storage.service';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {RestoreRequestComponent} from "../restore-request/restore-request.component";
+import {RestoreRequestComponent} from '../restore-request/restore-request.component';
 
 @Component({
   selector: 'app-login',

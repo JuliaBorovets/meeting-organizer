@@ -8,7 +8,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class UserLoginDto {
-    private Long id;
+    private Long userId;
 
     private String username;
 

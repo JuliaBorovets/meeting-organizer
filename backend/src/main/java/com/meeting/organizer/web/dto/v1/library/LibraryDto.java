@@ -17,4 +17,8 @@ public class LibraryDto {
     private String description;
 
     private Byte[] image;
+
+    private Long userId;
+
+    private Boolean isPrivate = false;
 }

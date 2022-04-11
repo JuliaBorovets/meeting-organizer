@@ -117,6 +117,7 @@ CREATE TABLE libraries
     description VARCHAR(255),
     image       BYTEA,
     user_id     BIGINT,
+    is_private   BOOLEAN,
 
     CONSTRAINT libraries_pkey PRIMARY KEY (library_id)
 );

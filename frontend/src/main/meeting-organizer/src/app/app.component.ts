@@ -4,7 +4,6 @@ import {UserModel} from './models/user/user.model';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {AuthService} from './services/auth/auth.service';
-import {updateWhile} from "@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript";
 
 @Component({
   selector: 'app-root',
@@ -39,7 +38,6 @@ export class AppComponent implements OnDestroy, OnInit {
       this.storageService.currentUser.subscribe(
         user => {
           this.user = user;
-          console.log('--', user);
         }
       )
     );

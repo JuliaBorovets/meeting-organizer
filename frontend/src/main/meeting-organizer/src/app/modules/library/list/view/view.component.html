@@ -5,7 +5,7 @@
       <div fxFlex="row">
 
         <div fxLayout="column" fxFlex="20">
-          <img width="200px" alt="image" class="img-responsive" src="assets/test.svg">
+          <img width="200px" alt="image" class="img-responsive" src="assets/hero-media-illustration-dark.svg">
         </div>
 
         <div fxLayout="column" fxFlex="60" style="width: auto">
@@ -18,28 +18,23 @@
         </div>
 
         <div fxLayout="column" fxLayoutAlign="space-around end" fxFlex="20">
-          <button mat-icon-button aria-label="Open in new tab icon" (click)="openFullInfoView()">
-            <mat-icon>open_in_new</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
+            <mat-icon>more_vert</mat-icon>
           </button>
-
-<!--          <button mat-stroked-button *ngIf="organisationItem.isPrivate" color="primary">Private</button>-->
-<!--          <button mat-stroked-button *ngIf="!organisationItem.isPrivate" color="primary">Not private</button>-->
-
-<!--          <button mat-stroked-button color="primary" disabled-->
-<!--                  matBadge="{{organisationItem.organizers.length}}"-->
-<!--                  matBadgePosition="after" matBadgeColor="accent">-->
-<!--            Hosts-->
-<!--          </button>-->
-
-<!--          <button mat-stroked-button color="primary" disabled-->
-<!--                  matBadge="{{organisationItem.participants.length}}"-->
-<!--                  matBadgePosition="after" matBadgeColor="accent">-->
-<!--            Participants-->
-<!--          </button>-->
-
-<!--          <button mat-raised-button color="primary" *ngIf="!getIsJoinedOrganisation()" (click)="joinOrganisation()">Join</button>-->
-<!--          <button mat-raised-button color="primary" *ngIf="getIsJoinedOrganisation()" (click)="leaveOrganisation()">Leave</button>-->
-
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item aria-label="Open in new tab icon" (click)="openFullInfoView()">
+              <mat-icon>open_in_new</mat-icon>
+              <span>Info</span>
+            </button>
+            <button mat-menu-item aria-label="Update" *ngIf="isLibraryOwner()" (click)="openEditView()">
+              <mat-icon>edit</mat-icon>
+              <span>Update</span>
+            </button>
+            <button mat-menu-item aria-label="Delete" *ngIf="isLibraryOwner()" (click)="deleteLibrary()">
+              <mat-icon>delete_outline</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
         </div>
 
       </div>

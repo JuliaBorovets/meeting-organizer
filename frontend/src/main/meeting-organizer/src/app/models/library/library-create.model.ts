@@ -1,8 +1,7 @@
-export class LibraryModel {
-  libraryId?: number;
+export class LibraryCreateModel {
   name?: string;
   description?: string;
   image?: Blob;
-  isPrivate?: boolean;
   userId?: number;
+  isPrivate?: boolean;
 }

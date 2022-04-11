@@ -18,11 +18,13 @@ import {AuthModule} from './modules/shared/auth/auth.module';
 import {NotFoundComponent} from './modules/shared/not-found/not-found.component';
 import {ToastrModule} from "ngx-toastr";
 import {RouterModule} from "@angular/router";
+import { ConfirmComponent } from './components/confirm/confirm.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ConfirmComponent
   ],
   imports: [
     BrowserModule,

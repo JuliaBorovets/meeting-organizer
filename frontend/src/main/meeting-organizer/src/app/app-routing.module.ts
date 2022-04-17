@@ -16,6 +16,10 @@ const routes: Routes = [
         loadChildren: () => import('src/app/modules/library/library.module').then(m => m.LibraryModule)
       },
       {
+        path: 'library-content',
+        loadChildren: () => import('src/app/modules/library-content/content.module').then(m => m.LibraryContentModule)
+      },
+      {
         path: 'main-page',
         loadChildren: () => import('src/app/modules/shared/shared.module').then(m => m.SharedModule)
       },

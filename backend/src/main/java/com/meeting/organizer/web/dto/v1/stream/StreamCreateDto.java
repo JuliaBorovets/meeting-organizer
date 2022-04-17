@@ -14,5 +14,4 @@ public class StreamCreateDto {
     private String name;
 
     private Long libraryId;
-
 }

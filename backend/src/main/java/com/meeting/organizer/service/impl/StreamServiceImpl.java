@@ -47,7 +47,7 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
 
         Stream streamEntity = streamMapper.streamCreateDtoToStream(createDto);
         Library library = libraryService.findById(createDto.getLibraryId());
-
+        streamEntity.setLibrary(library);
         Stream createdEntity = repository.save(streamEntity);
         log.info("created stream {}", createdEntity);
 

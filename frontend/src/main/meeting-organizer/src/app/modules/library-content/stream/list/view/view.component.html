@@ -1,0 +1,35 @@
+<div class="view">
+
+  <mat-card>
+    <mat-card-content>
+      <div fxFlex="row">
+        <div fxLayout="column" fxFlex="95">
+          <div fxLayoutAlign="left center">
+            <p class="stream-name">{{streamModel.name}}</p>
+          </div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="5">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item aria-label="Add event" (click)="openAddEventDialog()">
+              <mat-icon>edit</mat-icon>
+              <span>Add Event</span>
+            </button>
+            <button mat-menu-item aria-label="Update" (click)="openUpdateDialog()">
+              <mat-icon>edit</mat-icon>
+              <span>Update</span>
+            </button>
+            <button mat-menu-item aria-label="Delete" (click)="deleteStream()">
+              <mat-icon>delete_outline</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </div>
+
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+

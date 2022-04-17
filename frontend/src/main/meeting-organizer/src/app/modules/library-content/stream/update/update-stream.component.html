@@ -1,0 +1,31 @@
+<div class="update-stream-form">
+  <form (ngSubmit)="onSubmit()" [formGroup]="streamUpdateForm">
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <p class="header-title"> Update Stream </p>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-input" appearance="outline">
+        <mat-label>name</mat-label>
+        <input matInput type="text" id="name" class="form-control" name="name" formControlName="name"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }" required>
+        <mat-error *ngIf="submitted && f.name.errors" class="invalid-input">
+          <mat-error class="invalid-input">Min length = 4, max length=50</mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-error *ngIf="isError" class="error-info">
+      Cannot update Stream
+    </mat-error>
+
+    <button mat-button>Update</button>
+
+    <div class="more-info">
+      <a class="btn btn-outline-primary login" (click)="onNoClick()">Cancel</a>
+    </div>
+
+  </form>
+</div>
+

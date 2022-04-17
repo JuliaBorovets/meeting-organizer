@@ -3,21 +3,18 @@
   <mat-card>
     <mat-card-content>
       <div fxFlex="row">
-
-        <div fxLayout="column" fxFlex="20">
+        <div fxLayout="column" fxFlex="20" (click)="openLibraryContent()">
           <img width="200px" alt="image" class="img-responsive" src="assets/hero-media-illustration-dark.svg">
         </div>
-
-        <div fxLayout="column" fxFlex="60" style="width: auto">
+        <div fxLayout="column" fxFlex="95" style="width: auto; margin-left: 10px;" (click)="openLibraryContent()">
           <div fxLayoutAlign="center">
             <p class="library-name">{{libraryItem.name}}</p>
           </div>
-          <div fxLayoutAlign="start" >
+          <div fxLayoutAlign="start" (click)="openLibraryContent()">
             <p class="info">{{libraryItem.description}}</p>
           </div>
         </div>
-
-        <div fxLayout="column" fxLayoutAlign="space-around end" fxFlex="20">
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="5">
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
             <mat-icon>more_vert</mat-icon>
           </button>

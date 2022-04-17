@@ -1,32 +1,31 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {StorageService} from '../../../services/auth/storage.service';
-import {LibraryService} from '../../../services/library/library.service';
+import {StreamService} from '../../../../services/stream/stream.service';
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss']
 })
-export class CreateComponent implements OnInit, OnDestroy {
+export class CreateStreamComponent implements OnInit, OnDestroy {
 
   createForm: FormGroup;
   isCreateFailed = false;
   errorMessage = '';
   submitted = false;
-  userId: number;
+  libraryId: number;
   isError = false;
   isInValid = false;
   private subscription: Subscription;
 
-  constructor(public dialogRef: MatDialogRef<CreateComponent>,
-              private storageService: StorageService,
+  constructor(public dialogRef: MatDialogRef<CreateStreamComponent>,
               private formBuilder: FormBuilder,
               public dialog: MatDialog,
-              private libraryService: LibraryService) {
-    this.userId = storageService.getUser.userId;
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private streamService: StreamService) {
+    this.libraryId = data.libraryId;
     this.subscription = new Subscription();
   }
 
@@ -40,13 +39,7 @@ export class CreateComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.minLength(4),
         Validators.maxLength(50)])
-      ],
-      description: [null, Validators.compose([
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(50)])
-      ],
-      isPrivate: [false, null]
+      ]
     });
   }
 
@@ -62,12 +55,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 
     const createRequest = {
       name: this.f.name.value,
-      description: this.f.description.value,
-      userId: this.userId,
-      isPrivate: this.f.isPrivate.value
+      libraryId: this.libraryId
     };
 
-    this.subscription = this.libraryService.create(createRequest).subscribe(
+    this.subscription = this.streamService.create(createRequest).subscribe(
       () => {
         this.dialogRef.close();
       },

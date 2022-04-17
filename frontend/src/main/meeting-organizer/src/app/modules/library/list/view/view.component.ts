@@ -8,6 +8,7 @@ import {Subscription} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
 import {DialogService} from '../../../../services/confirm-dialog.service';
 import {UpdateComponent} from '../../update/update.component';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-view',
@@ -25,7 +26,8 @@ export class ViewComponent implements OnDestroy {
               private storageService: StorageService,
               public dialog: MatDialog,
               private toastrService: ToastrService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private router: Router) {
     this.userId = this.storageService.getUser.userId;
   }
 
@@ -72,6 +74,10 @@ export class ViewComponent implements OnDestroy {
 
   isLibraryOwner(): boolean {
     return this.libraryItem.userId === this.userId;
+  }
+
+  openLibraryContent(): void {
+    this.router.navigate(['library-content/view/', this.libraryItem.libraryId]).then();
   }
 
   ngOnDestroy(): void {

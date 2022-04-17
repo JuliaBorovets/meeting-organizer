@@ -1,0 +1,7 @@
+export enum State {
+  DRAFT = 'DRAFT',
+  PLANNED = 'PLANNED',
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  ARCHIVED = 'ARCHIVED'
+}

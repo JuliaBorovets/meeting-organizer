@@ -22,11 +22,25 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   streamId: number;
   isError = false;
   isInValid = false;
+  hidePasswordField = true;
   private subscription: Subscription;
   range = new FormGroup({
     start: new FormControl(),
     end: new FormControl(),
   });
+
+  selectedType: MeetingType;
+  meetingTypes: MeetingType[] = [
+    MeetingType.ZOOM,
+    MeetingType.WEBEX
+  ];
+
+  eventTypes: EventType[] = [
+    EventType.CONFERENCE,
+    EventType.SEMINAR,
+    EventType.COLLOQUIUM,
+    EventType.WORKSHOP
+  ];
 
   constructor(public dialogRef: MatDialogRef<CreateEventComponent>,
               private formBuilder: FormBuilder,
@@ -43,30 +57,28 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   }
 
   createCreateForm(): void {
-    const config: Map<string, any> = new Map<string, any>();
-    config.set('name', ['', null]);
-    config.set('startDate', ['', null]);
-    config.set('endDate', ['', null]);
-    config.set('maxNumberParticipants', [1, null]);
-    config.set('photo', [null, null]);
-    config.set('eventType', [EventType.CONFERENCE, null]);
-    config.set('state', [State.NOT_STARTED, null]);
-    config.set('meetingType', [MeetingType.ZOOM, null]);
-    // Zoom
-    config.set('agenda', ['', null]);
-    config.set('password', ['', null]);
-    config.set('startTime', ['', null]);
-    config.set('timezone', ['', null]);
-    config.set('topic', ['', null]);
-    // Zoom settings
-    config.set('allowMultipleDevices', [true, null]);
-    config.set('hostVideo', [true, null]);
-    config.set('meetingAuthentication', [false, null]);
-    config.set('muteUponEntry', [true, null]);
-    config.set('participantVideo', [false, null]);
-    config.set('waitingRoom', [false, null]);
+    this.createForm = this.formBuilder.group({
+      name: ['', null],
+      startDate: ['', null],
+      durationInMinutes: [30, null],
 
-    this.createForm = this.formBuilder.group(config);
+      maxNumberParticipants: [10, null],
+      eventType: [EventType.CONFERENCE, null],
+
+      meetingType: [MeetingType.ZOOM, null],
+      photo: [null, null],
+
+      agenda: ['', null],
+      password: ['', null],
+      allowMultipleDevices: [true, null],
+      hostVideo: [true, null],
+      meetingAuthentication: [false, null],
+
+      muteUponEntry: [true, null],
+      participantVideo: [false, null],
+      waitingRoom: [false, null]
+
+    });
   }
 
   get f() {
@@ -81,12 +93,12 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
     const baseCreateRequest = {
       startDate: this.f.startDate.value,
-      endDate: this.f.endDate.value,
+      durationInMinutes: this.f.durationInMinutes.value,
       maxNumberParticipants: this.f.maxNumberParticipants.value,
       name: this.f.name.value,
       photo: this.f.photo.value,
       eventType: this.f.eventType.value,
-      state: this.f.state.value,
+      state: State.NOT_STARTED,
       meetingType: this.f.meetingType.value,
       libraryId: this.libraryId,
       streamId: this.streamId,
@@ -96,10 +108,9 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       ...baseCreateRequest,
       meetingEntity: {
         agenda: this.f.agenda.value,
+        topic: this.f.name.value,
         password: this.f.password.value,
-        startTime: this.f.startTime.value,
-        timezone: this.f.timezone.value,
-        topic: this.f.topic.value,
+        startTime: this.f.startDate.value,
         settings: {
           allowMultipleDevices: this.f.allowMultipleDevices.value,
           hostVideo: this.f.hostVideo.value,
@@ -114,6 +125,8 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     let response;
     if (this.f.meetingType.value === MeetingType.ZOOM) {
       response = this.eventService.create(zoomCreateRequest);
+    } else {
+      response = this.eventService.create(baseCreateRequest);
     }
 
     this.subscription = response.subscribe(
@@ -124,6 +137,10 @@ export class CreateEventComponent implements OnInit, OnDestroy {
         this.isError = true;
       }
     );
+  }
+
+  isZoomTypeSelected(): boolean {
+    return this.f.meetingType.value === MeetingType.ZOOM;
   }
 
   onNoClick(): void {

@@ -16,9 +16,9 @@
         <input matInput [type]="hidePasswordField ? 'password' : 'text'" id="password" class="form-control"
                name="password"
                formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" required>
-<!--        <mat-icon matSuffix (click)="hidePasswordField = !hidePasswordField">-->
-<!--          {{hidePasswordField ? 'visibility_off' : 'visibility'}}-->
-<!--        </mat-icon>-->
+        <mat-icon matSuffix (click)="hidePasswordField = !hidePasswordField">
+          {{hidePasswordField ? 'visibility_off' : 'visibility'}}
+        </mat-icon>
         <mat-error *ngIf="submitted && f.password.errors" class="invalid-input">
           <mat-error *ngIf="f.password.errors.required">Field is required</mat-error>
         </mat-error>

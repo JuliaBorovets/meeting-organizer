@@ -71,7 +71,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   openCreateEventView(): void {
     const creatEventDialogRef = this.dialog.open(CreateEventComponent, {
-      height: 'auto',
+      height: '80vh',
       width: 'auto',
       data: {libraryId: this.libraryId}
     });

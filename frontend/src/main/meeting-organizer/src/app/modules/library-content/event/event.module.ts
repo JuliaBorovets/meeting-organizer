@@ -8,7 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {FlexModule} from '@angular/flex-layout';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatInputModule} from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
@@ -20,6 +20,9 @@ import {UpdateComponent} from './update/update.component';
 import { EventListComponent } from './list/event-list.component';
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatDividerModule} from "@angular/material/divider";
+import {MatListModule} from "@angular/material/list";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [ViewComponent, CreateEventComponent, UpdateComponent, EventListComponent],
@@ -40,7 +43,11 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     MatMenuModule,
     RouterModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatDividerModule,
+    MatListModule,
+    MatSelectModule,
+    FormsModule
   ],
   exports: [
     ViewComponent,

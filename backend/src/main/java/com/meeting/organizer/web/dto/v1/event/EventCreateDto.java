@@ -18,7 +18,7 @@ public class EventCreateDto {
 
     private LocalDate startDate;
 
-    private LocalDate endDate;
+    private Long durationInMinutes;
 
     private Integer maxNumberParticipants;
 

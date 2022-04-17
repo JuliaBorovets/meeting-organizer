@@ -1,3 +1,4 @@
 export enum MeetingType {
-  ZOOM = 'ZOOM'
+  ZOOM = 'ZOOM',
+  WEBEX = 'WEBEX'
 }

@@ -1,0 +1,43 @@
+<div class="contact-us-form">
+  <form (ngSubmit)="onSubmit()" [formGroup]="contactUsForm">
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <p class="header-title"> Contact Us </p>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-input" appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" id="name" class="form-control" name="name" formControlName="name"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }" required>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-input" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" id="email" class="form-control" name="email" formControlName="email"
+               [ngClass]="{ 'is-invalid': submitted && f.email.errors }" required>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-input" appearance="outline">
+        <mat-label>Message</mat-label>
+        <input matInput type="text" id="message" class="form-control" name="message" formControlName="message"
+               [ngClass]="{ 'is-invalid': submitted && f.message.errors }" required>
+      </mat-form-field>
+    </div>
+
+    <mat-error *ngIf="isError" class="error-info">
+      Cannot send your request
+    </mat-error>
+
+    <button mat-button>Send</button>
+
+    <div class="more-info">
+      <a class="btn btn-outline-primary login" (click)="onNoClick()">Cancel</a>
+    </div>
+
+  </form>
+</div>

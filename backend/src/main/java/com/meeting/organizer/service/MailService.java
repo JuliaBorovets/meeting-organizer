@@ -1,17 +1,19 @@
 package com.meeting.organizer.service;
 
 import com.meeting.organizer.model.user.User;
+import com.meeting.organizer.web.dto.v1.ContactUsDto;
 
 public interface MailService {
 
-    //todo
     void sendRegistrationCredentials(User user);
 
-    //todo
     void sendRegistrationConfirmLinkMail(User user, String passwordResetLink);
 
     void sendResetPasswordLinkMail(User user, String passwordResetLink);
 
     void sendPasswordUpdateMail(User user);
 
+    void sendContactUsRequest(ContactUsDto contactUsDto, String email);
+
+    void sendContactUsConfirmation(String link);
 }

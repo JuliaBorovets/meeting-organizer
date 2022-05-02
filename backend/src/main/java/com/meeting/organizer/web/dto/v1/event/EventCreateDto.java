@@ -31,10 +31,6 @@ public class EventCreateDto {
 
     private State state;
 
-//    private List<Tag> tags = new ArrayList<>();
-//
-//    private Location location;
-
     private MeetingType meetingType;
 
     private Object meetingEntity;
@@ -42,4 +38,8 @@ public class EventCreateDto {
     private Long libraryId;
 
     private Long streamId;
+
+    private Boolean generateMeeting;
+
+    private String joinUrl;
 }

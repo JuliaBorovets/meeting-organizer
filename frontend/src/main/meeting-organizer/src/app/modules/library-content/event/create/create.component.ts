@@ -23,6 +23,9 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   isError = false;
   isInValid = false;
   hidePasswordField = true;
+
+  generateMeeting = true;
+
   private subscription: Subscription;
   range = new FormGroup({
     start: new FormControl(),
@@ -76,8 +79,24 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
       muteUponEntry: [true, null],
       participantVideo: [false, null],
-      waitingRoom: [false, null]
+      waitingRoom: [false, null],
 
+      generateMeeting: [false, null],
+
+      joinUrl: ['', null],
+
+      webexTitle: ['', null],
+      webexAgenda: ['', null],
+      webexPassword: ['', null],
+      webexStart: ['', null],
+      webexDurationInMinutes: [30, null],
+      webexHostEmail: ['', null],
+      webexEnabledAutoRecordMeeting: [false, null],
+      webexEnabledJoinBeforeHost: [true, null],
+      webexAutoAcceptRequest: [true, null],
+      webexRequireFirstName: [true, null],
+      webexRequireLastName: [true, null],
+      webexRequireEmail: [false, null],
     });
   }
 
@@ -102,6 +121,14 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       meetingType: this.f.meetingType.value,
       libraryId: this.libraryId,
       streamId: this.streamId,
+      generateMeeting: this.f.generateMeeting.value
+    };
+
+    const addExistingEventRequest = {
+      ...baseCreateRequest,
+      meetingEntity: {
+        joinUrl: this.f.joinUrl.value
+      },
     };
 
     const zoomCreateRequest = {
@@ -122,14 +149,41 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       },
     };
 
-    let response;
-    if (this.f.meetingType.value === MeetingType.ZOOM) {
-      response = this.eventService.create(zoomCreateRequest);
+    const webexCreateRequest = {
+      ...baseCreateRequest,
+      meetingEntity: {
+        title: this.f.webexTitle.value,
+        agenda: this.f.webexAgenda.value,
+        password: this.f.webexPassword.value,
+        start: this.f.startDate.value,
+        durationInMinutes: this.f.durationInMinutes.value,
+        hostEmail: this.f.webexHostEmail.value,
+        enabledAutoRecordMeeting: this.f.webexEnabledAutoRecordMeeting.value,
+        enabledJoinBeforeHost: this.f.webexEnabledJoinBeforeHost.value,
+        registration: {
+          autoAcceptRequest: this.f.webexAutoAcceptRequest.value,
+          requireFirstName: this.f.webexRequireFirstName.value,
+          requireLastName: this.f.webexRequireLastName.value,
+          requireEmail: this.f.webexRequireEmail.value,
+        }
+      },
+    };
+
+    let request;
+
+    if (this.generateMeeting) {
+      if (this.f.meetingType.value === MeetingType.ZOOM) {
+        request = zoomCreateRequest;
+      } else if (this.f.meetingType.value === MeetingType.WEBEX) {
+        request = webexCreateRequest;
+      } else {
+        request = baseCreateRequest;
+      }
     } else {
-      response = this.eventService.create(baseCreateRequest);
+      request = addExistingEventRequest;
     }
 
-    this.subscription = response.subscribe(
+    this.subscription = this.eventService.create(request).subscribe(
       () => {
         this.dialogRef.close();
       },
@@ -141,6 +195,15 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
   isZoomTypeSelected(): boolean {
     return this.f.meetingType.value === MeetingType.ZOOM;
+  }
+
+  isWebexTypeSelected(): boolean {
+    console.log('===', this.f.meetingType.value);
+    return this.f.meetingType.value === MeetingType.WEBEX;
+  }
+
+  isGenerateNewEventSelected(): boolean {
+    return this.f.generateMeeting.value;
   }
 
   onNoClick(): void {

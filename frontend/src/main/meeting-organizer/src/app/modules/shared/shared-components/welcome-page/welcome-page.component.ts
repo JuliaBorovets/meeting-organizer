@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {LoginComponent} from '../../auth/login/login.component';
 import {Subscription} from 'rxjs';
 import {RegisterComponent} from '../../auth/register/register.component';
+import {ContactUsComponent} from "../../contact-us/contact-us.component";
 
 @Component({
   selector: 'app-welcome-page',
@@ -55,6 +56,13 @@ export class WelcomePageComponent implements OnInit, OnDestroy {
     );
   }
 
+
+  openContactUsDialog(): void {
+    this.dialog.open(ContactUsComponent, {
+      height: 'auto',
+      width: '65vh'
+    });
+  }
 
   ngOnDestroy(): void {
     if (this.subscription) {

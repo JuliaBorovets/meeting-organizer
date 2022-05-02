@@ -4,7 +4,6 @@ import {Observable} from 'rxjs';
 import {StreamModel} from '../../models/stream/stream.model';
 import {StreamResponseModel} from '../../models/stream/stream-response.model';
 import {StreamFilterModel} from '../../models/stream/stream-filter.model';
-import {EventModel} from "../../models/event/event.model";
 
 @Injectable({
   providedIn: 'root'

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>MeetingProject support</title>
+</head>
+<body>
+<h1>Hello, </h1>
+<br>
+
+<ul>
+  <li>Name : <span th:text="${contactUsDto.getName()}"></span></li>
+  <li>Email : <span th:text="${contactUsDto.getEmail()}"></span></li>
+  <li>Message : <span th:text="${contactUsDto.getMessage()}"></span></li>
+</ul>
+</body>
+</html>

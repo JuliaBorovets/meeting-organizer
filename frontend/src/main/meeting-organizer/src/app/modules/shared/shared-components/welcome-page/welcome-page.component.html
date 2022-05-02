@@ -1,8 +1,11 @@
-<div fxLayout="row" fxLayoutAlign="end end">
-  <div class="welcome-button">
+<div fxLayout="row">
+  <div fxLayout="column" fxFlex="10"  class="welcome-button">
+    <button mat-stroked-button color="primary" (click)="openContactUsDialog()">Contact Us</button>
+  </div>
+  <div fxLayout="column" fxFlex="10" fxFlexOffset="70" class="welcome-button">
     <button mat-stroked-button color="primary" (click)="openLoginDialog()">Login</button>
   </div>
-  <div class="welcome-button">
+  <div fxLayout="column" fxFlex="10" class="welcome-button">
     <button mat-stroked-button color="primary" (click)="openRegisterDialog()">Register</button>
   </div>
 </div>

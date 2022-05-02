@@ -68,13 +68,38 @@
       </mat-form-field>
     </div>
 
-    <div *ngIf="isZoomTypeSelected()">
+    <br>
+
+    <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+      <div>
+        <mat-slide-toggle
+          formControlName="generateMeeting"
+          [color]="'accent'">
+        </mat-slide-toggle>
+        <mat-label class="toggle-class">Generate a new Meeting</mat-label>
+      </div>
+    </div>
+
+    <br>
+
+    <div *ngIf="!isGenerateNewEventSelected()">
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>join Url</mat-label>
+          <input matInput type="text" id="joinUrl" class="form-control" name="joinUrl" formControlName="joinUrl"
+                 [ngClass]="{ 'is-invalid': submitted && f.joinUrl.errors }">
+        </mat-form-field>
+      </div>
+    </div>
+
+
+    <div *ngIf="isZoomTypeSelected() && isGenerateNewEventSelected()">
 
       <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
         <mat-form-field class="full-width-event-input" appearance="outline">
           <mat-label>agenda</mat-label>
           <input matInput type="text" id="agenda" class="form-control" name="agenda" formControlName="agenda"
-                 [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+                 [ngClass]="{ 'is-invalid': submitted && f.agenda.errors }">
         </mat-form-field>
       </div>
 
@@ -119,38 +144,141 @@
           </div>
         </div>
       </div>
+
+      <br>
+
+      <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+        <div fxLayout="column" fxFlex="40">
+          <div>
+            <mat-slide-toggle
+              formControlName="muteUponEntry"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Mute upon entry</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="30">
+          <div>
+            <mat-slide-toggle
+              formControlName="participantVideo"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Participant video</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="26">
+          <div>
+            <mat-slide-toggle
+              formControlName="waitingRoom"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Waiting room</mat-label>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <br>
+    <div *ngIf="isWebexTypeSelected() && isGenerateNewEventSelected()">
 
-    <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
-      <div fxLayout="column" fxFlex="40">
-        <div>
-          <mat-slide-toggle
-            formControlName="muteUponEntry"
-            [color]="'accent'">
-          </mat-slide-toggle>
-          <mat-label class="toggle-class">Mute upon entry</mat-label>
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput type="text" id="webexTitle" class="form-control" name="webexTitle"
+                 formControlName="webexTitle"
+                 [ngClass]="{ 'is-invalid': submitted && f.webexTitle.errors }">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Agenda</mat-label>
+          <input matInput type="text" id="webexAgenda" class="form-control" name="webexAgenda"
+                 formControlName="webexAgenda"
+                 [ngClass]="{ 'is-invalid': submitted && f.webexAgenda.errors }">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput type="text" id="webexPassword" class="form-control" name="webexPassword"
+                 formControlName="webexPassword"
+                 [ngClass]="{ 'is-invalid': submitted && f.webexPassword.errors }">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Host email</mat-label>
+          <input matInput type="text" id="webexHostEmail" class="form-control" name="webexHostEmail"
+                 formControlName="webexHostEmail"
+                 [ngClass]="{ 'is-invalid': submitted && f.webexHostEmail.errors }">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+        <div fxLayout="column" fxFlex="40">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexEnabledAutoRecordMeeting"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Enable AutoRecording</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="30">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexEnabledJoinBeforeHost"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Enable Join Before Host</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="26">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexAutoAcceptRequest"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Auto Accept Request</mat-label>
+          </div>
         </div>
       </div>
-      <div fxLayout="column" fxFlex="30">
-        <div>
-          <mat-slide-toggle
-            formControlName="participantVideo"
-            [color]="'accent'">
-          </mat-slide-toggle>
-          <mat-label class="toggle-class">Participant video</mat-label>
+
+      <br>
+
+      <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+        <div fxLayout="column" fxFlex="40">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexRequireFirstName"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Require First Name</mat-label>
+          </div>
         </div>
-      </div>
-      <div fxLayout="column" fxFlex="26">
-        <div>
-          <mat-slide-toggle
-            formControlName="waitingRoom"
-            [color]="'accent'">
-          </mat-slide-toggle>
-          <mat-label class="toggle-class">Waiting room</mat-label>
+        <div fxLayout="column" fxFlex="30">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexRequireLastName"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Require Last Name</mat-label>
+          </div>
         </div>
+        <div fxLayout="column" fxFlex="26">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexRequireEmail"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Require Email</mat-label>
+          </div>
+        </div>
+
       </div>
+
     </div>
 
     <br>

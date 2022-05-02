@@ -1,9 +1,12 @@
 package com.meeting.organizer.web.mapper.v1;
 
+import com.meeting.organizer.client.webex.model.WebexMeeting;
 import com.meeting.organizer.client.zoom.model.ZoomMeeting;
 import com.meeting.organizer.model.Event;
 import com.meeting.organizer.web.dto.v1.event.EventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.EventDto;
+import com.meeting.organizer.web.dto.v1.event.webex.WebexEventCreateDto;
+import com.meeting.organizer.web.dto.v1.event.webex.WebexEventDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventDto;
 import org.mapstruct.Mapper;
@@ -22,9 +25,13 @@ public interface EventMapper {
     })
     EventDto eventToEventDto(Event event);
 
-    ZoomMeeting meetingCreateDtoToMeeting(ZoomEventCreateDto createDto);
+    ZoomMeeting zoomMeetingCreateDtoToMeeting(ZoomEventCreateDto createDto);
 
-    ZoomMeeting meetingDtoToMeeting(ZoomEventDto zoomEventDto);
+    WebexMeeting webexMeetingCreateDtoToMeeting(WebexEventCreateDto createDto);
+
+    ZoomMeeting zoomMeetingDtoToMeeting(ZoomEventDto zoomEventDto);
+
+    WebexMeeting zoomMeetingDtoToMeeting(WebexEventDto eventDto);
 
     ZoomEventDto metingToMeetingDto(ZoomMeeting zoomMeeting);
 }

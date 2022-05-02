@@ -1,9 +1,10 @@
-package com.meeting.organizer.client.zoom.service;
+package com.meeting.organizer.client.zoom.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.meeting.organizer.client.zoom.model.ZoomInvitation;
 import com.meeting.organizer.client.zoom.model.ZoomMeeting;
+import com.meeting.organizer.client.zoom.service.ZoomClientService;
 import com.meeting.organizer.config.ApplicationParameters;
 import com.meeting.organizer.exception.custom.*;
 import lombok.extern.slf4j.Slf4j;

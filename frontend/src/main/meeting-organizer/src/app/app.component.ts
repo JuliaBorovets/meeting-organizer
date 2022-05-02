@@ -4,6 +4,8 @@ import {UserModel} from './models/user/user.model';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {AuthService} from './services/auth/auth.service';
+import {MatDialog} from "@angular/material/dialog";
+import {ContactUsComponent} from "./modules/shared/contact-us/contact-us.component";
 
 @Component({
   selector: 'app-root',
@@ -30,7 +32,8 @@ export class AppComponent implements OnDestroy, OnInit {
 
   constructor(private storageService: StorageService,
               private router: Router,
-              private authService: AuthService) {
+              private authService: AuthService,
+              public dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -43,6 +46,12 @@ export class AppComponent implements OnDestroy, OnInit {
     );
   }
 
+  openContactUsForm() {
+    this.dialog.open(ContactUsComponent, {
+      height: 'auto',
+      width: '65vh'
+    });
+  }
 
   logout(): void {
     this.authService.logout();

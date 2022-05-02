@@ -44,6 +44,8 @@ public class Event {
 
     private Long externalMeetingId;
 
+    private String joinUrl;
+
     @Builder.Default
     @ManyToMany(mappedBy = "events")
     private List<Tag> tags = new ArrayList<>();

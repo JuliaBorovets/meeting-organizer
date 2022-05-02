@@ -1,6 +1,7 @@
 package com.meeting.organizer.web.api.v1;
 
 import com.meeting.organizer.service.StreamService;
+import com.meeting.organizer.web.dto.v1.event.AddEventToStreamDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamCreateDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamResponse;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @Slf4j
 @RestController
@@ -50,9 +53,8 @@ public class StreamController {
     }
 
     @PatchMapping("/add_event")
-    public StreamDto addEventToStream(@RequestParam(value = "streamId") Long streamId,
-                                      @RequestParam(value = "eventId") Long eventId) {
-        return streamService.addEventToStream(streamId, eventId);
+    public StreamDto addEventToStream(@RequestBody AddEventToStreamDto eventIdList) {
+        return streamService.addEventToStream(eventIdList);
     }
 
     @PatchMapping("/remove_event")

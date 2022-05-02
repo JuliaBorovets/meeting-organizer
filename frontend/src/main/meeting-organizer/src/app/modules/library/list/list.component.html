@@ -9,12 +9,12 @@
        [active]="activeLink === link"> {{link.label}} </a>
   </nav>
 </div>
-
 <div *ngIf="isLoading; else content" class="spinner">
   <mat-spinner></mat-spinner>
 </div>
 
 <ng-template #content>
+<!--  <app-test></app-test>-->
 
   <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
     <app-view *ngFor="let result of resultList"

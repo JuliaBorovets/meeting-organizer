@@ -7,6 +7,8 @@ import com.meeting.organizer.web.dto.v1.event.EventDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface EventMapper {
@@ -15,6 +17,9 @@ public interface EventMapper {
 
     Event eventFromEventDto(EventDto eventDto);
 
+    @Mappings({
+            @Mapping(target = "streamId", source = "event.stream.streamId"),
+    })
     EventDto eventToEventDto(Event event);
 
     ZoomMeeting meetingCreateDtoToMeeting(ZoomEventCreateDto createDto);

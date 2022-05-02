@@ -37,7 +37,7 @@ export class ViewComponent implements OnInit, OnDestroy {
               public dialog: MatDialog,
               private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
-      this.libraryId = +params.id;
+      this.libraryId = +params.libraryId;
     });
   }
 

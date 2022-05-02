@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -36,7 +37,7 @@ public class EventCreateDto {
 
     private MeetingType meetingType;
 
-    private MeetingDto meetingEntity;
+    private Object meetingEntity;
 
     private Long libraryId;
 

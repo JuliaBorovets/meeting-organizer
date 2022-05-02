@@ -16,16 +16,17 @@ import {RouterModule} from '@angular/router';
 import {ViewComponent} from './list/view/view.component';
 import {EventRoutingModule} from './event-routing.module';
 import {CreateEventComponent} from './create/create.component';
-import {UpdateComponent} from './update/update.component';
+import {UpdateEventComponent} from './update/update-event.component';
 import { EventListComponent } from './list/event-list.component';
-import {MatNativeDateModule} from "@angular/material/core";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatDividerModule} from "@angular/material/divider";
-import {MatListModule} from "@angular/material/list";
-import {MatSelectModule} from "@angular/material/select";
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatListModule} from '@angular/material/list';
+import {MatSelectModule} from '@angular/material/select';
+import { InfoComponent } from './list/info/info.component';
 
 @NgModule({
-  declarations: [ViewComponent, CreateEventComponent, UpdateComponent, EventListComponent],
+  declarations: [ViewComponent, CreateEventComponent, UpdateEventComponent, EventListComponent, InfoComponent],
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,

@@ -15,4 +15,6 @@ public interface ZoomClientService {
 
     ZoomInvitation getMeetingInvitation(Long meetingId);
 
+    Boolean checkZoomUserExistsByEmail(String email);
+
 }

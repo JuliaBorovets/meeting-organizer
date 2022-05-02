@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {StreamModel} from '../../models/stream/stream.model';
 import {StreamResponseModel} from '../../models/stream/stream-response.model';
 import {StreamFilterModel} from '../../models/stream/stream-filter.model';
+import {EventModel} from "../../models/event/event.model";
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,13 @@ export class StreamService {
 
   updateStream(stream: StreamModel): Observable<StreamModel> {
     return this.http.put<StreamModel>('/api/v1/stream', stream);
+  }
+
+  addEventToStream(streamId: number, eventIdsList: string[]): Observable<StreamModel> {
+    return this.http.patch<StreamModel>(`/api/v1/stream/add_event`, {eventIdsList, streamId});
+  }
+
+  deleteEventFromStream(eventId: number, streamId: number): Observable<StreamModel> {
+    return this.http.patch<StreamModel>(`/api/v1/stream/remove_event?eventId=${eventId}&streamId=${streamId}`, {});
   }
 }

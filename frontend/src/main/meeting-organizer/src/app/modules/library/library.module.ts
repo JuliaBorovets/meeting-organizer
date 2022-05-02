@@ -10,19 +10,22 @@ import {CommonModule} from '@angular/common';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {LibraryRoutingModule} from './library-routing.module';
 import { InfoComponent } from './info/info.component';
-import {MatCardModule} from "@angular/material/card";
-import {MatIconModule} from "@angular/material/icon";
-import {FlexModule} from "@angular/flex-layout";
-import {MatButtonModule} from "@angular/material/button";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {ReactiveFormsModule} from "@angular/forms";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import {MatInputModule} from "@angular/material/input";
-import {MatMenuModule} from "@angular/material/menu";
-import {RouterModule} from "@angular/router";
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
+import {FlexModule} from '@angular/flex-layout';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatInputModule} from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
+import {RouterModule} from '@angular/router';
+import {MatTreeModule} from '@angular/material/tree';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
-  declarations: [ListComponent, CreateComponent, UpdateComponent, ViewComponent, SearchComponent, InfoComponent],
+  declarations: [ListComponent, CreateComponent, UpdateComponent, ViewComponent, TestComponent, SearchComponent, InfoComponent, TestComponent],
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,
@@ -38,7 +41,9 @@ import {RouterModule} from "@angular/router";
     MatSlideToggleModule,
     MatInputModule,
     MatMenuModule,
-    RouterModule
+    RouterModule,
+    MatTreeModule,
+    MatProgressBarModule,
   ],
   entryComponents: [CreateComponent, InfoComponent]
 })

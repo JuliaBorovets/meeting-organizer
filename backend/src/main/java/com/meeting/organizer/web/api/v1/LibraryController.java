@@ -60,4 +60,10 @@ public class LibraryController {
 
         return libraryService.getUserLibraryListPaginated(userId, pageable);
     }
+
+//    @PutMapping
+//    public LibraryDto addEventToLibrary(@RequestBody LibraryUpdateDto libraryUpdateDto) {
+//        return libraryService.updateLibrary(libraryUpdateDto);
+//    }
+
 }

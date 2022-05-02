@@ -1,0 +1,21 @@
+<div class="back-button">
+  <mat-icon (click)="navigateToListView()">arrow_back_ios</mat-icon>
+</div>
+
+<div class="create-add-event-button" fxLayout="raw" fxLayoutAlign="center center">
+  <button mat-stroked-button color="primary" class="add-event" (click)="openAddEventView()">Add Event</button>
+  <button mat-stroked-button color="primary" class="create-event" (click)="openCreateEventView()">Create Event</button>
+</div>
+
+
+<div *ngIf="isLoading; else content" class="spinner">
+  <mat-spinner></mat-spinner>
+</div>
+
+<ng-template #content>
+
+  <div fxLayoutAlign="center stretch" fxLayout="column" class="view-content">
+      <app-event-list></app-event-list>
+  </div>
+
+</ng-template>

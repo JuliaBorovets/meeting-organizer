@@ -41,4 +41,6 @@ public class EventDto {
     private String externalMeetingId;
 
     private MeetingDto meetingEntity;
+
+    private Long streamId;
 }

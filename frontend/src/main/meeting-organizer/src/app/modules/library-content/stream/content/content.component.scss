@@ -1,0 +1,32 @@
+.create-event, .add-event {
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-top: 0;
+}
+
+.create-add-event-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -20px;
+  width: 60%;
+}
+
+.back-button {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.view-content {
+  margin-top: 10px;
+}
+
+
+.select-events-streams {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1px;
+}

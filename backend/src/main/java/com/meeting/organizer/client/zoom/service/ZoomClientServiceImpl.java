@@ -41,6 +41,10 @@ public class ZoomClientServiceImpl implements ZoomClientService {
     private String meetingUpdateUrl;
     @Value("${zoom.url.meeting-invitation}")
     private String meetingInvitationGetUrl;
+    @Value("${zoom.url.check-user-email}")
+    private String checkUserEmailUrl;
+    @Value("${zoom.url.host_id}")
+    private String zoomHostId;
 
     public ZoomClientServiceImpl(ApplicationParameters applicationParameters,
                                  RestTemplate restTemplate,
@@ -54,6 +58,7 @@ public class ZoomClientServiceImpl implements ZoomClientService {
 
     @Override
     public ZoomMeeting createMeeting(ZoomMeeting createEntity) {
+        createEntity.setHost_id(zoomHostId);
         HttpHeaders headers = createHeaders();
         HttpEntity<ZoomMeeting> httpEntity = new HttpEntity<>(createEntity, headers);
 
@@ -160,6 +165,28 @@ public class ZoomClientServiceImpl implements ZoomClientService {
         } catch (HttpClientErrorException e) {
             throw new MeetingInvitationNotFoundException(e);
         }
+    }
+
+    @Override
+    public Boolean checkZoomUserExistsByEmail(String email) {
+        HttpHeaders headers = createHeaders();
+        HttpEntity<ZoomMeeting> httpEntity = new HttpEntity<>(headers);
+
+        try {
+            URI uri = UriComponentsBuilder.fromUriString(checkUserEmailUrl)
+                    .buildAndExpand(email)
+                    .toUri();
+
+            log.info("Check if Zoom user exists by id, url: {}, httpEntity {}", uri, httpEntity);
+
+            nonIdempotentRetryTemplate.execute(retryContext ->
+                    restTemplate.exchange(uri, HttpMethod.GET, httpEntity, Object.class)
+            );
+            return true;
+        } catch (HttpClientErrorException e) {
+            log.info("Zoom user does not exists by email " + email);
+        }
+        return false;
     }
 
     private HttpHeaders createHeaders() {

@@ -1,1 +1,71 @@
-<p>view works! {{eventModel.eventId}}</p>
+<div class="view">
+
+  <mat-card>
+    <mat-card-content>
+      <div fxFlex="row">
+        <div fxLayout="column" fxFlex="20">
+          <img width="200px" alt="image" class="img-responsive" src="assets/hero-media-illustration-dark.svg">
+        </div>
+        <div fxLayout="column" fxFlex="95" style="width: auto; margin-left: 10px;">
+          <div fxLayoutAlign="center">
+            <p class="library-name">{{eventModel.name}}</p>
+          </div>
+          <div fxLayoutAlign="start">
+            <p class="info">{{eventModel.startDate}}</p>
+          </div>
+          <button mat-icon-button aria-label="Open in new tab icon">
+            <mat-icon>open_in_new</mat-icon>
+          </button>
+          <div fxLayout="column" fxFlex="80">
+            <div fxLayout="raw"  fxFlex="50">
+              <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'CONFERENCE'">Conference
+              </button>
+              <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'SEMINAR'">Seminar</button>
+              <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'COLLOQUIUM'">Colloquium
+              </button>
+              <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'WORKSHOP'">Workshop</button>
+
+
+              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'DRAFT'">Draft</button>
+              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'PLANNED'">Planned</button>
+              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'NOT_STARTED'">Not started</button>
+              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'IN_PROGRESS'">In progress</button>
+              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'ARCHIVED'">Archived</button>
+
+              <button mat-stroked-button color="primary" *ngIf="eventModel.meetingType === 'ZOOM'">Zoom</button>
+              <button mat-stroked-button color="primary" *ngIf="eventModel.meetingType === 'WEBEX'">Webex</button>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="space-around end" fxFlex="20">
+
+          <button mat-raised-button color="primary">Start</button>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="5">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item aria-label="Open in new tab icon" (click)="openInfoDialog()">
+              <mat-icon>open_in_new</mat-icon>
+              <span>Info</span>
+            </button>
+            <button mat-menu-item aria-label="Update" (click)="openUpdateDialog()">
+              <mat-icon>edit</mat-icon>
+              <span>Update</span>
+            </button>
+            <button mat-menu-item aria-label="Delete" *ngIf="eventModel.streamId" (click)="deleteEventFormStream()">
+              <mat-icon>delete_outline</mat-icon>
+              <span>Delete from stream</span>
+            </button>
+            <button mat-menu-item aria-label="Delete">
+              <mat-icon>delete_outline</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </div>
+
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

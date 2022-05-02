@@ -26,7 +26,7 @@ export class StreamListComponent implements OnInit, OnDestroy {
   constructor(private streamService: StreamService,
               private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
-      this.libraryId = +params.id;
+      this.libraryId = +params.libraryId;
       this.streamFilter.libraryId = this.libraryId;
     });
   }

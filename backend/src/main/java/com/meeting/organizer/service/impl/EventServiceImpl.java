@@ -1,7 +1,9 @@
 package com.meeting.organizer.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meeting.organizer.client.zoom.model.ZoomMeeting;
 import com.meeting.organizer.client.zoom.service.ZoomClientService;
+import com.meeting.organizer.exception.custom.UnsupportedEventException;
 import com.meeting.organizer.model.Event;
 import com.meeting.organizer.model.Library;
 import com.meeting.organizer.model.MeetingType;
@@ -14,6 +16,7 @@ import com.meeting.organizer.web.dto.v1.event.*;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventDto;
 import com.meeting.organizer.web.mapper.v1.EventMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -59,6 +62,8 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
             event.setStream(stream);
         }
 
+        ZoomMeeting createdMeeting = createMeetingByType(eventCreateDto.getMeetingType(), eventCreateDto.getMeetingEntity());
+        event.setExternalMeetingId(createdMeeting.getId());
         Event savedEvent = repository.save(event);
         libraryService.save(library);
 
@@ -66,7 +71,6 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
             streamService.save(stream);
         }
 
-        createMeetingByType(eventCreateDto.getMeetingType(), eventCreateDto.getMeetingEntity());
 
         return eventMapper.eventToEventDto(savedEvent);
     }
@@ -115,19 +119,57 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
+    public EventResponse findAllByNotLibraryId(Long libraryId, Pageable pageable) {
+        EventResponse eventResponse = new EventResponse();
+
+        List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdNotContaining(libraryId, pageable)
+                .stream()
+                .map(eventMapper::eventToEventDto)
+                .collect(Collectors.toList());
+
+        eventResponse.setList(eventDtoList);
+        eventResponse.setTotalItems(countAllByLibraryId(libraryId));
+
+        return eventResponse;
+    }
+
+    @Override
     public EventDto findEventById(Long eventId) {
         return eventMapper.eventToEventDto(
                 findById(eventId)
         );
     }
 
-    private void createMeetingByType(MeetingType type, MeetingDto meetingDto) {
+    @Override
+    public List<EventDto> findAllByNameAndStreamNotContaining(Long libraryId, Long streamId, String name, Pageable pageable) {
+//        List<Event> result = repository.findByLibrary_LibraryIdAndStream_StreamId(
+//                libraryId, streamId, name, pageable
+//        );
+
+        List<Event> test = repository.findByLibrary_LibraryIdAndStream_StreamId(libraryId, null, pageable);
+        List<Event> test2 = repository.findByLibrary_LibraryIdAndStream_StreamIdAndNameLike(libraryId, null, name + "%",  pageable);
+
+        log.info("---{}", test);
+        log.info("2---{}", test2);
+        return test2.stream()
+                .map(eventMapper::eventToEventDto)
+                .collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    private ZoomMeeting createMeetingByType(MeetingType type, Object meetingDto) {
         if (type.equals(MeetingType.ZOOM) && Objects.nonNull(meetingDto)) {
-            ZoomEventCreateDto zoomEventCreateDto = (ZoomEventCreateDto) meetingDto;
+            ObjectMapper mapper = new ObjectMapper();
+
+            ZoomEventCreateDto zoomEventCreateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), ZoomEventCreateDto.class);
+
+            log.info("--{}", meetingDto);
             ZoomMeeting zoomMeeting = eventMapper.meetingCreateDtoToMeeting(zoomEventCreateDto);
             log.info("zoomMeeting {}", zoomMeeting);
-            zoomClientService.createMeeting(zoomMeeting);
+            return zoomClientService.createMeeting(zoomMeeting);
         }
+
+        throw new UnsupportedEventException("Not supported type for event " + type.name());
     }
 
     private void updateMeetingByType(MeetingType type, MeetingDto meetingDto) {

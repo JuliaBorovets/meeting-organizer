@@ -6,8 +6,8 @@ import {DialogService} from '../../../../../services/confirm-dialog.service';
 import {StreamService} from '../../../../../services/stream/stream.service';
 import {ToastrService} from 'ngx-toastr';
 import {UpdateStreamComponent} from '../../update/update-stream.component';
-import {AddEventComponent} from "../../add-event/add-event.component";
-import {ActivatedRoute} from "@angular/router";
+import {AddEventComponent} from '../../add-event/add-event.component';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-stream-view',
@@ -27,9 +27,10 @@ export class ViewComponent implements OnInit, OnDestroy {
               private dialogService: DialogService,
               private streamService: StreamService,
               private toastrService: ToastrService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private router: Router) {
     this.route.params.subscribe(params => {
-      this.libraryId = +params.id;
+      this.libraryId = +params.libraryId;
     });
   }
 
@@ -55,8 +56,8 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   openAddEventDialog(): void {
     const addEventDialogRef = this.dialog.open(AddEventComponent, {
-      height: 'auto',
-      width: '65vh',
+      height: '40vh',
+      width: '80vh',
       data: {streamModel: this.streamModel}
     });
 
@@ -85,6 +86,10 @@ export class ViewComponent implements OnInit, OnDestroy {
           );
         }
       });
+  }
+
+  openStreamContent(): void {
+    this.router.navigate(['library-content/' + this.streamModel.libraryId + '/stream/view/' + this.streamModel.streamId]).then();
   }
 
   ngOnDestroy(): void {

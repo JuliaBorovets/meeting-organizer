@@ -1,5 +1,6 @@
 package com.meeting.organizer.service;
 
+import com.meeting.organizer.web.dto.v1.event.AddEventToStreamDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamCreateDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamResponse;
@@ -18,7 +19,7 @@ public interface StreamService {
 
     StreamResponse getAllByLibraryIdPaginated(Long libraryId, Pageable pageable);
 
-    StreamDto addEventToStream(Long streamId, Long eventId);
+    StreamDto addEventToStream(AddEventToStreamDto eventList);
 
     StreamDto deleteEventFromStream(Long streamId, Long eventId);
 }

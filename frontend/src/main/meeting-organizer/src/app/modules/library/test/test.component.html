@@ -1,0 +1,50 @@
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="0" matTreeNodeToggle>
+    <div class="view">
+      <mat-card>
+        <mat-card-content>
+          <div fxFlex="row">
+            <div fxLayout="column" fxFlex="20">
+              <img width="100px" alt="image" class="img-responsive" src="assets/hero-media-illustration-dark.svg">
+            </div>
+            <div fxLayout="column" fxFlex="95" style="width: auto; margin-left: 10px;">
+              <div fxLayoutAlign="center">
+                <p class="library-name">{{node.item}}</p>
+              </div>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="center center" fxFlex="5">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item aria-label="Open in new tab icon">
+                  <mat-icon>open_in_new</mat-icon>
+                  <span>Info</span>
+                </button>
+                <button mat-menu-item aria-label="Delete">
+                  <mat-icon>delete_outline</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </div>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <button mat-icon-button class="library-name"
+            [attr.aria-label]="'Toggle ' + node.item.name" matTreeNodeToggle>
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+      {{node.item.name}}
+    </button>
+    <mat-progress-bar *ngIf="node.isLoading"
+                      mode="indeterminate"
+                      class="example-tree-progress-bar"></mat-progress-bar>
+  </mat-tree-node>
+</mat-tree>
+

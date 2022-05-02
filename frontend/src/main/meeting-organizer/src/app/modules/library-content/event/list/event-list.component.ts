@@ -18,6 +18,7 @@ export class EventListComponent implements OnInit, OnDestroy {
   pageSizeOptions: number[] = [5, 10, 25, 50];
   public eventFilter: EventFilterModel = new EventFilterModel();
   private libraryId: number;
+  private streamId: number;
   public isLoading = true;
   pageEvent: PageEvent;
   eventList: EventModel[] = [];
@@ -26,8 +27,10 @@ export class EventListComponent implements OnInit, OnDestroy {
   constructor(private eventService: EventService,
               private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
-      this.libraryId = +params.id;
+      this.libraryId = +params.libraryId;
+      this.streamId = +params.streamId;
       this.eventFilter.libraryId = this.libraryId;
+      this.eventFilter.streamId = this.streamId;
     });
   }
 

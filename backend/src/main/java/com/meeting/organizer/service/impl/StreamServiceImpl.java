@@ -8,6 +8,7 @@ import com.meeting.organizer.repository.StreamRepository;
 import com.meeting.organizer.service.AbstractService;
 import com.meeting.organizer.service.CRUDService;
 import com.meeting.organizer.service.StreamService;
+import com.meeting.organizer.web.dto.v1.event.AddEventToStreamDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamCreateDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamResponse;
@@ -53,7 +54,7 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
 
         library.getStreams().add(createdEntity);
         libraryService.save(library);
-        return streamMapper.streamToStreamDto(createdEntity);
+        return streamToStreamDto(createdEntity);
     }
 
     @Transactional
@@ -62,7 +63,7 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
         Stream stream = findById(updateDto.getStreamId());
         stream.setName(updateDto.getName());
         repository.save(stream);
-        return streamMapper.streamToStreamDto(stream);
+        return streamToStreamDto(stream);
     }
 
     //todo add onDelete relation configuration to delete all inner events
@@ -76,7 +77,7 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
     public StreamDto findStreamById(Long id) {
         Stream stream = repository.findById(id)
                 .orElseThrow(() -> new StreamNotFoundException("Stream not found. id=" + id));
-        return streamMapper.streamToStreamDto(stream);
+        return streamToStreamDto(stream);
     }
 
     @Override
@@ -86,7 +87,7 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
 
         List<StreamDto> streamDtoList = repository.findByLibrary_LibraryId(libraryId, pageable)
                 .stream()
-                .map(streamMapper::streamToStreamDto)
+                .map(this::streamToStreamDto)
                 .collect(Collectors.toList());
 
         response.setList(streamDtoList);
@@ -97,17 +98,20 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
 
     @Transactional
     @Override
-    public StreamDto addEventToStream(Long streamId, Long eventId) {
+    public StreamDto addEventToStream(AddEventToStreamDto addEventToStreamDto) {
 
-        Stream stream = findById(streamId);
-        Event event = eventService.findById(eventId);
+        Stream stream = findById(addEventToStreamDto.getStreamId());
+        List<Event> eventList = addEventToStreamDto.getEventIdsList().stream()
+                .map(eventService::findById)
+                .peek(event -> event.setStream(stream))
+                .collect(Collectors.toList());
 
-        stream.getEvents().add(event);
-        event.setStream(stream);
+        log.info("{}", eventList);
+        stream.getEvents().addAll(eventList);
 
         repository.save(stream);
-        eventService.save(event);
-        return streamMapper.streamToStreamDto(stream);
+        eventList.forEach(eventService::save);
+        return streamToStreamDto(stream);
     }
 
     @Transactional
@@ -121,6 +125,12 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
 
         repository.save(stream);
         eventService.save(event);
-        return streamMapper.streamToStreamDto(stream);
+        return streamToStreamDto(stream);
+    }
+
+    private StreamDto streamToStreamDto(Stream stream) {
+        StreamDto streamDto = streamMapper.streamToStreamDto(stream);
+        streamDto.setLibraryId(stream.getLibrary().getLibraryId());
+        return streamDto;
     }
 }

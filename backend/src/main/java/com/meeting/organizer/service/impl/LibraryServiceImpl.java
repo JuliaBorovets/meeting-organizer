@@ -125,8 +125,6 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
     }
 
     private LibraryDto convertToDto(Library library) {
-        LibraryDto dto = libraryMapper.libraryToLibraryDto(library);
-        dto.setUserId(library.getUser().getUserId());
-        return dto;
+        return libraryMapper.libraryToLibraryDto(library);
     }
 }

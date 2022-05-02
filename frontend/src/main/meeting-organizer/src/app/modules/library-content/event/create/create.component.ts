@@ -71,7 +71,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       agenda: ['', null],
       password: ['', null],
       allowMultipleDevices: [true, null],
-      hostVideo: [true, null],
+      hostVideo: [false, null],
       meetingAuthentication: [false, null],
 
       muteUponEntry: [true, null],
@@ -110,14 +110,14 @@ export class CreateEventComponent implements OnInit, OnDestroy {
         agenda: this.f.agenda.value,
         topic: this.f.name.value,
         password: this.f.password.value,
-        startTime: this.f.startDate.value,
+        start_time: this.f.startDate.value,
         settings: {
-          allowMultipleDevices: this.f.allowMultipleDevices.value,
-          hostVideo: this.f.hostVideo.value,
-          meetingAuthentication: this.f.meetingAuthentication.value,
-          muteUponEntry: this.f.muteUponEntry.value,
-          participantVideo: this.f.participantVideo.value,
-          waitingRoom: this.f.waitingRoom.value
+          allow_multiple_devices: this.f.allowMultipleDevices.value,
+          host_video: this.f.hostVideo.value,
+          meeting_authentication: this.f.meetingAuthentication.value,
+          mute_upon_entry: this.f.muteUponEntry.value,
+          participant_video: this.f.participantVideo.value,
+          waiting_room: this.f.waitingRoom.value
         }
       },
     };

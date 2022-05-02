@@ -19,9 +19,14 @@ import {StreamRoutingModule} from './stream-routing.module';
 import { StreamListComponent } from './list/stream-list.component';
 import {UpdateStreamComponent} from './update/update-stream.component';
 import { AddEventComponent } from './add-event/add-event.component';
+import { ContentComponent } from './content/content.component';
+import {EventModule} from '../event/event.module';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatOptionModule} from '@angular/material/core';
 
 @NgModule({
-  declarations: [ViewComponent, CreateStreamComponent, UpdateStreamComponent, StreamListComponent, AddEventComponent],
+  declarations: [ViewComponent, CreateStreamComponent, UpdateStreamComponent, StreamListComponent, AddEventComponent, ContentComponent],
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,
@@ -37,7 +42,11 @@ import { AddEventComponent } from './add-event/add-event.component';
     MatSlideToggleModule,
     MatInputModule,
     MatMenuModule,
-    RouterModule
+    RouterModule,
+    EventModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    MatOptionModule
   ],
   exports: [
     CreateStreamComponent,

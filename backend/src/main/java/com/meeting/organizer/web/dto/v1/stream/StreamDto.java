@@ -15,7 +15,7 @@ public class StreamDto {
 
     private String name;
 
-//    private Library library;
+    private Long libraryId;
 //
 //    private List<Event> events = new ArrayList<>();
 

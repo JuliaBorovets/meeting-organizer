@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -43,6 +45,26 @@ public class EventController {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
         return eventService.findAllByLibraryId(libraryId, streamId, pageable);
+    }
+
+    @GetMapping("/library/not/{libraryId}")
+    public EventResponse findAllByLibraryIdNot(@PathVariable Long libraryId,
+                                               @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                               @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        return eventService.findAllByNotLibraryId(libraryId, pageable);
+    }
+
+    @GetMapping("/stream/not/{libraryId}")
+    public List<EventDto> findAllByNameAndStreamNotContaining(@PathVariable Long libraryId,
+                                                              @RequestParam(value = "streamId", required = false) Long streamId,
+                                                              @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                                              @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                                              @RequestParam(value = "name", defaultValue = "") String name
+                                                             ) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        return eventService.findAllByNameAndStreamNotContaining(libraryId, streamId, name, pageable);
     }
 
     @GetMapping("/{id}")

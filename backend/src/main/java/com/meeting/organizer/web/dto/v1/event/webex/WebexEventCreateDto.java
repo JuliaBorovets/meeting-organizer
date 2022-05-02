@@ -19,7 +19,7 @@ public class WebexEventCreateDto {
 
     private String start;
 
-    private Long webexDurationInMinutes;
+    private Long durationInMinutes;
 
     private String hostEmail;
 

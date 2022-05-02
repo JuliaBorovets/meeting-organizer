@@ -106,6 +106,7 @@ CREATE TABLE events
     library_id              BIGINT,
     location_id             BIGINT,
     stream_id               BIGINT,
+    join_url                VARCHAR(255),
 
     CONSTRAINT events_pkey PRIMARY KEY (event_id)
 );
@@ -117,7 +118,7 @@ CREATE TABLE libraries
     description VARCHAR(255),
     image       BYTEA,
     user_id     BIGINT,
-    is_private   BOOLEAN,
+    is_private  BOOLEAN,
 
     CONSTRAINT libraries_pkey PRIMARY KEY (library_id)
 );

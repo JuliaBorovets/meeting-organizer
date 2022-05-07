@@ -1,12 +1,12 @@
 package com.meeting.organizer.client.webex.service.impl;
 
+import com.meeting.organizer.client.webex.model.WebexCreateMeeting;
 import com.meeting.organizer.client.webex.model.WebexMeeting;
 import com.meeting.organizer.client.webex.service.WebexClientService;
 import com.meeting.organizer.client.webex.service.WebexTokenService;
 import com.meeting.organizer.client.zoom.model.ZoomMeeting;
-import com.meeting.organizer.config.ApplicationParameters;
 import com.meeting.organizer.exception.custom.MeetingCanNotCreateException;
-import lombok.RequiredArgsConstructor;
+import com.meeting.organizer.exception.custom.MeetingNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,6 @@ import java.net.URI;
 @Service
 public class WebexClientServiceImpl implements WebexClientService {
 
-    private final ApplicationParameters applicationParameters;
     private final RestTemplate restTemplate;
     private final RetryTemplate nonIdempotentRetryTemplate;
     private final RetryTemplate idempotentRetryTemplate;
@@ -34,13 +33,13 @@ public class WebexClientServiceImpl implements WebexClientService {
 
     @Value("${webex.url.meeting-create}")
     private String meetingCreateUrl;
+    @Value("${webex.url.meeting-get}")
+    private String meetingGetUrl;
 
-    public WebexClientServiceImpl(ApplicationParameters applicationParameters,
-                                  RestTemplate restTemplate,
+    public WebexClientServiceImpl(RestTemplate restTemplate,
                                   @Qualifier("nonIdempotentRetryTemplate") RetryTemplate nonIdempotentRetryTemplate,
                                   @Qualifier("idempotentRetryTemplate") RetryTemplate idempotentRetryTemplate,
                                   WebexTokenService webexTokenService) {
-        this.applicationParameters = applicationParameters;
         this.restTemplate = restTemplate;
         this.idempotentRetryTemplate = idempotentRetryTemplate;
         this.nonIdempotentRetryTemplate = nonIdempotentRetryTemplate;
@@ -49,13 +48,37 @@ public class WebexClientServiceImpl implements WebexClientService {
 
     @Override
     public void deleteMeeting(Long id) {
+        //todo
+    }
+
+    @Override
+    public WebexMeeting getById(String id) {
+
+        HttpHeaders headers = createHeaders();
+        HttpEntity<WebexMeeting> httpEntity = new HttpEntity<>(headers);
+
+        try {
+            URI uri = UriComponentsBuilder.fromUriString(meetingGetUrl)
+                    .buildAndExpand(id)
+                    .toUri();
+
+            log.info("Getting meeting by id, url: {}, httpEntity {}", uri, httpEntity);
+
+            ResponseEntity<WebexMeeting> responseEntity = nonIdempotentRetryTemplate.execute(retryContext ->
+                    restTemplate.exchange(uri, HttpMethod.GET, httpEntity, WebexMeeting.class)
+            );
+
+            return responseEntity.getBody();
+        } catch (HttpClientErrorException e) {
+            throw new MeetingNotFoundException(e);
+        }
 
     }
 
     @Override
-    public WebexMeeting createMeeting(WebexMeeting createEntity) {
+    public WebexMeeting createMeeting(WebexCreateMeeting createEntity) {
         HttpHeaders headers = createHeaders();
-        HttpEntity<WebexMeeting> httpEntity = new HttpEntity<>(createEntity, headers);
+        HttpEntity<WebexCreateMeeting> httpEntity = new HttpEntity<>(createEntity, headers);
 
         try {
             log.info("Creating meeting, url: {}, httpEntity {}", meetingCreateUrl, httpEntity);

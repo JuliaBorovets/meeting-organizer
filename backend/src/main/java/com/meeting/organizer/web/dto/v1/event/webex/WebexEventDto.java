@@ -38,5 +38,4 @@ public class WebexEventDto {
 
     private Boolean enabledJoinBeforeHost;
 
-    private WebexRegistration registration;
 }

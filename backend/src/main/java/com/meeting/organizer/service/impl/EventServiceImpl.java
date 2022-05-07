@@ -1,15 +1,13 @@
 package com.meeting.organizer.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meeting.organizer.client.webex.model.WebexCreateMeeting;
 import com.meeting.organizer.client.webex.model.WebexMeeting;
 import com.meeting.organizer.client.webex.service.WebexClientService;
 import com.meeting.organizer.client.zoom.model.ZoomMeeting;
 import com.meeting.organizer.client.zoom.service.ZoomClientService;
 import com.meeting.organizer.exception.custom.UnsupportedEventException;
-import com.meeting.organizer.model.Event;
-import com.meeting.organizer.model.Library;
-import com.meeting.organizer.model.MeetingType;
-import com.meeting.organizer.model.Stream;
+import com.meeting.organizer.model.*;
 import com.meeting.organizer.repository.EventRepository;
 import com.meeting.organizer.service.AbstractService;
 import com.meeting.organizer.service.CRUDService;
@@ -27,6 +25,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -112,7 +116,8 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     public void deleteEvent(Long id) {
         log.info("deleting event with={}", id);
         Event event = findById(id);
-        deleteMeetingByType(event.getMeetingType(), event.getExternalMeetingId());
+        //todo delete also external meeting
+        //deleteMeetingByType(event.getMeetingType(), event.getExternalMeetingId());
         super.deleteById(id);
     }
 
@@ -148,9 +153,13 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
     @Override
     public EventDto findEventById(Long eventId) {
-        return eventMapper.eventToEventDto(
+        EventDto eventDto = eventMapper.eventToEventDto(
                 findById(eventId)
         );
+
+        setExternalMeetingByType(eventDto);
+
+        return eventDto;
     }
 
     @Override
@@ -162,6 +171,29 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         return result.stream()
                 .map(eventMapper::eventToEventDto)
                 .collect(Collectors.toList());
+    }
+
+    private void setExternalMeetingByType(EventDto eventDto) {
+        MeetingType eventType = eventDto.getMeetingType();
+
+        if (eventType.equals(MeetingType.ZOOM)) {
+            ZoomMeeting zoomMeeting = zoomClientService.getById(Long.parseLong(eventDto.getExternalMeetingId()));
+            eventDto.setMeetingEntity(
+                    eventMapper.metingToZoomMeetingDto(zoomMeeting)
+            );
+            return;
+        }
+
+        if (eventType.equals(MeetingType.WEBEX)) {
+            WebexMeeting webexMeeting = webexClientService.getById(eventDto.getExternalMeetingId());
+            eventDto.setMeetingEntity(
+                    eventMapper.meetingToWebexMeetingDto(webexMeeting)
+            );
+            return;
+        }
+
+        throw new UnsupportedEventException("Not supported type for event " + eventType.name());
+
     }
 
     @SneakyThrows
@@ -176,7 +208,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
             log.info("zoomMeeting {}", zoomMeeting);
 
             ZoomMeeting createdMeeting = zoomClientService.createMeeting(zoomMeeting);
-            event.setExternalMeetingId(Long.valueOf(createdMeeting.getId()));
+            event.setExternalMeetingId(createdMeeting.getId().toString());
             event.setJoinUrl(createdMeeting.getJoin_url());
             return;
         }
@@ -186,12 +218,17 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
             WebexEventCreateDto webexEventCreateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), WebexEventCreateDto.class);
 
-            WebexMeeting webexMeeting = eventMapper.webexMeetingCreateDtoToMeeting(webexEventCreateDto);
 
-            log.info("webexMeeting {}", webexMeeting);
+            DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
+            String end = LocalDateTime.parse(webexEventCreateDto.getStart(), FORMATTER)
+                    .plus(webexEventCreateDto.getDurationInMinutes(), ChronoUnit.MINUTES)
+                    .toString();
+
+            WebexCreateMeeting webexMeeting = eventMapper.webexMeetingCreateDtoToMeeting(webexEventCreateDto);
+            webexMeeting.setEnd(end);
 
             WebexMeeting createdMeeting = webexClientService.createMeeting(webexMeeting);
-            event.setExternalMeetingId(Long.valueOf(createdMeeting.getId()));
+            event.setExternalMeetingId(createdMeeting.getId());
             event.setJoinUrl(createdMeeting.getWebLink());
             return;
         }

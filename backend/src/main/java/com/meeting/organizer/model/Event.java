@@ -42,7 +42,7 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private MeetingType meetingType;
 
-    private Long externalMeetingId;
+    private String externalMeetingId;
 
     private String joinUrl;
 

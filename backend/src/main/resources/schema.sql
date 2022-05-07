@@ -102,7 +102,7 @@ CREATE TABLE events
     event_type              VARCHAR(255),
     state                   VARCHAR(255),
     meeting_type            VARCHAR(255),
-    external_meeting_id     BIGINT,
+    external_meeting_id     VARCHAR(255),
     library_id              BIGINT,
     location_id             BIGINT,
     stream_id               BIGINT,

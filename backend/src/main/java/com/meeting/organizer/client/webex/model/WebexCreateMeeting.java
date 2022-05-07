@@ -1,4 +1,4 @@
-package com.meeting.organizer.web.dto.v1.event.webex;
+package com.meeting.organizer.client.webex.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WebexEventCreateDto {
-
+public class WebexCreateMeeting {
     private String title;
 
     private String agenda;
@@ -19,7 +18,7 @@ public class WebexEventCreateDto {
 
     private String start;
 
-    private Long durationInMinutes;
+    private String end;
 
     private String hostEmail;
 
@@ -28,4 +27,3 @@ public class WebexEventCreateDto {
     private Boolean enabledJoinBeforeHost;
 
 }
-

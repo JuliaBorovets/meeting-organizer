@@ -19,11 +19,13 @@ import {CreateEventComponent} from './create/create.component';
 import {UpdateEventComponent} from './update/update-event.component';
 import { EventListComponent } from './list/event-list.component';
 import {MatNativeDateModule} from '@angular/material/core';
-import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatSelectModule} from '@angular/material/select';
 import { InfoComponent } from './list/info/info.component';
+import {NgxMatDatetimePickerModule} from '@angular-material-components/datetime-picker';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MaterialModule} from '../../material.module';
 
 @NgModule({
   declarations: [ViewComponent, CreateEventComponent, UpdateEventComponent, EventListComponent, InfoComponent],
@@ -44,11 +46,13 @@ import { InfoComponent } from './list/info/info.component';
     MatMenuModule,
     RouterModule,
     MatNativeDateModule,
-    MatDatepickerModule,
     MatDividerModule,
     MatListModule,
     MatSelectModule,
-    FormsModule
+    FormsModule,
+    NgxMatDatetimePickerModule,
+    MatDatepickerModule,
+    MaterialModule
   ],
   exports: [
     ViewComponent,

@@ -111,7 +111,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     }
 
     const baseCreateRequest = {
-      startDate: this.f.startDate.value,
+      startDate: new Date(this.f.startDate.value).toISOString(),
       durationInMinutes: this.f.durationInMinutes.value,
       maxNumberParticipants: this.f.maxNumberParticipants.value,
       name: this.f.name.value,
@@ -159,13 +159,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
         durationInMinutes: this.f.durationInMinutes.value,
         hostEmail: this.f.webexHostEmail.value,
         enabledAutoRecordMeeting: this.f.webexEnabledAutoRecordMeeting.value,
-        enabledJoinBeforeHost: this.f.webexEnabledJoinBeforeHost.value,
-        registration: {
-          autoAcceptRequest: this.f.webexAutoAcceptRequest.value,
-          requireFirstName: this.f.webexRequireFirstName.value,
-          requireLastName: this.f.webexRequireLastName.value,
-          requireEmail: this.f.webexRequireEmail.value,
-        }
+        enabledJoinBeforeHost: this.f.webexEnabledJoinBeforeHost.value
       },
     };
 

@@ -16,9 +16,28 @@ import {LibraryModule} from './modules/library/library.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {AuthModule} from './modules/shared/auth/auth.module';
 import {NotFoundComponent} from './modules/shared/not-found/not-found.component';
-import {ToastrModule} from "ngx-toastr";
-import {RouterModule} from "@angular/router";
+import {ToastrModule} from 'ngx-toastr';
+import {RouterModule} from '@angular/router';
 import { ConfirmComponent } from './components/confirm/confirm.component';
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+  NgxMatTimepickerModule,
+  NGX_MAT_DATE_FORMATS,
+  NgxMatDateFormats
+} from '@angular-material-components/datetime-picker';
+
+const CUSTOM_DATE_FORMATS: NgxMatDateFormats = {
+  parse: {
+    dateInput: 'l, LTS'
+  },
+  display: {
+    dateInput: 'YYYY-MM-DD HH:mm:ss',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  }
+};
 
 @NgModule({
   declarations: [
@@ -43,6 +62,10 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
     LibraryModule,
     FlexLayoutModule,
     AuthModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule,
+
     ToastrModule.forRoot({
       timeOut: 150000, // 15 seconds
       closeButton: true,
@@ -50,7 +73,10 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
     }),
     RouterModule
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    //  { provide: NGX_MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
+  ],
   exports: [],
   bootstrap: [AppComponent]
 })

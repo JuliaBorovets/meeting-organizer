@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS user_role CASCADE;
 DROP TABLE IF EXISTS role_authority CASCADE;
 DROP TABLE IF EXISTS event_user_fav CASCADE;
 DROP TABLE IF EXISTS library_user_fav CASCADE;
+DROP TABLE IF EXISTS library_user_access CASCADE;
 
 CREATE TABLE authority
 (
@@ -115,12 +116,13 @@ CREATE TABLE events
 
 CREATE TABLE libraries
 (
-    library_id  BIGSERIAL,
-    name        VARCHAR(255),
-    description VARCHAR(255),
-    image       BYTEA,
-    user_id     BIGINT,
-    is_private  BOOLEAN,
+    library_id   BIGSERIAL,
+    name         VARCHAR(255),
+    description  VARCHAR(255),
+    access_token VARCHAR(255),
+    image        BYTEA,
+    user_id      BIGINT,
+    is_private   BOOLEAN,
 
     CONSTRAINT libraries_pkey PRIMARY KEY (library_id)
 );
@@ -227,9 +229,17 @@ CREATE TABLE library_user_fav
 CREATE TABLE event_user_fav
 (
     event_id BIGINT,
-    user_id    BIGINT,
+    user_id  BIGINT,
 
     PRIMARY KEY (event_id, user_id)
+);
+
+CREATE TABLE library_user_access
+(
+    library_id BIGINT,
+    user_id    BIGINT,
+
+    PRIMARY KEY (library_id, user_id)
 );
 
 ALTER TABLE users
@@ -292,3 +302,7 @@ ALTER TABLE library_user_fav
 ALTER TABLE event_user_fav
     ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL,
     ADD CONSTRAINT event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL;
+
+ALTER TABLE library_user_access
+    ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL,
+    ADD CONSTRAINT library_id_fk FOREIGN KEY (library_id) REFERENCES libraries (library_id) ON DELETE SET NULL;

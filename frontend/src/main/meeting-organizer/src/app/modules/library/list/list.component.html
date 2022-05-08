@@ -1,5 +1,9 @@
-<div class="create-button">
+<div class="create-button" *ngIf="isFindAllSelected() || isFindMySelected()">
   <button mat-stroked-button color="primary" (click)="openCreateDialog()">Create library</button>
+</div>
+
+<div class="create-button" *ngIf="isFindAccessSelected()">
+  <button mat-stroked-button color="primary" (click)="openAddAccessCodeDialog()">Add access</button>
 </div>
 
 <div class="select-organisation">
@@ -18,6 +22,7 @@
     <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
       <app-view *ngFor="let result of resultList"
                 [libraryItem]="result"
+                [isGrantedLibraryItem]="isFindAccessSelected()"
                 (updateLibraryEvent)="searchLibraries()"
       >
       </app-view>

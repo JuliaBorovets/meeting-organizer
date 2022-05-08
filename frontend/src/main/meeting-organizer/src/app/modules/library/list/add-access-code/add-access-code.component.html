@@ -1,0 +1,27 @@
+<div class="create-library-form">
+  <form (ngSubmit)="onSubmit()" [formGroup]="createForm">
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <p class="header-title"> Add access code </p>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-input" appearance="outline">
+        <mat-label>access token</mat-label>
+        <input matInput type="text" id="name" class="form-control" name="accessToken" formControlName="accessToken"
+               [ngClass]="{ 'is-invalid': submitted && f.accessToken.errors }" required>
+      </mat-form-field>
+    </div>
+
+    <mat-error *ngIf="isCreateFailed" class="error-info">
+      Cannot add code
+    </mat-error>
+
+    <button mat-button>Add</button>
+
+    <div class="more-info">
+      <a class="btn btn-outline-primary login" (click)="onNoClick()">Cancel</a>
+    </div>
+
+  </form>
+</div>

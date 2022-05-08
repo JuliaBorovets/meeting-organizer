@@ -8,6 +8,7 @@ import {StorageService} from '../../../services/auth/storage.service';
 import {LibraryResponseModel} from '../../../models/library/library-response.model';
 import {CreateComponent} from '../create/create.component';
 import {LibraryService} from '../../../services/library/library.service';
+import {AddAccessCodeComponent} from "./add-access-code/add-access-code.component";
 
 @Component({
   selector: 'app-list',
@@ -28,12 +29,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
   links = [
     {
-      label: 'all',
-      findAll: true
+      label: 'All'
     },
     {
-      label: 'my',
-      findAll: false
+      label: 'My'
+    },
+    {
+      label: 'Given Access'
     }
   ];
   activeLink = this.links[0];
@@ -52,9 +54,15 @@ export class ListComponent implements OnInit, OnDestroy {
   searchLibraries() {
     this.isLoading = true;
     this.libraryCount = 0;
-    const observable: Observable<LibraryResponseModel> = this.activeLink.findAll
-      ? this.libraryService.findAll(this.filter)
-      : this.libraryService.findAllUser(this.filter);
+    let observable: Observable<LibraryResponseModel>;
+
+    if (this.isFindAllSelected()) {
+      observable = this.libraryService.findAll(this.filter);
+    } else if (this.isFindMySelected()) {
+      observable = this.libraryService.findAllUser(this.filter);
+    } else if (this.isFindAccessSelected()) {
+      observable = this.libraryService.findAllUserAccess(this.filter);
+    }
 
     this.subscription.add(
       observable.subscribe(
@@ -83,12 +91,37 @@ export class ListComponent implements OnInit, OnDestroy {
     );
   }
 
+  openAddAccessCodeDialog(): void {
+    const addAccessDialogRef = this.dialog.open(AddAccessCodeComponent, {
+      height: 'auto',
+      width: '65vh'
+    });
+
+    this.subscription.add(
+      addAccessDialogRef.afterClosed().subscribe(
+        () => this.searchLibraries(),
+        () => this.isError = true)
+    );
+  }
+
   onPaginateChange(event: PageEvent): void {
     this.filter.pageNumber = event.pageIndex;
     this.filter.pageSize = event.pageSize;
     this.filter.pageNumber = this.filter.pageNumber + 1;
 
     this.searchLibraries();
+  }
+
+  isFindAllSelected(): boolean {
+    return this.activeLink === this.links[0];
+  }
+
+  isFindMySelected(): boolean {
+    return this.activeLink === this.links[1];
+  }
+
+  isFindAccessSelected(): boolean {
+    return this.activeLink === this.links[2];
   }
 
   ngOnDestroy(): void {

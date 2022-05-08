@@ -5,7 +5,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -25,6 +27,8 @@ public class Library {
     private String name;
 
     private String description;
+
+    private String accessToken;
 
     @Lob
     private Byte[] image;
@@ -50,4 +54,9 @@ public class Library {
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> usersFavorite = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "library_user_access",
+            joinColumns = {@JoinColumn(name = "library_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private Set<User> givenAccessList = new HashSet<>();
 }

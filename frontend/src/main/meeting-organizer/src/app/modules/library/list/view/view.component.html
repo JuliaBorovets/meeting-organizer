@@ -37,6 +37,10 @@
               <mat-icon>edit</mat-icon>
               <span>Update</span>
             </button>
+            <button mat-menu-item aria-label="Delete" *ngIf="isGrantedLibraryItem" (click)="deleteAccess()">
+              <mat-icon>delete_outline</mat-icon>
+              <span>Delete from access</span>
+            </button>
             <button mat-menu-item aria-label="Delete" *ngIf="isLibraryOwner()" (click)="deleteLibrary()">
               <mat-icon>delete_outline</mat-icon>
               <span>Delete</span>

@@ -2,6 +2,7 @@ package com.meeting.organizer.service.impl;
 
 import com.meeting.organizer.config.MailConstants;
 import com.meeting.organizer.exception.custom.MailSendException;
+import com.meeting.organizer.model.Library;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.service.MailService;
 import com.meeting.organizer.web.dto.v1.ContactUsDto;
@@ -86,6 +87,24 @@ public class MailServiceImpl implements MailService {
         } catch (MessagingException e) {
             throw new MailSendException("Failed to send mail!", e);
         }
+    }
+
+    @Override
+    public void sendAddLibraryAccessMail(User user, Library library) {
+        sendMessage(user.getEmail(),
+                MailConstants.ADD_LIBRARY_ACCESS_MAIL_SUBJECT,
+                MailConstants.ADD_LIBRARY_ACCESS_MAIL_TEMPLATE,
+                Map.of("library", library,
+                        "user", user));
+    }
+
+    @Override
+    public void sendRemoveLibraryAccessMail(User user, Library library) {
+        sendMessage(user.getEmail(),
+                MailConstants.REMOVE_LIBRARY_ACCESS_MAIL_SUBJECT,
+                MailConstants.REMOVE_LIBRARY_ACCESS_MAIL_TEMPLATE,
+                Map.of("library", library,
+                        "user", user));
     }
 
     private void sendMessage(String email, String subject, String template, Map<String, Object> params) {

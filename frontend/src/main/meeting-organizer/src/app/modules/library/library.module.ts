@@ -22,9 +22,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import {RouterModule} from '@angular/router';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { AddAccessCodeComponent } from './list/add-access-code/add-access-code.component';
 
 @NgModule({
-  declarations: [ListComponent, CreateComponent, UpdateComponent, ViewComponent, SearchComponent, InfoComponent],
+  declarations: [ListComponent, CreateComponent, UpdateComponent, ViewComponent, SearchComponent, InfoComponent, AddAccessCodeComponent],
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,

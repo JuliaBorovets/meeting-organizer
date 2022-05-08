@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface LibraryRepository extends PagingAndSortingRepository<Library, Long> {
 
@@ -16,4 +17,9 @@ public interface LibraryRepository extends PagingAndSortingRepository<Library, L
 
     List<Library> findLibrariesByUsersFavorite_UserId(Long userId, Pageable pageable);
 
+    List<Library> findLibrariesByIsPrivateOrGivenAccessListContainsOrUser(Boolean isPrivate, User user, User creator, Pageable pageable);
+
+    Optional<Library> findByAccessToken(String accessToken);
+
+    List<Library> findLibrariesByGivenAccessList_UserId(Long userId, Pageable pageable);
 }

@@ -1,10 +1,9 @@
 package com.meeting.organizer.service;
 
-import com.meeting.organizer.web.dto.v1.library.LibraryCreateDto;
-import com.meeting.organizer.web.dto.v1.library.LibraryDto;
-import com.meeting.organizer.web.dto.v1.library.LibraryResponse;
-import com.meeting.organizer.web.dto.v1.library.LibraryUpdateDto;
+import com.meeting.organizer.web.dto.v1.library.*;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface LibraryService {
 
@@ -25,4 +24,13 @@ public interface LibraryService {
     LibraryDto removeLibraryFromFavorites(Long libraryId, Long userId);
 
     LibraryResponse getUserFavoriteLibrariesPaginated(Long userId, Pageable pageable);
+
+    LibraryDto addAccessToLibraryByUserEmail(AddLibraryAccessDto addLibraryAccessDto);
+
+    LibraryDto removeAccessToLibraryByUserEmail(List<String> emailList, Long libraryId);
+
+    LibraryDto addAccessToLibraryByToken(AddLibraryAccessByTokenDto addLibraryAccessDto);
+
+    LibraryResponse getLibraryGivenAccessListByUser(Long userId, Pageable pageable);
+
 }

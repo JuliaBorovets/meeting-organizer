@@ -70,4 +70,24 @@ export class LibraryService {
     params = params.append('userId', String(userId));
     return this.http.delete<LibraryModel>('/api/v1/library/favorite', {params});
   }
+
+  findAllUserAccess(filter: LibraryFilterModel): Observable<LibraryResponseModel> {
+    let params = new HttpParams();
+    params = params.append('pageSize', String(filter.pageSize));
+    params = params.append('pageNumber', String(filter.pageNumber));
+    params = params.append('userId', String(filter.userId));
+
+    return this.http.get<LibraryResponseModel>(`/api/v1/library/access`, {params});
+  }
+
+  addAccessToLibraryByToken(request: any): Observable<LibraryModel> {
+    return this.http.put<LibraryModel>('/api/v1/library/access/token', request);
+  }
+
+  removeAccessToLibraryByUserEmail(emailList: string[], libraryId: number): Observable<LibraryModel> {
+    let params = new HttpParams();
+    params = params.append('emailList', String(emailList));
+    params = params.append('libraryId', String(libraryId));
+    return this.http.delete<LibraryModel>('/api/v1/library/access', {params});
+  }
 }

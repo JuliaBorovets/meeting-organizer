@@ -19,6 +19,8 @@ export class ViewComponent implements OnDestroy {
 
   @Input() libraryItem: LibraryModel;
   @Output() updateLibraryEvent = new EventEmitter();
+  @Input() isGrantedLibraryItem = false;
+
   userId: number;
   private subscription: Subscription = new Subscription();
 
@@ -62,6 +64,26 @@ export class ViewComponent implements OnDestroy {
       .subscribe((confirmed) => {
         if (confirmed) {
           this.libraryService.deleteLibrary(this.libraryItem.libraryId).subscribe(
+            () => {
+              this.toastrService.success('Success!', 'Deleted!');
+              this.updateLibraryEvent.emit();
+            },
+            () => this.toastrService.error('Error!', 'Deletion failed!')
+          );
+        }
+      });
+  }
+
+  deleteAccess(): void {
+    this.dialogService.confirmDialog({
+      title: 'Confirm deletion',
+      message: 'Do you want to confirm this action?',
+      confirmCaption: 'Confirm',
+      cancelCaption: 'Cancel',
+    })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.libraryService.removeAccessToLibraryByUserEmail([this.storageService.getUser.email], this.libraryItem.libraryId).subscribe(
             () => {
               this.toastrService.success('Success!', 'Deleted!');
               this.updateLibraryEvent.emit();

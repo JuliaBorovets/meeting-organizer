@@ -116,6 +116,10 @@ public class User implements UserDetails, CredentialsContainer {
     private List<Library> favoriteLibraries = new ArrayList<>();
 
     @Builder.Default
+    @ManyToMany(mappedBy = "givenAccessList")
+    private Set<Library> givenAccessLibraries = new HashSet<>();
+
+    @Builder.Default
     @ManyToMany(mappedBy = "usersFavorite")
     private List<Event> favoriteEvents = new ArrayList<>();
 

@@ -1,5 +1,6 @@
 package com.meeting.organizer.model;
 
+import com.meeting.organizer.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -69,4 +70,10 @@ public class Event {
     @OneToMany(mappedBy = "event")
     @Builder.Default
     private List<Reaction> reactions = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "event_user_fav",
+            joinColumns = {@JoinColumn(name = "event_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private List<User> usersFavorite = new ArrayList<>();
 }

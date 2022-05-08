@@ -8,6 +8,7 @@ import com.meeting.organizer.client.zoom.model.ZoomMeeting;
 import com.meeting.organizer.client.zoom.service.ZoomClientService;
 import com.meeting.organizer.exception.custom.UnsupportedEventException;
 import com.meeting.organizer.model.*;
+import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.repository.EventRepository;
 import com.meeting.organizer.service.AbstractService;
 import com.meeting.organizer.service.CRUDService;
@@ -16,6 +17,8 @@ import com.meeting.organizer.web.dto.v1.event.*;
 import com.meeting.organizer.web.dto.v1.event.webex.WebexEventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventDto;
+import com.meeting.organizer.web.dto.v1.library.LibraryDto;
+import com.meeting.organizer.web.dto.v1.library.LibraryResponse;
 import com.meeting.organizer.web.mapper.v1.EventMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -44,19 +47,23 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     private final EventMapper eventMapper;
     private final CRUDService<Library> libraryService;
     private final CRUDService<Stream> streamService;
+    private final CRUDService<User> userService;
+
 
     public EventServiceImpl(EventRepository eventRepository,
                             ZoomClientService zoomClientService,
                             WebexClientService webexClientService,
                             EventMapper eventMapper,
                             @Qualifier("libraryServiceImpl") CRUDService<Library> libraryService,
-                            @Lazy @Qualifier("streamServiceImpl") CRUDService<Stream> streamService) {
+                            @Lazy @Qualifier("streamServiceImpl") CRUDService<Stream> streamService,
+                            @Qualifier("userServiceImpl") CRUDService<User> userService) {
         super(eventRepository);
         this.zoomClientService = zoomClientService;
         this.webexClientService = webexClientService;
         this.eventMapper = eventMapper;
         this.libraryService = libraryService;
         this.streamService = streamService;
+        this.userService = userService;
     }
 
     @Transactional
@@ -122,12 +129,12 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
-    public EventResponse findAllByLibraryId(Long libraryId, Long streamId, Pageable pageable) {
+    public EventResponse findAllByLibraryId(Long userId, Long libraryId, Long streamId, Pageable pageable) {
         EventResponse eventResponse = new EventResponse();
 
         List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdAndStream_StreamId(libraryId, streamId, pageable)
                 .stream()
-                .map(eventMapper::eventToEventDto)
+                .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
 
         eventResponse.setList(eventDtoList);
@@ -137,12 +144,12 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
-    public EventResponse findAllByNotLibraryId(Long libraryId, Pageable pageable) {
+    public EventResponse findAllByNotLibraryId(Long userId, Long libraryId, Pageable pageable) {
         EventResponse eventResponse = new EventResponse();
 
         List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdNotContaining(libraryId, pageable)
                 .stream()
-                .map(eventMapper::eventToEventDto)
+                .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
 
         eventResponse.setList(eventDtoList);
@@ -163,14 +170,53 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
-    public List<EventDto> findAllByNameAndStreamNotContaining(Long libraryId, Long streamId, String name, Pageable pageable) {
+    public List<EventDto> findAllByNameAndStreamNotContaining(Long userId, Long libraryId, Long streamId, String name, Pageable pageable) {
 
         List<Event> result = repository.findByLibrary_LibraryIdAndStream_StreamIdAndNameLike(
                 libraryId, null, name + "%", pageable);
 
         return result.stream()
-                .map(eventMapper::eventToEventDto)
+                .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public EventDto addEventToFavorites(Long eventId, Long userId) {
+        Event event = findById(eventId);
+        User user = userService.findById(userId);
+
+        event.getUsersFavorite().add(user);
+        user.getFavoriteEvents().add(event);
+        repository.save(event);
+        userService.save(user);
+
+        return convertToDto(event, userId);
+    }
+
+    @Override
+    public EventDto removeEventFromFavorites(Long eventId, Long userId) {
+        Event event = findById(eventId);
+        User user = userService.findById(userId);
+
+        event.getUsersFavorite().remove(user);
+        user.getFavoriteEvents().remove(event);
+        repository.save(event);
+        userService.save(user);
+
+        return convertToDto(event, userId);
+    }
+
+    @Override
+    public EventResponse getUserFavoriteEventsPaginated(Long userId, Pageable pageable) {
+        List<EventDto> eventDtoList =  repository.findEventsByUsersFavorite_UserId(userId, pageable).stream()
+                .map(e -> convertToDto(e, userId))
+                .collect(Collectors.toList());
+
+        EventResponse eventResponse = new EventResponse();
+        eventResponse.setTotalItems((long) eventDtoList.size());
+        eventResponse.setList(eventDtoList);
+
+        return eventResponse;
     }
 
     private void setExternalMeetingByType(EventDto eventDto) {
@@ -253,6 +299,15 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
     private Long countAllByLibraryId(Long libraryId) {
         return repository.countByLibrary_LibraryId(libraryId);
+    }
+
+    private EventDto convertToDto(Event event, Long userId) {
+        Boolean isFavorite = event.getUsersFavorite().stream()
+                .anyMatch(u -> userId.equals(u.getUserId()));
+
+        EventDto eventDto = eventMapper.eventToEventDto(event);
+        eventDto.setIsFavorite(isFavorite);
+        return eventDto;
     }
 
 }

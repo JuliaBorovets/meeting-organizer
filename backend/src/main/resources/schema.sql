@@ -16,6 +16,8 @@ DROP TABLE IF EXISTS tags CASCADE;
 DROP TABLE IF EXISTS tag_event CASCADE;
 DROP TABLE IF EXISTS user_role CASCADE;
 DROP TABLE IF EXISTS role_authority CASCADE;
+DROP TABLE IF EXISTS event_user_fav CASCADE;
+DROP TABLE IF EXISTS library_user_fav CASCADE;
 
 CREATE TABLE authority
 (
@@ -214,6 +216,21 @@ CREATE TABLE role_authority
     PRIMARY KEY (role_id, authority_id)
 );
 
+CREATE TABLE library_user_fav
+(
+    library_id BIGINT,
+    user_id    BIGINT,
+
+    PRIMARY KEY (library_id, user_id)
+);
+
+CREATE TABLE event_user_fav
+(
+    event_id BIGINT,
+    user_id    BIGINT,
+
+    PRIMARY KEY (event_id, user_id)
+);
 
 ALTER TABLE users
     ADD CONSTRAINT user_location_id_fk FOREIGN KEY (location_id) REFERENCES locations (location_id) ON DELETE SET NULL;
@@ -267,3 +284,11 @@ ALTER TABLE user_role
 
 ALTER TABLE comments
     ADD CONSTRAINT comment_reaction_id_fk FOREIGN KEY (reaction_id) REFERENCES reactions (reaction_id) ON DELETE SET NULL;
+
+ALTER TABLE library_user_fav
+    ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL,
+    ADD CONSTRAINT library_id_fk FOREIGN KEY (library_id) REFERENCES libraries (library_id) ON DELETE SET NULL;
+
+ALTER TABLE event_user_fav
+    ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL,
+    ADD CONSTRAINT event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL;

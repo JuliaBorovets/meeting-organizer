@@ -18,7 +18,7 @@
 
             <li class="nav-item">
               <a class="nav-link active" style="text-align: center;" [routerLink]="''">
-                <i class="fas fa-tachometer-alt"></i>
+                <i class="fa-solid fa-user"></i>
                 <span>Profile</span>
               </a>
             </li>
@@ -26,8 +26,17 @@
             <div class="dropdown-divider"></div>
 
             <li class="nav-item">
+              <a class="nav-link active" style="text-align: center;" [routerLink]="'favorites'">
+                <i class="fa-solid fa-heart"></i>
+                <span>Favorites</span>
+              </a>
+            </li>
+
+            <div class="dropdown-divider"></div>
+
+            <li class="nav-item">
               <a class="nav-link active" style="text-align: center;" [routerLink]="'main-page'">
-                <i class="fas fa-tachometer-alt"></i>
+                <i class="fa-solid fa-chart-line"></i>
                 <span>Dashboard</span>
               </a>
             </li>
@@ -36,7 +45,7 @@
 
             <li class="nav-item">
               <a class="nav-link active" style="text-align: center;" [routerLink]="'library'">
-                <i class="fas fa-tachometer-alt"></i>
+                <i class="fa-regular fa-folder-open"></i>
                 <span>Libraries</span>
               </a>
             </li>
@@ -45,7 +54,7 @@
 
             <li class="nav-item">
               <a class="nav-link active" style="text-align: center;" [routerLink]="''">
-                <i class="fas fa-tachometer-alt"></i>
+                <i class="fa-regular fa-calendar"></i>
                 <span>Meetings</span>
               </a>
             </li>
@@ -53,17 +62,8 @@
             <div class="dropdown-divider"></div>
 
             <li class="nav-item">
-              <a class="nav-link active" style="text-align: center;">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Notifications</span>
-              </a>
-            </li>
-
-            <div class="dropdown-divider"></div>
-
-            <li class="nav-item">
               <a class="nav-link active" style="text-align: center;" (click)="openContactUsForm()">
-                <i class="fas fa-tachometer-alt"></i>
+                <i class="fa-solid fa-triangle-exclamation"></i>
                 <span>Contact us</span>
               </a>
             </li>

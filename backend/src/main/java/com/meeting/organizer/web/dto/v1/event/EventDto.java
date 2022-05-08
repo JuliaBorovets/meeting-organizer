@@ -43,4 +43,7 @@ public class EventDto {
     private Object meetingEntity;
 
     private Long streamId;
+
+    private Boolean isFavorite = false;
+
 }

@@ -1,23 +1,37 @@
-<div *ngIf="isLoading; else content" class="spinner">
-  <mat-spinner></mat-spinner>
-</div>
+<div *ngIf="!isLoading; else loading">
 
-<ng-template #content>
+  <div *ngIf="eventList.length>0; else empty">
+    <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
+      <app-event-view *ngFor="let result of eventList"
+                      [eventModel]="result"
+                      (updateEventEvent)="findEventListByLibraryId()"
+      >
+      </app-event-view>
+    </div>
+    <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                   [length]="eventCount"
+                   [pageSize]="eventFilter.pageSize"
+                   (page)="pageEvent = $event; onPaginateChange($event)">
 
-  <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
-    <app-event-view *ngFor="let result of eventList"
-                     [eventModel]="result"
-                     (updateEventEvent)="findEventListByLibraryId()"
-    >
-    </app-event-view>
+    </mat-paginator>
   </div>
 
+  <ng-template #empty>
+    <br>
+    <br>
+    <br>
+    <div class="container-fluid">
+      <div class="text-center mt-5">
+        <p class="text-dark mb-5 lead">Empty events list</p>
+      </div>
+    </div>
+  </ng-template>
+
+</div>
+
+
+<ng-template #loading>
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
 </ng-template>
-
-<mat-paginator [pageSizeOptions]="pageSizeOptions"
-               [length]="eventCount"
-               [pageSize]="eventFilter.pageSize"
-               (page)="pageEvent = $event; onPaginateChange($event)">
-
-</mat-paginator>
-

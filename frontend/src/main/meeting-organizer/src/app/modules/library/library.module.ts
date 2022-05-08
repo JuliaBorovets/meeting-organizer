@@ -22,10 +22,9 @@ import {MatMenuModule} from '@angular/material/menu';
 import {RouterModule} from '@angular/router';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import { TestComponent } from './test/test.component';
 
 @NgModule({
-  declarations: [ListComponent, CreateComponent, UpdateComponent, ViewComponent, TestComponent, SearchComponent, InfoComponent, TestComponent],
+  declarations: [ListComponent, CreateComponent, UpdateComponent, ViewComponent, SearchComponent, InfoComponent],
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,
@@ -43,7 +42,7 @@ import { TestComponent } from './test/test.component';
     MatMenuModule,
     RouterModule,
     MatTreeModule,
-    MatProgressBarModule,
+    MatProgressBarModule
   ],
   entryComponents: [CreateComponent, InfoComponent]
 })

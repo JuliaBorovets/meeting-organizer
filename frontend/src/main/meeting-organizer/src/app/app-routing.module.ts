@@ -20,6 +20,10 @@ const routes: Routes = [
         loadChildren: () => import('src/app/modules/library-content/content.module').then(m => m.LibraryContentModule)
       },
       {
+        path: 'favorites',
+        loadChildren: () => import('src/app/modules/favorites/favorites.module').then(m => m.FavoritesModule)
+      },
+      {
         path: 'main-page',
         loadChildren: () => import('src/app/modules/shared/shared.module').then(m => m.SharedModule)
       },

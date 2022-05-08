@@ -44,4 +44,10 @@ public class Library {
     @OneToMany(mappedBy = "library", fetch = FetchType.LAZY)
     private List<Event> events = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "library_user_fav",
+            joinColumns = {@JoinColumn(name = "library_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private List<User> usersFavorite = new ArrayList<>();
+
 }

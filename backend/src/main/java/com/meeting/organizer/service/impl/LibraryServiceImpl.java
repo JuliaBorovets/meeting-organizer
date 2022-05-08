@@ -87,7 +87,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
 
         List<LibraryDto> libraryDtoList = repository.findByUser_UserId(userId, pageable)
                 .stream()
-                .map(this::convertToDto)
+                .map(l -> convertToDto(l, userId))
                 .collect(Collectors.toList());
 
         response.setList(libraryDtoList);
@@ -97,17 +97,56 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
     }
 
     @Override
-    public LibraryResponse getLibraryListPaginated(Pageable pageable) {
+    public LibraryResponse getLibraryListPaginated(Long userId, Pageable pageable) {
         LibraryResponse response = new LibraryResponse();
 
         List<LibraryDto> libraryDtoList = repository.findAll(pageable)
                 .stream()
-                .map(this::convertToDto)
+                .map(l -> convertToDto(l, userId))
                 .collect(Collectors.toList());
 
         response.setList(libraryDtoList);
         response.setTotalItems(calculateTotalLibraryCount());
         return response;
+    }
+
+    @Override
+    public LibraryDto addLibraryToFavorites(Long libraryId, Long userId) {
+        Library library = findById(libraryId);
+        User user = userService.findById(userId);
+
+        library.getUsersFavorite().add(user);
+        user.getFavoriteLibraries().add(library);
+        repository.save(library);
+        userService.save(user);
+
+        return convertToDto(library, userId);
+    }
+
+    @Override
+    public LibraryDto removeLibraryFromFavorites(Long libraryId, Long userId) {
+        Library library = findById(libraryId);
+        User user = userService.findById(userId);
+
+        library.getUsersFavorite().remove(user);
+        user.getFavoriteLibraries().remove(library);
+        repository.save(library);
+        userService.save(user);
+
+        return convertToDto(library, userId);
+    }
+
+    @Override
+    public LibraryResponse getUserFavoriteLibrariesPaginated(Long userId, Pageable pageable) {
+        List<LibraryDto> libraryDtoList =  repository.findLibrariesByUsersFavorite_UserId(userId, pageable).stream()
+                .map(l -> convertToDto(l, userId))
+                .collect(Collectors.toList());
+
+        LibraryResponse libraryResponse = new LibraryResponse();
+        libraryResponse.setTotalItems((long) libraryDtoList.size());
+        libraryResponse.setList(libraryDtoList);
+
+        return libraryResponse;
     }
 
     @Override
@@ -122,6 +161,15 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
 
     private Long calculateTotalLibraryCount() {
         return repository.count();
+    }
+
+    private LibraryDto convertToDto(Library library, Long userId) {
+        Boolean isFavorite = library.getUsersFavorite().stream()
+                .anyMatch(u -> userId.equals(u.getUserId()));
+
+        LibraryDto libraryDto = libraryMapper.libraryToLibraryDto(library);
+        libraryDto.setIsFavorite(isFavorite);
+        return libraryDto;
     }
 
     private LibraryDto convertToDto(Library library) {

@@ -25,22 +25,21 @@
               </button>
               <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'WORKSHOP'">Workshop</button>
 
-
-              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'DRAFT'">Draft</button>
-              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'PLANNED'">Planned</button>
-              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'NOT_STARTED'">Not started</button>
-              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'IN_PROGRESS'">In progress</button>
-              <button mat-stroked-button color="primary" *ngIf="eventModel.state === 'ARCHIVED'">Archived</button>
-
               <button mat-stroked-button color="primary" *ngIf="eventModel.meetingType === 'ZOOM'">Zoom</button>
               <button mat-stroked-button color="primary" *ngIf="eventModel.meetingType === 'WEBEX'">Webex</button>
             </div>
           </div>
         </div>
-        <div fxLayout="column" fxLayoutAlign="space-around end" fxFlex="20">
 
-          <button mat-raised-button color="primary">Start</button>
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="5">
+          <button mat-icon-button  aria-label="delete from favorites" (click)="addToFavorites()" *ngIf="!eventModel.isFavorite">
+            <i class="fa-regular fa-heart"></i>
+          </button>
+          <button mat-icon-button  aria-label="delete from favorites" (click)="deleteFromFavorites()" *ngIf="eventModel.isFavorite">
+            <i class="fa-solid fa-heart"></i>
+          </button>
         </div>
+
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex="5">
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
             <mat-icon>more_vert</mat-icon>

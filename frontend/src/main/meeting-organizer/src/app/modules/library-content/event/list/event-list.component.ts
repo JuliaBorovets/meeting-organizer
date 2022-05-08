@@ -5,6 +5,7 @@ import {ActivatedRoute} from '@angular/router';
 import {EventFilterModel} from '../../../../models/event/event-filter.model';
 import {EventModel} from '../../../../models/event/event.model';
 import {EventService} from '../../../../services/event/event.service';
+import {StorageService} from '../../../../services/auth/storage.service';
 
 @Component({
   selector: 'app-event-list',
@@ -25,12 +26,14 @@ export class EventListComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   constructor(private eventService: EventService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private storageService: StorageService) {
     this.route.params.subscribe(params => {
       this.libraryId = +params.libraryId;
       this.streamId = +params.streamId;
       this.eventFilter.libraryId = this.libraryId;
       this.eventFilter.streamId = this.streamId;
+      this.eventFilter.userId = this.storageService.getUser.userId;
     });
   }
 

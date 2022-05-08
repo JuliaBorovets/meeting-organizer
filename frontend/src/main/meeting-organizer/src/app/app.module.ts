@@ -22,22 +22,9 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
 import {
   NgxMatDatetimePickerModule,
   NgxMatNativeDateModule,
-  NgxMatTimepickerModule,
-  NGX_MAT_DATE_FORMATS,
-  NgxMatDateFormats
+  NgxMatTimepickerModule
 } from '@angular-material-components/datetime-picker';
-
-const CUSTOM_DATE_FORMATS: NgxMatDateFormats = {
-  parse: {
-    dateInput: 'l, LTS'
-  },
-  display: {
-    dateInput: 'YYYY-MM-DD HH:mm:ss',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  }
-};
+import {FavoritesModule} from './modules/favorites/favorites.module';
 
 @NgModule({
   declarations: [
@@ -65,6 +52,7 @@ const CUSTOM_DATE_FORMATS: NgxMatDateFormats = {
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     NgxMatNativeDateModule,
+    FavoritesModule,
 
     ToastrModule.forRoot({
       timeOut: 150000, // 15 seconds
@@ -77,7 +65,8 @@ const CUSTOM_DATE_FORMATS: NgxMatDateFormats = {
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     //  { provide: NGX_MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
   ],
-  exports: [],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

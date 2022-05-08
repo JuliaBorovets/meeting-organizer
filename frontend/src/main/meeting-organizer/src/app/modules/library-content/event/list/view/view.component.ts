@@ -7,8 +7,9 @@ import {ToastrService} from 'ngx-toastr';
 import {ActivatedRoute} from '@angular/router';
 import {EventService} from '../../../../../services/event/event.service';
 import {UpdateEventComponent} from '../../update/update-event.component';
-import {StreamService} from "../../../../../services/stream/stream.service";
-import {InfoComponent} from "../info/info.component";
+import {StreamService} from '../../../../../services/stream/stream.service';
+import {InfoComponent} from '../info/info.component';
+import {StorageService} from '../../../../../services/auth/storage.service';
 
 @Component({
   selector: 'app-event-view',
@@ -23,16 +24,19 @@ export class ViewComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   public isError = false;
   libraryId: number;
+  userId: number;
 
   constructor(public dialog: MatDialog,
               private dialogService: DialogService,
               private eventService: EventService,
               private toastrService: ToastrService,
               private route: ActivatedRoute,
-              private streamService: StreamService) {
+              private streamService: StreamService,
+              private storageService: StorageService) {
     this.route.params.subscribe(params => {
       this.libraryId = +params.libraryId;
     });
+    this.userId = this.storageService.getUser.userId;
   }
 
   ngOnInit(): void {
@@ -107,6 +111,32 @@ export class ViewComponent implements OnInit, OnDestroy {
           );
         }
       });
+  }
+
+  addToFavorites(): void {
+    this.subscription.add(
+      this.eventService.addEventToFavorites(this.eventModel.eventId, this.userId)
+        .subscribe(
+          () => {
+            this.toastrService.success('Success!', 'Added!');
+            this.updateEventEvent.emit();
+          },
+          () => this.toastrService.error('Error!', 'Failed to add!')
+        )
+    );
+  }
+
+  deleteFromFavorites(): void {
+    this.subscription.add(
+      this.eventService.deleteEventFromFavorites(this.eventModel.eventId, this.userId)
+        .subscribe(
+          () => {
+            this.toastrService.success('Success!', 'Deleted!');
+            this.updateEventEvent.emit();
+          },
+          () => this.toastrService.error('Error!', 'Failed to delete!')
+        )
+    );
   }
 
   ngOnDestroy(): void {

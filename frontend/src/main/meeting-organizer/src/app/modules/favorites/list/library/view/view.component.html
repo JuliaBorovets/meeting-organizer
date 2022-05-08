@@ -1,0 +1,26 @@
+<div class="view">
+
+<mat-card>
+  <mat-card-content>
+    <div fxFlex="row">
+      <div fxLayout="column" fxFlex="20">
+        <img width="200px" alt="image" class="img-responsive" src="assets/hero-media-illustration-dark.svg">
+      </div>
+      <div fxLayout="column" fxFlex="95" style="width: auto; margin-left: 10px;">
+        <div fxLayoutAlign="center">
+          <p class="library-name">{{libraryItem.name}}</p>
+        </div>
+        <div fxLayoutAlign="start">
+          <p class="info">{{libraryItem.description}}</p>
+        </div>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center" fxFlex="9">
+        <button mat-icon-button  aria-label="delete from favorites" (click)="deleteFromFavorites()">
+          <i class="fa-solid fa-heart-crack"></i>
+        </button>
+      </div>
+
+    </div>
+  </mat-card-content>
+</mat-card>
+</div>

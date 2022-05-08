@@ -8,7 +8,7 @@ import {Subscription} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
 import {DialogService} from '../../../../services/confirm-dialog.service';
 import {UpdateComponent} from '../../update/update.component';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-view',
@@ -78,6 +78,32 @@ export class ViewComponent implements OnDestroy {
 
   openLibraryContent(): void {
     this.router.navigate(['library-content/view/', this.libraryItem.libraryId]).then();
+  }
+
+  addToFavorites(): void {
+    this.subscription.add(
+      this.libraryService.addLibraryToFavorites(this.libraryItem.libraryId, this.userId)
+        .subscribe(
+          () => {
+            this.toastrService.success('Success!', 'Added!');
+            this.updateLibraryEvent.emit();
+          },
+          () => this.toastrService.error('Error!', 'Failed to add!')
+        )
+    );
+  }
+
+  deleteFromFavorites(): void {
+    this.subscription.add(
+      this.libraryService.deleteLibraryFromFavorites(this.libraryItem.libraryId, this.userId)
+        .subscribe(
+          () => {
+            this.toastrService.success('Success!', 'Deleted!');
+            this.updateLibraryEvent.emit();
+          },
+          () => this.toastrService.error('Error!', 'Failed to delete!')
+        )
+    );
   }
 
   ngOnDestroy(): void {

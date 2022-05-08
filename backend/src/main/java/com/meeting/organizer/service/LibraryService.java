@@ -18,6 +18,11 @@ public interface LibraryService {
 
     LibraryResponse getUserLibraryListPaginated(Long userId, Pageable pageable);
 
-    LibraryResponse getLibraryListPaginated(Pageable pageable);
+    LibraryResponse getLibraryListPaginated(Long userId, Pageable pageable);
 
+    LibraryDto addLibraryToFavorites(Long libraryId, Long userId);
+
+    LibraryDto removeLibraryFromFavorites(Long libraryId, Long userId);
+
+    LibraryResponse getUserFavoriteLibrariesPaginated(Long userId, Pageable pageable);
 }

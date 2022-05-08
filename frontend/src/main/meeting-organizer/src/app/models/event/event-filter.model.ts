@@ -3,4 +3,5 @@ export class EventFilterModel {
   pageNumber = 1;
   libraryId: number;
   streamId?: number;
+  userId?: number;
 }

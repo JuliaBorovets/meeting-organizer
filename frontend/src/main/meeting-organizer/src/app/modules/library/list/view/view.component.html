@@ -14,6 +14,16 @@
             <p class="info">{{libraryItem.description}}</p>
           </div>
         </div>
+
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="5">
+          <button mat-icon-button  aria-label="delete from favorites" (click)="addToFavorites()" *ngIf="!libraryItem.isFavorite">
+            <i class="fa-regular fa-heart"></i>
+          </button>
+          <button mat-icon-button  aria-label="delete from favorites" (click)="deleteFromFavorites()" *ngIf="libraryItem.isFavorite">
+            <i class="fa-solid fa-heart"></i>
+          </button>
+        </div>
+
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex="5">
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
             <mat-icon>more_vert</mat-icon>

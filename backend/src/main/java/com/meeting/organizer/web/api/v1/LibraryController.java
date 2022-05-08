@@ -43,11 +43,12 @@ public class LibraryController {
     @GetMapping
     public LibraryResponse getLibraryList(
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
-            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber) {
+            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam Long userId) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return libraryService.getLibraryListPaginated(pageable);
+        return libraryService.getLibraryListPaginated(userId, pageable);
     }
 
     @GetMapping("/list")
@@ -61,9 +62,28 @@ public class LibraryController {
         return libraryService.getUserLibraryListPaginated(userId, pageable);
     }
 
-//    @PutMapping
-//    public LibraryDto addEventToLibrary(@RequestBody LibraryUpdateDto libraryUpdateDto) {
-//        return libraryService.updateLibrary(libraryUpdateDto);
-//    }
+
+    @PutMapping("/favorite")
+    public LibraryDto addLibraryToFavorites(@RequestParam(value = "libraryId") Long libraryId,
+                                            @RequestParam(value = "userId") Long userId) {
+        return libraryService.addLibraryToFavorites(libraryId, userId);
+    }
+
+    @DeleteMapping("/favorite")
+    public LibraryDto removeLibraryFromFavorites(@RequestParam(value = "libraryId") Long libraryId,
+                                               @RequestParam(value = "userId") Long userId) {
+        return libraryService.removeLibraryFromFavorites(libraryId, userId);
+    }
+
+    @GetMapping("/favorite")
+    public LibraryResponse getLibraryFavoriteListByUser(
+            @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam Long userId) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        return libraryService.getUserFavoriteLibrariesPaginated(userId, pageable);
+    }
 
 }

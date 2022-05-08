@@ -21,4 +21,6 @@ public class LibraryDto {
     private Long userId;
 
     private Boolean isPrivate = false;
+
+    private Boolean isFavorite = false;
 }

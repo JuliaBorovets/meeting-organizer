@@ -5,4 +5,5 @@ export class LibraryModel {
   image?: Blob;
   isPrivate?: boolean;
   userId?: number;
+  isFavorite?: boolean;
 }

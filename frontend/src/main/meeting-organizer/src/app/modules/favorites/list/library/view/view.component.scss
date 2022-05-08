@@ -1,0 +1,29 @@
+mat-card {
+  width: 90% !important;
+  margin: 10px auto !important;
+}
+
+.mat-stroked-button, .mat-raised-button {
+  width: 100% !important;
+}
+
+.library-name {
+  letter-spacing: 0.5px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.info {
+  word-wrap: break-word;
+  width: 600px;
+  font-size: 14px;
+}
+
+.view {
+  cursor: pointer;
+}
+
+.fa-heart-crack {
+  color: #4e73df;
+  height: 80%;
+}

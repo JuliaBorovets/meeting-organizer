@@ -1,0 +1,38 @@
+<div *ngIf="!isLoading; else loading">
+
+  <div *ngIf="resultList.length>0; else empty">
+    <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
+      <app-view-favorite *ngFor="let result of resultList"
+                         [libraryItem]="result"
+                         (updateLibraryEvent)="findFavorites()"
+      >
+      </app-view-favorite>
+    </div>
+
+    <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                   [length]="libraryCount"
+                   [pageSize]="filter.pageSize"
+                   (page)="pageEvent = $event; onPaginateChange($event)">
+
+    </mat-paginator>
+  </div>
+
+  <ng-template #empty>
+    <br>
+    <br>
+    <br>
+    <div class="container-fluid">
+      <div class="text-center mt-5">
+        <p class="text-dark mb-5 lead">Empty favorites list</p>
+      </div>
+    </div>
+  </ng-template>
+
+</div>
+
+
+<ng-template #loading>
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

@@ -9,6 +9,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog
 import {EventService} from '../../../../services/event/event.service';
 import {EventModel} from '../../../../models/event/event.model';
 import {StreamService} from "../../../../services/stream/stream.service";
+import {StorageService} from "../../../../services/auth/storage.service";
 
 @Component({
   selector: 'app-add-event',
@@ -25,6 +26,7 @@ export class AddEventComponent implements OnInit, OnDestroy {
   isUpdateFailed = false;
   libraryId: number;
   streamId: number;
+  userId: number;
   name = '';
   private subscription: Subscription;
 
@@ -34,9 +36,11 @@ export class AddEventComponent implements OnInit, OnDestroy {
               public dialog: MatDialog,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private streamService: StreamService,
-              private eventService: EventService) {
+              private eventService: EventService,
+              private storageService: StorageService) {
     this.libraryId = data.libraryId;
     this.streamId = data.streamId;
+    this.userId = this.storageService.getUser.userId;
     this.subscription = new Subscription();
     this.eventsFormCtrl.valueChanges.pipe(
       startWith(null),
@@ -53,7 +57,7 @@ export class AddEventComponent implements OnInit, OnDestroy {
   }
 
   findEvents(event: string): Observable<EventModel[]> {
-    return this.eventService.findAllByStreamNotContaining(this.libraryId, this.streamId, event);
+    return this.eventService.findAllByStreamNotContaining(this.userId, this.libraryId, this.streamId, event);
   }
 
   add(event: MatChipInputEvent): void {

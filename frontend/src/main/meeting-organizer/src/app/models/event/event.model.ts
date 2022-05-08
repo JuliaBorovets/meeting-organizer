@@ -15,9 +15,7 @@ export class EventModel {
   externalMeetingId?: string;
   streamId?: number;
   meetingEntity?: MeetingEntity;
-
-  // private List<Tag> tags = new ArrayList<>();
-  // private Location location;
+  isFavorite?: boolean;
 }
 
 export class MeetingEntity {

@@ -111,6 +111,14 @@ public class User implements UserDetails, CredentialsContainer {
     @Builder.Default
     private List<Notification> notifications = new ArrayList<>();
 
+    @Builder.Default
+    @ManyToMany(mappedBy = "usersFavorite")
+    private List<Library> favoriteLibraries = new ArrayList<>();
+
+    @Builder.Default
+    @ManyToMany(mappedBy = "usersFavorite")
+    private List<Event> favoriteEvents = new ArrayList<>();
+
     @Override
     public void eraseCredentials() {
         setPassword(null);

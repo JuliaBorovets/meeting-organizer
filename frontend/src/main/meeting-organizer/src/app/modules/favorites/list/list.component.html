@@ -1,0 +1,16 @@
+<div class="select-favorites">
+  <nav mat-tab-nav-bar class="toolbar-buttons">
+    <a mat-tab-link class="projects_button" *ngFor="let link of links"
+       (click)="activeLink = link; searchFavorites()"
+       [active]="activeLink === link"> {{link.label}} </a>
+  </nav>
+</div>
+
+<div fxLayoutAlign="center stretch" fxLayout="column" class="view" *ngIf="isLibrariesSelected()">
+  <app-library></app-library>
+</div>
+
+<div fxLayoutAlign="center stretch" fxLayout="column" class="view" *ngIf="isEventsSelected()">
+  <app-event></app-event>
+</div>
+

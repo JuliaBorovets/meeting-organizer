@@ -24,7 +24,10 @@ import {
   NgxMatNativeDateModule,
   NgxMatTimepickerModule
 } from '@angular-material-components/datetime-picker';
-import {FavoritesModule} from './modules/favorites/favorites.module';
+import {FavoritesModule} from './modules/favorite/favorites.module';
+import {ProfileModule} from './modules/profile/profile.module';
+import {DashboardModule} from './modules/dashboard/dashboard.module';
+import {MeetingModule} from "./modules/meeting/meeting.module";
 
 @NgModule({
   declarations: [
@@ -53,6 +56,9 @@ import {FavoritesModule} from './modules/favorites/favorites.module';
     NgxMatTimepickerModule,
     NgxMatNativeDateModule,
     FavoritesModule,
+    ProfileModule,
+    DashboardModule,
+    MeetingModule,
 
     ToastrModule.forRoot({
       timeOut: 150000, // 15 seconds
@@ -62,8 +68,7 @@ import {FavoritesModule} from './modules/favorites/favorites.module';
     RouterModule
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    //  { provide: NGX_MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   exports: [
   ],

@@ -12,6 +12,18 @@ const routes: Routes = [
         pathMatch: 'full'
       },
       {
+        path: 'profile',
+        loadChildren: () => import('src/app/modules/profile/profile.module').then(m => m.ProfileModule)
+      },
+      {
+        path: 'favorite',
+        loadChildren: () => import('src/app/modules/favorite/favorites.module').then(m => m.FavoritesModule)
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () => import('src/app/modules/dashboard/dashboard.module').then(m => m.DashboardModule)
+      },
+      {
         path: 'library',
         loadChildren: () => import('src/app/modules/library/library.module').then(m => m.LibraryModule)
       },
@@ -20,8 +32,8 @@ const routes: Routes = [
         loadChildren: () => import('src/app/modules/library-content/content.module').then(m => m.LibraryContentModule)
       },
       {
-        path: 'favorites',
-        loadChildren: () => import('src/app/modules/favorites/favorites.module').then(m => m.FavoritesModule)
+        path: 'meeting',
+        loadChildren: () => import('src/app/modules/meeting/meeting.module').then(m => m.MeetingModule)
       },
       {
         path: 'main-page',

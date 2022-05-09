@@ -8,12 +8,14 @@
       >
       </app-stream-view>
     </div>
-    <mat-paginator [pageSizeOptions]="pageSizeOptions"
-                   [length]="streamCount"
-                   [pageSize]="streamFilter.pageSize"
-                   (page)="pageEvent = $event; onPaginateChange($event)">
+    <div class="paginator">
+      <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                     [length]="streamCount"
+                     [pageSize]="streamFilter.pageSize"
+                     (page)="pageEvent = $event; onPaginateChange($event)">
 
-    </mat-paginator>
+      </mat-paginator>
+    </div>
   </div>
 
   <ng-template #empty>

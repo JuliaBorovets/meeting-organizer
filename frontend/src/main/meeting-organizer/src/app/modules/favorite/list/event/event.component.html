@@ -3,18 +3,19 @@
   <div *ngIf="resultList.length>0; else empty">
     <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
       <app-event-view-fav *ngFor="let result of resultList"
-                         [eventItem]="result"
-                         (updateEventEvent)="findFavorites()"
+                          [eventItem]="result"
+                          (updateEventEvent)="findFavorites()"
       >
       </app-event-view-fav>
     </div>
 
-    <mat-paginator [pageSizeOptions]="pageSizeOptions"
-                   [length]="eventCount"
-                   [pageSize]="filter.pageSize"
-                   (page)="pageEvent = $event; onPaginateChange($event)">
-
-    </mat-paginator>
+    <div class="paginator">
+      <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                     [length]="eventCount"
+                     [pageSize]="filter.pageSize"
+                     (page)="pageEvent = $event; onPaginateChange($event)">
+      </mat-paginator>
+    </div>
   </div>
 
   <ng-template #empty>

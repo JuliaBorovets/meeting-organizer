@@ -9,12 +9,13 @@
       </app-view-favorite>
     </div>
 
-    <mat-paginator [pageSizeOptions]="pageSizeOptions"
-                   [length]="libraryCount"
-                   [pageSize]="filter.pageSize"
-                   (page)="pageEvent = $event; onPaginateChange($event)">
-
-    </mat-paginator>
+    <div class="paginator">
+      <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                     [length]="libraryCount"
+                     [pageSize]="filter.pageSize"
+                     (page)="pageEvent = $event; onPaginateChange($event)">
+      </mat-paginator>
+    </div>
   </div>
 
   <ng-template #empty>

@@ -32,6 +32,10 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createUpdateForm();
+    this.initForm();
+  }
+
+  initForm(): void {
     this.subscription.add(
       this.userService.getUserById(this.userId).subscribe(
         data => {
@@ -106,6 +110,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   public cancelUpdating() {
     this.updateForm.reset();
+    this.initForm();
   }
 
   ngOnDestroy(): void {

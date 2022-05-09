@@ -1,18 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
-
-const plainTextHttpOptions = {
-  headers: new HttpHeaders({
-    Accept: 'text/plain',
-    'Content-Type': 'text/plain'
-  }),
-  responseType: 'text' as 'json'
-};
+import {UserModel} from '../models/user/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,20 +10,12 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUserById(id: any): Observable<any> {
-    return this.http.get('/api/admin/profiles/' + id, httpOptions);
+  getUserById(id: any): Observable<UserModel> {
+    return this.http.get<UserModel>('/api/v1/user/' + id);
   }
 
-  updateUser(id: any, user: any): Observable<any> {
-    return this.http.put('/api/admin/profiles/' + id, user, httpOptions);
-  }
-
-  deactivateUser(id: any): Observable<any> {
-    return this.http.patch('/api/admin/profiles/activate/' + id, plainTextHttpOptions);
-  }
-
-  activateUser(id: any): Observable<any> {
-    return this.http.patch('/api/admin/profiles/deactivate/' + id, plainTextHttpOptions);
+  updateUser(user: any): Observable<UserModel> {
+    return this.http.put<UserModel>(`/api/v1/user`, user);
   }
 
 }

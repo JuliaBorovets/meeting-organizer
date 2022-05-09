@@ -1,9 +1,6 @@
 package com.meeting.organizer.service;
 
-import com.meeting.organizer.web.dto.v1.event.EventCreateDto;
-import com.meeting.organizer.web.dto.v1.event.EventDto;
-import com.meeting.organizer.web.dto.v1.event.EventResponse;
-import com.meeting.organizer.web.dto.v1.event.EventUpdateDto;
+import com.meeting.organizer.web.dto.v1.event.*;
 import com.meeting.organizer.web.dto.v1.library.LibraryDto;
 import com.meeting.organizer.web.dto.v1.library.LibraryResponse;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +17,10 @@ public interface EventService {
 
     EventResponse findAllByLibraryId(Long userId, Long libraryId, Long streamId, Pageable pageable);
 
+    EventResponse findAll(Long userId, Pageable pageable);
+
+    EventResponse findAllByUser(Long userId, Pageable pageable);
+
     EventResponse findAllByNotLibraryId(Long userId, Long libraryId, Pageable pageable);
 
     EventDto findEventById(Long eventId);
@@ -31,4 +32,12 @@ public interface EventService {
     EventDto removeEventFromFavorites(Long eventId, Long userId);
 
     EventResponse getUserFavoriteEventsPaginated(Long userId, Pageable pageable);
+
+    EventResponse getEventsGivenAccessListByUser(Long userId, Pageable pageable);
+
+    EventDto addAccessToEventByUserEmail(AddEventAccessDto addEventAccessDto);
+
+    EventDto removeAccessFromEventByUserEmail(List<String> emailList,  Long eventId);
+
+    EventDto addAccessToEventByToken(AddEventAccessByTokenDto addEventAccessDto);
 }

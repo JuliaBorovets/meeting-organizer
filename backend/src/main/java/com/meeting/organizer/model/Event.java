@@ -6,7 +6,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -48,6 +50,9 @@ public class Event {
     private String joinUrl;
 
     @Builder.Default
+    private Boolean isPrivate = false;
+
+    @Builder.Default
     @ManyToMany(mappedBy = "events")
     private List<Tag> tags = new ArrayList<>();
 
@@ -67,6 +72,10 @@ public class Event {
     @JoinColumn(name = "stream_id")
     private Stream stream;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @OneToMany(mappedBy = "event")
     @Builder.Default
     private List<Reaction> reactions = new ArrayList<>();
@@ -76,4 +85,12 @@ public class Event {
             joinColumns = {@JoinColumn(name = "event_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> usersFavorite = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "event_user_access",
+            joinColumns = {@JoinColumn(name = "event_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private Set<User> givenAccessList = new HashSet<>();
+
+    private String accessToken;
 }

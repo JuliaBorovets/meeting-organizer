@@ -3,9 +3,9 @@ import {Router, ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateStreamComponent} from '../stream/create/create.component';
-import {CreateEventComponent} from '../event/create/create.component';
+import {CreateEventComponent} from '../../meeting/event/create/create.component';
 import {StreamListComponent} from '../stream/list/stream-list.component';
-import {EventListComponent} from '../event/list/event-list.component';
+import {EventListComponent} from '../../meeting/event/list/event-list.component';
 
 @Component({
   selector: 'app-view',
@@ -49,7 +49,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   updateEventList(): void {
-    this.eventListComponent.findEventListByLibraryId();
+    this.eventListComponent.findEvents();
   }
 
   navigateToListView(): void {
@@ -80,6 +80,11 @@ export class ViewComponent implements OnInit, OnDestroy {
       creatEventDialogRef.afterClosed().subscribe(
         () => this.updateEventList()
       ));
+  }
+
+  openAddEventView(): void {
+    console.log('-----');
+
   }
 
   ngOnDestroy(): void {

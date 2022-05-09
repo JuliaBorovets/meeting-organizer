@@ -33,4 +33,6 @@ public class EventUpdateDto {
     private MeetingType meetingType;
 
     private MeetingDto meetingEntity;
+
+    private Boolean isPrivate;
 }

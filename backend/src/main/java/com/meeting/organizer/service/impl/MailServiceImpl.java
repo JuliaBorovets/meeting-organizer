@@ -2,6 +2,7 @@ package com.meeting.organizer.service.impl;
 
 import com.meeting.organizer.config.MailConstants;
 import com.meeting.organizer.exception.custom.MailSendException;
+import com.meeting.organizer.model.Event;
 import com.meeting.organizer.model.Library;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.service.MailService;
@@ -104,6 +105,24 @@ public class MailServiceImpl implements MailService {
                 MailConstants.REMOVE_LIBRARY_ACCESS_MAIL_SUBJECT,
                 MailConstants.REMOVE_LIBRARY_ACCESS_MAIL_TEMPLATE,
                 Map.of("library", library,
+                        "user", user));
+    }
+
+    @Override
+    public void sendAddEventAccessMail(User user, Event event) {
+        sendMessage(user.getEmail(),
+                MailConstants.ADD_EVENT_ACCESS_MAIL_SUBJECT,
+                MailConstants.ADD_EVENT_ACCESS_MAIL_TEMPLATE,
+                Map.of("event", event,
+                        "user", user));
+    }
+
+    @Override
+    public void sendRemoveEventAccessMail(User user, Event event) {
+        sendMessage(user.getEmail(),
+                MailConstants.REMOVE_EVENT_ACCESS_MAIL_SUBJECT,
+                MailConstants.REMOVE_EVENT_ACCESS_MAIL_TEMPLATE,
+                Map.of("event", event,
                         "user", user));
     }
 

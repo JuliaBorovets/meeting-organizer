@@ -1,11 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {PageEvent} from '@angular/material/paginator';
-import {Subscription} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
+import {Observable, Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
 import {EventFilterModel} from '../../../../models/event/event-filter.model';
 import {EventModel} from '../../../../models/event/event.model';
 import {EventService} from '../../../../services/event/event.service';
 import {StorageService} from '../../../../services/auth/storage.service';
+import {LibraryResponseModel} from '../../../../models/library/library-response.model';
+import {CreateEventComponent} from "../create/create.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-event-list',
@@ -14,6 +17,7 @@ import {StorageService} from '../../../../services/auth/storage.service';
 })
 export class EventListComponent implements OnInit, OnDestroy {
 
+  @Input() showTabs = false;
   eventCount = 0;
   isError = false;
   pageSizeOptions: number[] = [5, 10, 25, 50];
@@ -24,10 +28,23 @@ export class EventListComponent implements OnInit, OnDestroy {
   pageEvent: PageEvent;
   eventList: EventModel[] = [];
   private subscription: Subscription = new Subscription();
+  links = [
+    {
+      label: 'All'
+    },
+    {
+      label: 'My'
+    },
+    {
+      label: 'Given Access'
+    }
+  ];
+  activeLink = this.links[0];
 
   constructor(private eventService: EventService,
               private route: ActivatedRoute,
-              private storageService: StorageService) {
+              private storageService: StorageService,
+              public dialog: MatDialog) {
     this.route.params.subscribe(params => {
       this.libraryId = +params.libraryId;
       this.streamId = +params.streamId;
@@ -38,14 +55,29 @@ export class EventListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.findEventListByLibraryId();
+    this.findEvents();
   }
 
-  findEventListByLibraryId(): void {
+  findEvents(): void {
     this.isLoading = true;
     this.eventCount = 0;
+    let observable: Observable<LibraryResponseModel>;
+
+    console.log(this.libraryId);
+    if (this.libraryId) {
+      observable = this.eventService.findAllByLibraryId(this.eventFilter);
+    } else {
+      if (this.isFindAllSelected()) {
+        observable = this.eventService.findAll(this.eventFilter);
+      } else if (this.isFindMySelected()) {
+        observable = this.eventService.findAllUser(this.eventFilter);
+      } else if (this.isFindAccessSelected()) {
+        observable = this.eventService.findAllUserAccess(this.eventFilter);
+      }
+    }
+
     this.subscription.add(
-      this.eventService.findAllByLibraryId(this.eventFilter)
+      observable
         .subscribe(result => {
             this.eventList = result.list;
             this.eventCount = result.totalItems;
@@ -55,12 +87,37 @@ export class EventListComponent implements OnInit, OnDestroy {
     );
   }
 
+  openCreateEventView(): void {
+    const creatEventDialogRef = this.dialog.open(CreateEventComponent, {
+      height: '80vh',
+      width: 'auto',
+      data: {libraryId: this.libraryId}
+    });
+
+    this.subscription.add(
+      creatEventDialogRef.afterClosed().subscribe(
+        () => this.findEvents()
+      ));
+  }
+
   onPaginateChange(event: PageEvent): void {
     this.eventFilter.pageNumber = event.pageIndex;
     this.eventFilter.pageSize = event.pageSize;
     this.eventFilter.pageNumber = this.eventFilter.pageNumber + 1;
 
-    this.findEventListByLibraryId();
+    this.findEvents();
+  }
+
+  isFindAllSelected(): boolean {
+    return this.activeLink === this.links[0];
+  }
+
+  isFindMySelected(): boolean {
+    return this.activeLink === this.links[1];
+  }
+
+  isFindAccessSelected(): boolean {
+    return this.activeLink === this.links[2];
   }
 
   ngOnDestroy(): void {

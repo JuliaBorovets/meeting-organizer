@@ -20,7 +20,7 @@ import { StreamListComponent } from './list/stream-list.component';
 import {UpdateStreamComponent} from './update/update-stream.component';
 import { AddEventComponent } from './add-event/add-event.component';
 import { ContentComponent } from './content/content.component';
-import {EventModule} from '../event/event.module';
+import {EventModule} from '../../meeting/event/event.module';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatOptionModule} from '@angular/material/core';

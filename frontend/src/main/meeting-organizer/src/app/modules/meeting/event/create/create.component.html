@@ -90,6 +90,18 @@
 
     <br>
 
+    <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+      <div>
+        <mat-slide-toggle
+          formControlName="isPrivate"
+          [color]="'accent'">
+        </mat-slide-toggle>
+        <mat-label class="toggle-class">Private</mat-label>
+      </div>
+    </div>
+
+    <br>
+
     <div *ngIf="!isGenerateNewEventSelected()">
       <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
         <mat-form-field class="full-width-event-input" appearance="outline">

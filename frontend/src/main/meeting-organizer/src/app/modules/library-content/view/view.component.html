@@ -6,8 +6,15 @@
   <button mat-stroked-button color="primary" class="create-stream" (click)="openCreateStreamView()"
           *ngIf="activeLink == links[0]">Create Stream
   </button>
+</div>
+
+<div class="create-e-button" fxLayout="raw" fxLayoutAlign="center center">
   <button mat-stroked-button color="primary" class="create-event" (click)="openCreateEventView()"
-          *ngIf="activeLink == links[1]">Create Event</button>
+          *ngIf="activeLink == links[1]">Create Event
+  </button>
+  <button mat-stroked-button color="primary" class="create-event" (click)="openAddEventView()"
+          *ngIf="activeLink == links[1]">Add Event
+  </button>
 </div>
 
 <div class="select-events-streams">

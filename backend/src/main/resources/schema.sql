@@ -19,6 +19,7 @@ DROP TABLE IF EXISTS role_authority CASCADE;
 DROP TABLE IF EXISTS event_user_fav CASCADE;
 DROP TABLE IF EXISTS library_user_fav CASCADE;
 DROP TABLE IF EXISTS library_user_access CASCADE;
+DROP TABLE IF EXISTS event_user_access CASCADE;
 
 CREATE TABLE authority
 (
@@ -107,9 +108,12 @@ CREATE TABLE events
     meeting_type            VARCHAR(255),
     external_meeting_id     VARCHAR(255),
     library_id              BIGINT,
+    user_id                 BIGINT,
     location_id             BIGINT,
     stream_id               BIGINT,
     join_url                VARCHAR(255),
+    access_token            VARCHAR(255),
+    is_private              BOOLEAN,
 
     CONSTRAINT events_pkey PRIMARY KEY (event_id)
 );
@@ -234,6 +238,14 @@ CREATE TABLE event_user_fav
     PRIMARY KEY (event_id, user_id)
 );
 
+CREATE TABLE event_user_access
+(
+    event_id BIGINT,
+    user_id  BIGINT,
+
+    PRIMARY KEY (event_id, user_id)
+);
+
 CREATE TABLE library_user_access
 (
     library_id BIGINT,
@@ -255,7 +267,8 @@ ALTER TABLE actions
 ALTER TABLE events
     ADD CONSTRAINT event_library_id_fk FOREIGN KEY (library_id) REFERENCES libraries (library_id) ON DELETE SET NULL,
     ADD CONSTRAINT event_location_id_fk FOREIGN KEY (location_id) REFERENCES locations (location_id) ON DELETE SET NULL,
-    ADD CONSTRAINT event_stream_id_fk FOREIGN KEY (stream_id) REFERENCES streams (stream_id) ON DELETE SET NULL;
+    ADD CONSTRAINT event_stream_id_fk FOREIGN KEY (stream_id) REFERENCES streams (stream_id) ON DELETE SET NULL,
+    ADD CONSTRAINT event_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
 
 
 ALTER TABLE libraries
@@ -306,3 +319,7 @@ ALTER TABLE event_user_fav
 ALTER TABLE library_user_access
     ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL,
     ADD CONSTRAINT library_id_fk FOREIGN KEY (library_id) REFERENCES libraries (library_id) ON DELETE SET NULL;
+
+ALTER TABLE event_user_access
+    ADD CONSTRAINT event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL,
+    ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;

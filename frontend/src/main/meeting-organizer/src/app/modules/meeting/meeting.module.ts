@@ -10,9 +10,12 @@ import {MatInputModule} from '@angular/material/input';
 import {RouterModule} from '@angular/router';
 import {MeetingRoutingModule} from './meeting-routing.module';
 import {ListComponent} from './list/list.component';
+import {EventModule} from './event/event.module';
+import {MatTabsModule} from '@angular/material/tabs';
+import {InfoComponent} from './info/info.component';
 
 @NgModule({
-  declarations: [ListComponent],
+  declarations: [ListComponent, InfoComponent],
   imports: [
     CommonModule,
     MatCardModule,
@@ -23,7 +26,9 @@ import {ListComponent} from './list/list.component';
     ReactiveFormsModule,
     MatInputModule,
     RouterModule,
-    MeetingRoutingModule
+    MeetingRoutingModule,
+    EventModule,
+    MatTabsModule
   ],
   entryComponents: []
 })

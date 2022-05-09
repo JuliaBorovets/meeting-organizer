@@ -2,6 +2,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../services/auth/auth.guard';
 import {NgModule} from '@angular/core';
 import {ListComponent} from './list/list.component';
+import {InfoComponent} from './info/info.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,14 @@ const routes: Routes = [
         },
         component: ListComponent,
         canActivate: [AuthGuard],
+      },
+      {
+        path: 'info/:id',
+        data: {
+          breadcrumb: 'info'
+        },
+        component: InfoComponent,
+        canActivate: [AuthGuard]
       }
     ]
   }

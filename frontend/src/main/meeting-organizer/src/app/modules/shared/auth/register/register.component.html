@@ -2,7 +2,7 @@
 
   <form (ngSubmit)="onSubmit()" [formGroup]="registrationForm">
 
-    <mat-error *ngIf="isError">Username or Email already exists</mat-error>
+    <mat-error *ngIf="isError">Registration failed!</mat-error>
 
     <mat-form-field class="full-width-input" appearance="outline">
       <mat-label>email</mat-label>

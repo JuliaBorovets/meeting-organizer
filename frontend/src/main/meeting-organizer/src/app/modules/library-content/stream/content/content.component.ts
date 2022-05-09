@@ -2,9 +2,9 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {StorageService} from '../../../../services/auth/storage.service';
-import {CreateEventComponent} from '../../event/create/create.component';
+import {CreateEventComponent} from '../../../meeting/event/create/create.component';
 import {Subscription} from 'rxjs';
-import {EventListComponent} from "../../event/list/event-list.component";
+import {EventListComponent} from "../../../meeting/event/list/event-list.component";
 import {StreamListComponent} from "../list/stream-list.component";
 import {AddEventComponent} from "../add-event/add-event.component";
 
@@ -73,7 +73,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   updateContent(): void {
-    this.eventListComponent.findEventListByLibraryId();
+    this.eventListComponent.findEvents();
   }
 
   ngOnDestroy(): void {

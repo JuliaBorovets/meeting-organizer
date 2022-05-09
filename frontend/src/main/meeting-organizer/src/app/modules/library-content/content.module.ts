@@ -16,7 +16,7 @@ import {RouterModule} from '@angular/router';
 import {LibraryContentRoutingModule} from './content-routing.module';
 import {ViewComponent} from './view/view.component';
 import {StreamModule} from './stream/stream.module';
-import {EventModule} from './event/event.module';
+import {EventModule} from '../meeting/event/event.module';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 

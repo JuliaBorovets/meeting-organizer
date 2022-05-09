@@ -5,6 +5,7 @@ import com.meeting.organizer.service.UserService;
 import com.meeting.organizer.web.dto.v1.user.UserCreateDto;
 import com.meeting.organizer.web.dto.v1.user.UserDto;
 import com.meeting.organizer.web.dto.v1.user.UserLoginDto;
+import com.meeting.organizer.web.dto.v1.user.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,5 +32,15 @@ public class UserController {
     @PostMapping("/login")
     public UserLoginDto login(@RequestBody UserDto userDto) {
         return authorizationService.authenticate(userDto);
+    }
+
+    @GetMapping("/{id}")
+    public UserDto getById(@PathVariable Long id) {
+        return userService.getById(id);
+    }
+
+    @PutMapping
+    public UserDto update(@RequestBody UserUpdateDto userUpdateDto) {
+        return userService.update(userUpdateDto);
     }
 }

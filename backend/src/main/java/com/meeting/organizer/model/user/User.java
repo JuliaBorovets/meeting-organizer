@@ -109,6 +109,10 @@ public class User implements UserDetails, CredentialsContainer {
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
+    private List<Event> events = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Notification> notifications = new ArrayList<>();
 
     @Builder.Default
@@ -118,6 +122,10 @@ public class User implements UserDetails, CredentialsContainer {
     @Builder.Default
     @ManyToMany(mappedBy = "givenAccessList")
     private Set<Library> givenAccessLibraries = new HashSet<>();
+
+    @Builder.Default
+    @ManyToMany(mappedBy = "givenAccessList")
+    private Set<Event> givenAccessEvents = new HashSet<>();
 
     @Builder.Default
     @ManyToMany(mappedBy = "usersFavorite")

@@ -6,6 +6,7 @@ import {EventService} from '../../../../services/event/event.service';
 import {EventType} from '../../../../models/event/event-type.model';
 import {State} from '../../../../models/event/state.model';
 import {MeetingType} from '../../../../models/event/meeting-type.model';
+import {StorageService} from "../../../../services/auth/storage.service";
 
 @Component({
   selector: 'app-create',
@@ -23,6 +24,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   isError = false;
   isInValid = false;
   hidePasswordField = true;
+  userId: number;
 
   generateMeeting = true;
 
@@ -49,10 +51,12 @@ export class CreateEventComponent implements OnInit, OnDestroy {
               private formBuilder: FormBuilder,
               public dialog: MatDialog,
               @Inject(MAT_DIALOG_DATA) public data: any,
-              private eventService: EventService) {
+              private eventService: EventService,
+              private storageService: StorageService) {
     this.libraryId = data.libraryId;
     this.streamId = data.streamId;
     this.subscription = new Subscription();
+    this.userId = this.storageService.getUser.userId;
   }
 
   ngOnInit(): void {
@@ -82,6 +86,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       waitingRoom: [false, null],
 
       generateMeeting: [false, null],
+      isPrivate: [false, null],
 
       joinUrl: ['', null],
 
@@ -121,7 +126,9 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       meetingType: this.f.meetingType.value,
       libraryId: this.libraryId,
       streamId: this.streamId,
-      generateMeeting: this.f.generateMeeting.value
+      generateMeeting: this.f.generateMeeting.value,
+      isPrivate: this.f.isPrivate.value,
+      userId: this.userId
     };
 
     const addExistingEventRequest = {

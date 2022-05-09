@@ -16,6 +16,8 @@ export class EventModel {
   streamId?: number;
   meetingEntity?: MeetingEntity;
   isFavorite?: boolean;
+  joinUrl?: string;
+  isPrivate?: boolean;
 }
 
 export class MeetingEntity {

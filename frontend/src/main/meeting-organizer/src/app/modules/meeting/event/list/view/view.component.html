@@ -4,19 +4,16 @@
     <mat-card-content>
       <div fxFlex="row">
         <div fxLayout="column" fxFlex="20">
-          <img width="200px" alt="image" class="img-responsive" src="assets/hero-media-illustration-dark.svg">
+          <img width="200px" alt="image" class="img-responsive" src="../../../../../../assets/hero-media-illustration-dark.svg">
         </div>
         <div fxLayout="column" fxFlex="95" style="width: auto; margin-left: 10px;">
-          <div fxLayoutAlign="center">
+          <div fxLayoutAlign="center" (click)="navigateToInfoPage()">
             <p class="library-name">{{eventModel.name}}</p>
           </div>
-          <div fxLayoutAlign="start">
+          <div fxLayoutAlign="start" (click)="navigateToInfoPage()">
             <p class="info">{{eventModel.startDate}}</p>
           </div>
-          <button mat-icon-button aria-label="Open in new tab icon">
-            <mat-icon>open_in_new</mat-icon>
-          </button>
-          <div fxLayout="column" fxFlex="80">
+          <div fxLayout="column" fxFlex="80" (click)="navigateToInfoPage()">
             <div fxLayout="raw"  fxFlex="50">
               <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'CONFERENCE'">Conference
               </button>
@@ -45,10 +42,6 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item aria-label="Open in new tab icon" (click)="openInfoDialog()">
-              <mat-icon>open_in_new</mat-icon>
-              <span>Info</span>
-            </button>
             <button mat-menu-item aria-label="Update" (click)="openUpdateDialog()">
               <mat-icon>edit</mat-icon>
               <span>Update</span>

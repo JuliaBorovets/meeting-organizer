@@ -8,8 +8,8 @@ import {map, startWith, mergeMap} from 'rxjs/operators';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {EventService} from '../../../../services/event/event.service';
 import {EventModel} from '../../../../models/event/event.model';
-import {StreamService} from "../../../../services/stream/stream.service";
-import {StorageService} from "../../../../services/auth/storage.service";
+import {StreamService} from '../../../../services/stream/stream.service';
+import {StorageService} from '../../../../services/auth/storage.service';
 
 @Component({
   selector: 'app-add-event',
@@ -28,7 +28,7 @@ export class AddEventComponent implements OnInit, OnDestroy {
   streamId: number;
   userId: number;
   name = '';
-  private subscription: Subscription;
+  subscription: Subscription;
 
   @ViewChild('eventsInput') eventsInput: ElementRef<HTMLInputElement>;
 
@@ -91,7 +91,6 @@ export class AddEventComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const AddEventsRequest = {};
     const eventsIdToAdd = this.eventsToAdd
       .map(e => String(e.eventId));
     this.subscription.add(

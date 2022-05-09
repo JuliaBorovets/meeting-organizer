@@ -30,6 +30,30 @@ export class EventService {
     return this.http.get<EventResponseModel>(`/api/v1/event/library/${libraryId}`, {params});
   }
 
+  findAll(filter: EventFilterModel): Observable<EventResponseModel> {
+    let params = new HttpParams();
+    params = params.append('pageSize', String(filter.pageSize));
+    params = params.append('pageNumber', String(filter.pageNumber));
+    params = params.append('userId', String(filter.userId));
+    return this.http.get<EventResponseModel>(`/api/v1/event/list`, {params});
+  }
+
+  findAllUser(filter: EventFilterModel): Observable<EventResponseModel> {
+    let params = new HttpParams();
+    params = params.append('pageSize', String(filter.pageSize));
+    params = params.append('pageNumber', String(filter.pageNumber));
+    params = params.append('userId', String(filter.userId));
+    return this.http.get<EventResponseModel>(`/api/v1/event/list/user`, {params});
+  }
+
+  findAllUserAccess(filter: EventFilterModel): Observable<EventResponseModel> {
+    let params = new HttpParams();
+    params = params.append('pageSize', String(filter.pageSize));
+    params = params.append('pageNumber', String(filter.pageNumber));
+    params = params.append('userId', String(filter.userId));
+    return this.http.get<EventResponseModel>(`/api/v1/event/access`, {params});
+  }
+
   findAllByLibraryModelId(libraryId: number): Observable<EventResponseModel> {
     return this.http.get<EventResponseModel>(`/api/v1/event/library/${libraryId}`);
   }
@@ -72,4 +96,9 @@ export class EventService {
 
     return this.http.get<EventResponseModel>(`/api/v1/event/favorite`, {params});
   }
+
+  findById(id: number): Observable<EventModel> {
+    return this.http.get<EventModel>(`/api/v1/event/${id}`);
+  }
+
 }

@@ -171,9 +171,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
             mailService.sendAddLibraryAccessMail(u, library);
         });
 
-        repository.save(library);
-
-        return convertToDto(library);
+        return convertToDto(repository.save(library));
     }
 
     @Override
@@ -192,9 +190,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
             mailService.sendRemoveLibraryAccessMail(u, library);
         });
 
-        repository.save(library);
-
-        return convertToDto(library);
+        return convertToDto(repository.save(library));
     }
 
     @Override
@@ -208,11 +204,10 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
         user.getGivenAccessLibraries().add(library);
 
         userCRUDService.save(user);
-        repository.save(library);
 
         mailService.sendAddLibraryAccessMail(user, library);
 
-        return convertToDto(library);
+        return convertToDto(repository.save(library));
     }
 
     @Override

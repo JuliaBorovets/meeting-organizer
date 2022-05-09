@@ -4,7 +4,6 @@ export class UserModel {
   email: string;
   username?: string;
   password: string;
-  locationId?: number;
   firstName?: string;
   lastName?: string;
 }

@@ -1,10 +1,29 @@
+<div *ngIf="showTabs">
+  <div class="create-button" *ngIf="isFindAllSelected() || isFindMySelected()">
+    <button mat-stroked-button color="primary" (click)="openCreateEventView()">Create Event</button>
+  </div>
+
+  <div class="create-button" *ngIf="isFindAccessSelected()">
+    <button mat-stroked-button color="primary">Add access</button>
+  </div>
+
+  <div class="select-events">
+    <nav mat-tab-nav-bar class="toolbar-buttons">
+      <a mat-tab-link class="events_button" *ngFor="let link of links"
+         (click)="activeLink = link; findEvents()"
+         [active]="activeLink === link"> {{link.label}} </a>
+    </nav>
+  </div>
+</div>
+
+
 <div *ngIf="!isLoading; else loading">
 
   <div *ngIf="eventList.length>0; else empty">
     <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
       <app-event-view *ngFor="let result of eventList"
                       [eventModel]="result"
-                      (updateEventEvent)="findEventListByLibraryId()"
+                      (updateEventEvent)="findEvents()"
       >
       </app-event-view>
     </div>

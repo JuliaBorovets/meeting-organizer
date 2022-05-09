@@ -9,6 +9,7 @@ import com.meeting.organizer.repository.user.UserRepository;
 import com.meeting.organizer.service.*;
 import com.meeting.organizer.web.dto.v1.user.UserCreateDto;
 import com.meeting.organizer.web.dto.v1.user.UserDto;
+import com.meeting.organizer.web.dto.v1.user.UserUpdateDto;
 import com.meeting.organizer.web.mapper.v1.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -92,6 +93,27 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
 
         VerificationToken verificationToken = verificationTokenService.generateNewVerificationToken(token);
         mailService.sendResetPasswordLinkMail(verificationToken.getUser(), String.format(registrationConfirmLink, token));
+    }
+
+    @Override
+    public UserDto getById(Long id) {
+        return userMapper.userToUserDto(
+                findById(id)
+        );
+    }
+
+    @Override
+    public UserDto update(UserUpdateDto userUpdateDto) {
+        User user = findById(userUpdateDto.getUserId());
+        user.setEmail(userUpdateDto.getEmail());
+        user.setUsername(userUpdateDto.getUsername());
+        user.setFirstName(userUpdateDto.getFirstName());
+        user.setLastName(userUpdateDto.getLastName());
+        user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
+
+        return userMapper.userToUserDto(
+                repository.save(user)
+        );
     }
 
 }

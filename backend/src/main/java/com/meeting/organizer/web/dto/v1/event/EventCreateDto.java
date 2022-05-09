@@ -42,4 +42,8 @@ public class EventCreateDto {
     private Boolean generateMeeting;
 
     private String joinUrl;
+
+    private Boolean isPrivate;
+
+    private Long userId;
 }

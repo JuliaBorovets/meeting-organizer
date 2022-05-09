@@ -29,10 +29,4 @@ public class UserDto {
 
     private List<RoleDto> roles = new ArrayList<>();
 
-    private Timestamp lastModifiedDate;
-
-    private Boolean userGoogle2fa = false;
-
-    private Boolean google2faRequired = true;
-
 }

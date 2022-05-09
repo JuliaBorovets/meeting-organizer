@@ -22,13 +22,12 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatSelectModule} from '@angular/material/select';
-import { InfoComponent } from './list/info/info.component';
 import {NgxMatDatetimePickerModule} from '@angular-material-components/datetime-picker';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MaterialModule} from '../../material.module';
 
 @NgModule({
-  declarations: [ViewComponent, CreateEventComponent, UpdateEventComponent, EventListComponent, InfoComponent],
+  declarations: [ViewComponent, CreateEventComponent, UpdateEventComponent, EventListComponent],
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,

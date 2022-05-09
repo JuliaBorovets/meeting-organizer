@@ -1,1 +1,92 @@
-<p>profile view works!</p>
+<div class="view">
+
+  <mat-card>
+    <mat-card-content>
+      <div fxFlex="row" >
+        <div fxLayout="column" fxFlex="100" style="width: auto; margin-left: 10px; margin-bottom: 10px;">
+          <div fxLayoutAlign="center">
+            <p class="profile-name">My Profile</p>
+          </div>
+
+          <div fxLayoutAlign="center">
+            <img width="200px" alt="image" class="img-responsive" src="../../../../assets/hero-media-illustration-dark.svg">
+          </div>
+
+          <br>
+
+          <div class="update-profile-form">
+            <form (ngSubmit)="onSubmit()" [formGroup]="updateForm">
+
+              <mat-form-field class="full-width-input" appearance="outline">
+                <mat-label>email</mat-label>
+                <input matInput type="text" id="email" class="form-control" name="email"
+                       formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" required>
+                <mat-error *ngIf="submitted && f.email.errors">
+                  <mat-error *ngIf="f.email.errors.email">Not an email</mat-error>
+                  <mat-error *ngIf="f.email.errors.maxLength">Max length</mat-error>
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="full-width-input" appearance="outline">
+                <mat-label>username</mat-label>
+                <input matInput type="text" id="username" class="form-control" name="username" formControlName="username"
+                       [ngClass]="{ 'is-invalid': submitted && f.username.errors }" required>
+                <mat-error *ngIf="submitted && f.username.errors">
+                  <mat-error *ngIf="f.username.errors.minLength">Min length is</mat-error>
+                  <mat-error *ngIf="f.username.errors.maxLength">Max length is</mat-error>
+                  <mat-error *ngIf="f.username.errors.pattern">Pattern</mat-error>
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="full-width-input" appearance="outline">
+                <mat-label>first name</mat-label>
+                <input matInput type="text" id="firstName" class="form-control" name="firstName" formControlName="firstName"
+                       [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" required>
+                <mat-error *ngIf="submitted && f.firstName.errors">
+                  <mat-error *ngIf="f.firstName.errors.minLength">Min length is</mat-error>
+                  <mat-error *ngIf="f.firstName.errors.maxLength">Max length is</mat-error>
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="full-width-input" appearance="outline">
+                <mat-label>last name</mat-label>
+                <input matInput type="text" id="lastName" class="form-control" name="lastName" formControlName="lastName"
+                       [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" required>
+                <mat-error *ngIf="submitted && f.lastName.errors">
+                  <mat-error *ngIf="f.lastName.errors.minLength">Min length is</mat-error>
+                  <mat-error *ngIf="f.lastName.errors.maxLength">Max length is</mat-error>
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="full-width-input" appearance="outline">
+                <mat-label>password</mat-label>
+                <input matInput [type]="hidePasswordField ? 'password' : 'text'" id="password" class="form-control"
+                       name="password"
+                       formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" required>
+
+                <mat-icon matSuffix (click)="hidePasswordField = !hidePasswordField">
+                  {{hidePasswordField ? 'visibility_off' : 'visibility'}}
+                </mat-icon>
+                <mat-error *ngIf="submitted && f.password.errors">
+                  <mat-error *ngIf="f.password.errors.minLength">Min length</mat-error>
+                  <mat-error *ngIf="f.password.errors.maxLength">Max length</mat-error>
+                  <mat-error *ngIf="f.password.errors.pattern">Pattern</mat-error>
+                </mat-error>
+              </mat-form-field>
+
+              <button mat-button>Update</button>
+
+              <div class="more-info">
+                <a class="btn btn-outline-primary login" (click)="cancelUpdating()">Cancel</a>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <br>
+    </mat-card-content>
+  </mat-card>
+</div>

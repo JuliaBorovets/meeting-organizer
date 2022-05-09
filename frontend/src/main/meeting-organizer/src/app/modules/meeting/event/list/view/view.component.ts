@@ -4,11 +4,10 @@ import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogService} from '../../../../../services/confirm-dialog.service';
 import {ToastrService} from 'ngx-toastr';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {EventService} from '../../../../../services/event/event.service';
 import {UpdateEventComponent} from '../../update/update-event.component';
 import {StreamService} from '../../../../../services/stream/stream.service';
-import {InfoComponent} from '../info/info.component';
 import {StorageService} from '../../../../../services/auth/storage.service';
 
 @Component({
@@ -32,7 +31,8 @@ export class ViewComponent implements OnInit, OnDestroy {
               private toastrService: ToastrService,
               private route: ActivatedRoute,
               private streamService: StreamService,
-              private storageService: StorageService) {
+              private storageService: StorageService,
+              private router: Router) {
     this.route.params.subscribe(params => {
       this.libraryId = +params.libraryId;
     });
@@ -56,20 +56,6 @@ export class ViewComponent implements OnInit, OnDestroy {
       updateDialogRef.afterClosed().subscribe(
         () => this.updateEventEvent.emit(),
         () => this.isError = true)
-    );
-  }
-
-  openInfoDialog(): void {
-    const infoDialogRef = this.dialog.open(InfoComponent, {
-      height: 'auto',
-      width: '65vh',
-      data: {
-        eventModel: this.eventModel
-      }
-    });
-
-    this.subscription.add(
-      infoDialogRef.afterClosed().subscribe()
     );
   }
 
@@ -137,6 +123,14 @@ export class ViewComponent implements OnInit, OnDestroy {
           () => this.toastrService.error('Error!', 'Failed to delete!')
         )
     );
+  }
+
+  navigateToInfoPage(): void {
+    if (this.libraryId) {
+      this.router.navigateByUrl(`meeting/info/${this.eventModel.eventId}?libraryContent=true`).then(() => {});
+    } else {
+      this.router.navigateByUrl(`meeting/info/${this.eventModel.eventId}`).then(() => {});
+    }
   }
 
   ngOnDestroy(): void {

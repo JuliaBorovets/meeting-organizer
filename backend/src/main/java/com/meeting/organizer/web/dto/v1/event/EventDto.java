@@ -46,4 +46,5 @@ public class EventDto {
 
     private Boolean isFavorite = false;
 
+    private Boolean isPrivate;
 }

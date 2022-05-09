@@ -14,6 +14,7 @@ export class EventCreateModel {
   libraryId: number;
   streamId: number;
   meetingEntity: MeetingCreateEntity;
+  isPrivate?: boolean;
 }
 
 export class MeetingCreateEntity {

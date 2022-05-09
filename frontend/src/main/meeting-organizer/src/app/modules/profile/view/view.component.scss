@@ -1,0 +1,29 @@
+.profile-name {
+  letter-spacing: 0.5px;
+  font-weight: bold;
+  font-size: 20px;
+  text-transform: uppercase;
+  line-height: 16px;
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+}
+
+.email {
+  word-wrap: break-word;
+  width: 100vh;
+  font-size: 14px;
+}
+
+
+mat-card {
+  width: 85% !important;
+  margin: 20px auto !important;
+}
+
+
+.update-library-form {
+  width: 40% !important;
+  justify-content: center;
+}

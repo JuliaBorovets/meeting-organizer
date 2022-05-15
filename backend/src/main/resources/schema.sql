@@ -98,8 +98,8 @@ CREATE TABLE comments
 CREATE TABLE events
 (
     event_id                BIGSERIAL,
-    start_date              DATE,
-    end_date                DATE,
+    start_date              TIMESTAMP,
+    end_date                TIMESTAMP,
     max_number_participants INTEGER,
     name                    VARCHAR(255),
     photo                   BYTEA,

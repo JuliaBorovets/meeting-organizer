@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Data
@@ -17,7 +18,7 @@ import java.util.Objects;
 @Builder
 public class EventCreateDto {
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     private Long durationInMinutes;
 

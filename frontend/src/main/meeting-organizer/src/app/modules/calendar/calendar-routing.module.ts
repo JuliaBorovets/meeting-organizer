@@ -1,7 +1,7 @@
 import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../services/auth/auth.guard';
 import {NgModule} from '@angular/core';
-import {ListComponent} from './list/list.component';
+import {ViewComponent} from './view/view.component';
 
 const routes: Routes = [
   {
@@ -17,7 +17,7 @@ const routes: Routes = [
         data: {
           breadcrumb: 'list'
         },
-        component: ListComponent,
+        component: ViewComponent,
         canActivate: [AuthGuard],
       }
     ]
@@ -28,6 +28,6 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class DashboardRoutingModule {
+export class CalendarRoutingModule {
 
 }

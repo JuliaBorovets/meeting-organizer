@@ -20,8 +20,8 @@ const routes: Routes = [
         loadChildren: () => import('src/app/modules/favorite/favorites.module').then(m => m.FavoritesModule)
       },
       {
-        path: 'dashboard',
-        loadChildren: () => import('src/app/modules/dashboard/dashboard.module').then(m => m.DashboardModule)
+        path: 'calendar',
+        loadChildren: () => import('src/app/modules/calendar/calendar.module').then(m => m.CalendarModule)
       },
       {
         path: 'library',

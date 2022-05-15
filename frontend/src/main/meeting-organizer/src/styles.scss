@@ -1,12 +1,14 @@
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import '~ngx-toastr/toastr.css';
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
 
 html {
   height: 100%;
   min-height: 100%;
 }
 body {
-  margin: 0px;
+  margin: 0;
   font-family: 'Roboto', sans-serif;
   height: 100%;
   min-height: 100%;

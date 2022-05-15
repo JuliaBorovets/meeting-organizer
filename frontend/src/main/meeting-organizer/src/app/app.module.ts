@@ -26,8 +26,9 @@ import {
 } from '@angular-material-components/datetime-picker';
 import {FavoritesModule} from './modules/favorite/favorites.module';
 import {ProfileModule} from './modules/profile/profile.module';
-import {DashboardModule} from './modules/dashboard/dashboard.module';
-import {MeetingModule} from "./modules/meeting/meeting.module";
+import {CalendarModule} from './modules/calendar/calendar.module';
+import {MeetingModule} from './modules/meeting/meeting.module';
+
 
 @NgModule({
   declarations: [
@@ -57,7 +58,7 @@ import {MeetingModule} from "./modules/meeting/meeting.module";
     NgxMatNativeDateModule,
     FavoritesModule,
     ProfileModule,
-    DashboardModule,
+    CalendarModule,
     MeetingModule,
 
     ToastrModule.forRoot({

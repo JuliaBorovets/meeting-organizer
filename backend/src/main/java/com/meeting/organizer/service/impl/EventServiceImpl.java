@@ -32,6 +32,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -76,6 +77,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     public EventDto createEvent(EventCreateDto eventCreateDto) {
         Event event = eventMapper.eventFromCreateDto(eventCreateDto);
         event.setAccessToken(UUID.randomUUID().toString());
+        event.setEndDate(event.getStartDate().plus(eventCreateDto.getDurationInMinutes(), ChronoUnit.MINUTES));
         User user = userCRUDService.findById(eventCreateDto.getUserId());
         event.setUser(user);
         Stream stream = null;
@@ -117,11 +119,11 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         Event updatedEvent = findById(eventUpdateDto.getEventId());
         updatedEvent.setStartDate(eventUpdateDto.getStartDate());
-        updatedEvent.setEndDate(eventUpdateDto.getEndDate());
         updatedEvent.setMaxNumberParticipants(eventUpdateDto.getMaxNumberParticipants());
         updatedEvent.setName(eventUpdateDto.getName());
         updatedEvent.setPhoto(eventUpdateDto.getPhoto());
         updatedEvent.setMeetingType(eventUpdateDto.getMeetingType());
+        updatedEvent.setEndDate(eventUpdateDto.getStartDate().plus(eventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES));
 
         repository.save(updatedEvent);
 
@@ -171,8 +173,14 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         return eventResponse;
     }
 
+    //todo add not only creator, but also participant
     @Override
-    public EventResponse findAllByUser(Long userId, Pageable pageable) {
+    public List<Event> findAllByUser(Long userId) {
+        return repository.findAllByUser_UserId(userId, null);
+    }
+
+    @Override
+    public EventResponse findAllByUserPageable(Long userId, Pageable pageable) {
         EventResponse eventResponse = new EventResponse();
 
         List<EventDto> eventDtoList = repository.findAllByUser_UserId(userId, pageable).stream()

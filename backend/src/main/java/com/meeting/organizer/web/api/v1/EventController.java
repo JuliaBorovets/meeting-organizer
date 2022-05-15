@@ -63,7 +63,7 @@ public class EventController {
                                        @RequestParam(value = "userId") Long userId) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return eventService.findAllByUser(userId, pageable);
+        return eventService.findAllByUserPageable(userId, pageable);
     }
 
     @GetMapping("/library/not/{libraryId}")

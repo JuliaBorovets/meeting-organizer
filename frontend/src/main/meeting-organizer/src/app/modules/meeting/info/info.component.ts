@@ -15,6 +15,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   eventId: number;
   private subscription: Subscription = new Subscription();
   libraryContent = false;
+  calendarContent = false;
 
   constructor(private router: Router,
               private eventService: EventService,
@@ -22,6 +23,9 @@ export class InfoComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       if (params.libraryContent) {
         this.libraryContent = true;
+      }
+      if (params.calendarContent) {
+        this.calendarContent = true;
       }
     });
     this.route.params.subscribe(params => {
@@ -43,6 +47,8 @@ export class InfoComponent implements OnInit, OnDestroy {
   navigateToListView(): void {
     if (this.libraryContent) {
       this.router.navigateByUrl('library').then();
+    } else if (this.calendarContent) {
+      this.router.navigateByUrl('calendar').then();
     } else {
       this.router.navigateByUrl('meeting').then();
     }

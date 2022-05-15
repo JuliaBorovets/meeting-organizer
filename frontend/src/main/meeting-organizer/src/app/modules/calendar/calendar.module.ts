@@ -8,11 +8,23 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {RouterModule} from '@angular/router';
-import {DashboardRoutingModule} from './dashboard-routing.module';
-import {ListComponent} from './list/list.component';
+import {CalendarRoutingModule} from './calendar-routing.module';
+import {ViewComponent} from './view/view.component';
+import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import interactionPlugin from '@fullcalendar/interaction'; // a plugin!
+import listPlugin from '@fullcalendar/list';
+import timeGridPlugin from '@fullcalendar/timegrid';
 
+
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  interactionPlugin,
+  listPlugin,
+  timeGridPlugin
+]);
 @NgModule({
-  declarations: [ListComponent],
+  declarations: [ViewComponent],
   imports: [
     CommonModule,
     MatCardModule,
@@ -23,9 +35,11 @@ import {ListComponent} from './list/list.component';
     ReactiveFormsModule,
     MatInputModule,
     RouterModule,
-    DashboardRoutingModule
+    CalendarRoutingModule,
+    FullCalendarModule
+
   ],
   entryComponents: []
 })
-export class DashboardModule {
+export class CalendarModule {
 }

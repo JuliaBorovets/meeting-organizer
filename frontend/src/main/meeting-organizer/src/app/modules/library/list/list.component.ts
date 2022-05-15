@@ -8,7 +8,7 @@ import {StorageService} from '../../../services/auth/storage.service';
 import {LibraryResponseModel} from '../../../models/library/library-response.model';
 import {CreateComponent} from '../create/create.component';
 import {LibraryService} from '../../../services/library/library.service';
-import {AddAccessCodeComponent} from "./add-access-code/add-access-code.component";
+import {AddAccessCodeComponent} from './add-access-code/add-access-code.component';
 
 @Component({
   selector: 'app-list',

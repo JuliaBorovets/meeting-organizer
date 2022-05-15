@@ -4,7 +4,7 @@ import com.meeting.organizer.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,9 +25,9 @@ public class Event {
     @EqualsAndHashCode.Include
     private Long eventId;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     private Integer maxNumberParticipants;
 

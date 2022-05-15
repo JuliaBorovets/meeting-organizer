@@ -1,8 +1,7 @@
 package com.meeting.organizer.service;
 
+import com.meeting.organizer.model.Event;
 import com.meeting.organizer.web.dto.v1.event.*;
-import com.meeting.organizer.web.dto.v1.library.LibraryDto;
-import com.meeting.organizer.web.dto.v1.library.LibraryResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -19,7 +18,9 @@ public interface EventService {
 
     EventResponse findAll(Long userId, Pageable pageable);
 
-    EventResponse findAllByUser(Long userId, Pageable pageable);
+    List<Event> findAllByUser(Long userId);
+
+    EventResponse findAllByUserPageable(Long userId, Pageable pageable);
 
     EventResponse findAllByNotLibraryId(Long userId, Long libraryId, Pageable pageable);
 

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +19,9 @@ public class EventUpdateDto {
 
     private Long eventId;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate endDate;
+    private Long durationInMinutes;
 
     private Integer maxNumberParticipants;
 

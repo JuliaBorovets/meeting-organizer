@@ -27,6 +27,8 @@ public class EventUpdateDto {
 
     private String name;
 
+    private String description;
+
     private Byte[] photo;
 
     private Location location;

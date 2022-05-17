@@ -119,8 +119,21 @@ mat-card-content {
 }
 
 .paginator {
-  position: fixed;
+  //position: fixed;
   bottom: 5px;
-  width: 83%;
+  width: 90%;
   text-align: center;
+}
+
+mat-icon {
+  margin-right: 0px !important;
+  vertical-align: middle;
+}
+
+.mat-form-field-prefix, .mat-form-field-suffix {
+  flex: unset;
+  position: unset;
+  display: flex;
+  margin-top: auto;
+  margin-bottom: auto;
 }

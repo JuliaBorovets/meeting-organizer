@@ -33,6 +33,8 @@ public class Event {
 
     private String name;
 
+    private String description;
+
     @Lob
     private Byte[] photo;
 
@@ -78,7 +80,11 @@ public class Event {
 
     @OneToMany(mappedBy = "event")
     @Builder.Default
-    private List<Reaction> reactions = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "event")
+    @Builder.Default
+    private List<Rating> ratings = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "event_user_fav",

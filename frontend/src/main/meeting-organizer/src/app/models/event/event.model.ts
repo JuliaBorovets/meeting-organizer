@@ -6,8 +6,11 @@ import {ZoomMeetingCreateSetting} from './event-create.model';
 export class EventModel {
   eventId?: number;
   startDate?: string;
+  endDate?: string;
   maxNumberParticipants?: string;
+  durationInMinutes?: number;
   name?: string;
+  description?: string;
   image?: Blob;
   eventType?: EventType;
   state?: State;

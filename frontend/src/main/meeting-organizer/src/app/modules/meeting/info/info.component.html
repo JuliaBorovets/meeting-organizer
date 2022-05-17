@@ -2,35 +2,147 @@
   <mat-icon (click)="navigateToListView()">arrow_back_ios</mat-icon>
 </div>
 
-<div class="view">
+<div *ngIf="!isLoading; else loading">
 
-  <mat-card>
-    <mat-card-content>
-      <div fxFlex="row" >
-        <div fxLayout="column" fxFlex="100" style="width: auto; margin-left: 10px;">
-          <div fxLayoutAlign="center">
-            <p class="library-name">Name</p>
+  <div class="view">
+
+    <mat-card>
+      <mat-card-content>
+        <div fxFlex="row">
+          <div fxLayout="column" fxFlex="65" style="width: auto; margin-left: 10px;">
+            <div fxLayoutAlign="center">
+              <p class="library-name">{{eventModel.name }}</p>
+            </div>
+            <br>
+            <div fxLayoutAlign="center">
+              <img width="200px" alt="image" class="img-responsive"
+                   src="../../../../assets/hero-media-illustration-dark.svg">
+            </div>
           </div>
+          <div fxLayout="column" fxFlex="35" style="width: auto; margin-left: 10px;">
+            <div class="visit-button">
+              <button mat-stroked-button color="primary">Visit</button>
+            </div>
+            <div class="visit-button">
+              <button mat-raised-button color="primary">Open</button>
+            </div>
 
-          <br>
+            <div class="participant-count">
+              <div class="visit-button">
+                <p><i class="fa-solid fa-users"></i> 4/10</p>
+              </div>
+            </div>
 
-          <div fxLayoutAlign="center">
-            <img width="200px" alt="image" class="img-responsive" src="../../../../assets/hero-media-illustration-dark.svg">
-          </div>
+            <div class="event-time">
+              <div class="visit-button">
+                <p><i class="fa-solid fa-calendar"></i> {{eventModel.startDate | date:'fullDate'}}</p>
+              </div>
+            </div>
 
-          <br>
-
-          <div fxLayoutAlign="start">
-            <b> <p class="info">Description</p></b>
-          </div>
-
-          <div fxLayoutAlign="start">
-            <p class="info">{{eventModel.joinUrl}}</p>
+            <div class="event-time">
+              <div class="visit-button">
+                <p><i class="fa-solid fa-clock"></i> {{eventModel.startDate | date:'mediumTime'}}
+                  - {{eventModel.endDate | date:'mediumTime'}}</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <br>
-    </mat-card-content>
-  </mat-card>
+        <br>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <div class="menu-view">
+    <mat-tab-group dynamicHeight>
+      <mat-tab label="Info">
+        <div>
+          <mat-card class="desc">
+            <mat-card-content>
+              <div fxFlex="row">
+                <div *ngIf="eventModel.joinUrl">
+                  <b><p class="info">Join Url</p></b>
+                  <p class="info">{{eventModel.joinUrl}}</p>
+                </div>
+                <div>
+                  <b><p class="info">Description</p></b>
+                  <p class="info">{{eventModel.description}}</p>
+                </div>
+                <div>
+                  <div fxFlex="row">
+                    <b><p class="info">Type</p></b>
+                    <p class="info">{{eventModel.eventType | lowercase | titlecase}}</p>
+                  </div>
+                  <div>
+                    <b><p class="info">Platform</p></b>
+                    <p class="info">{{eventModel.meetingType | lowercase | titlecase}}</p>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+      <mat-tab label="Comments">
+
+        <div class="create-comment-form">
+          <form (ngSubmit)="createComment()" [formGroup]="createCommentForm">
+
+            <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+              <mat-form-field class="full-width-input" appearance="outline">
+                <mat-label>Add a comment</mat-label>
+                <input matInput type="text" id="text" class="form-control" name="text" formControlName="text">
+                <mat-icon matSuffix>
+                  <i class="fa-solid fa-paper-plane"> </i>
+                </mat-icon>
+              </mat-form-field>
+
+            </div>
+
+          </form>
+        </div>
+
+        <div *ngIf="!isLoading; else loading">
+
+          <div *ngIf="comments.length>0; else empty">
+
+            <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
+              <app-comment *ngFor="let result of comments"
+                           [comment]="result"
+                           (updateEvent)="searchComments()"
+              >
+              </app-comment>
+            </div>
+
+            <div class="paginator">
+              <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                             [length]="commentsCount"
+                             [pageSize]="filter.pageSize"
+                             (page)="pageEvent = $event; onPaginateChange($event)">
+
+              </mat-paginator>
+            </div>
+          </div>
+
+          <ng-template #empty>
+            <br>
+            <br>
+            <br>
+            <div class="container-fluid">
+              <div class="text-center mt-5">
+                <p class="text-dark mb-5 lead">Empty comments list</p>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
 </div>
+<ng-template #loading>
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

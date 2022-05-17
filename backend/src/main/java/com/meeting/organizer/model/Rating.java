@@ -1,5 +1,6 @@
 package com.meeting.organizer.model;
 
+import com.meeting.organizer.model.user.User;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -20,12 +21,20 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ratingId;
 
-    private String name;
+    private String username;
 
     private int score;
 
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp creationDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

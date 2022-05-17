@@ -3,6 +3,13 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {EventModel} from '../../../models/event/event.model';
 import {EventService} from '../../../services/event/event.service';
 import {Subscription} from 'rxjs';
+import {CommentModel} from '../../../models/reaction/comment.model';
+import {ReactionService} from '../../../services/reaction/reaction.service';
+import {CommentFilterModel} from '../../../models/reaction/comment-filter.model';
+import {ToastrService} from 'ngx-toastr';
+import {PageEvent} from '@angular/material/paginator';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {StorageService} from '../../../services/auth/storage.service';
 
 @Component({
   selector: 'app-info',
@@ -13,13 +20,26 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   eventModel: EventModel;
   eventId: number;
+  userId: number;
   private subscription: Subscription = new Subscription();
   libraryContent = false;
   calendarContent = false;
+  pageEvent: PageEvent;
+  public comments: CommentModel[] = [];
+  public isLoading = true;
+  commentsCount = 0;
+  pageSizeOptions: number[] = [5, 10, 25, 50];
+  public filter: CommentFilterModel = new CommentFilterModel();
+  createCommentForm: FormGroup;
+  submitted = false;
 
   constructor(private router: Router,
               private eventService: EventService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private formBuilder: FormBuilder,
+              private reactionService: ReactionService,
+              private storageService: StorageService,
+              private toastrService: ToastrService) {
     this.route.queryParams.subscribe(params => {
       if (params.libraryContent) {
         this.libraryContent = true;
@@ -30,18 +50,76 @@ export class InfoComponent implements OnInit, OnDestroy {
     });
     this.route.params.subscribe(params => {
       this.eventId = +params.id;
+      this.filter.eventId = this.eventId;
     });
+    this.userId = storageService.getUser.userId;
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.subscription.add(
       this.eventService.findById(this.eventId)
         .subscribe(
           (result) => {
             this.eventModel = result;
+            this.isLoading = false;
           }
         )
     );
+    this.searchComments();
+    this.createCreateCommentForm();
+  }
+
+  createCreateCommentForm(): void {
+    this.createCommentForm = this.formBuilder.group({
+      text: ['', null]
+    });
+  }
+
+  get f() {
+    return this.createCommentForm.controls;
+  }
+
+  searchComments() {
+    this.subscription.add(
+      this.reactionService.findAllByEvent(this.filter)
+        .subscribe(
+          result => {
+            this.commentsCount = result.totalItems;
+            this.comments = result.list;
+          },
+          () => this.toastrService.error('Error!', 'Fetch failed!')
+        )
+    );
+  }
+
+  createComment() {
+    this.submitted = true;
+    if (this.createCommentForm.invalid || this.f.text.value.trim() === '') {
+      return;
+    }
+
+    const createRequest = {
+      userId: this.userId,
+      eventId: this.eventId,
+      text: this.f.text.value
+    };
+
+    this.subscription = this.reactionService.createComment(createRequest).subscribe(
+      () => {
+        this.createCommentForm.reset();
+      },
+      () => this.toastrService.error('Error!', 'Failed to add a comment!')
+    );
+    this.searchComments();
+  }
+
+  onPaginateChange(event: PageEvent): void {
+    this.filter.pageNumber = event.pageIndex;
+    this.filter.pageSize = event.pageSize;
+    this.filter.pageNumber = this.filter.pageNumber + 1;
+
+    this.searchComments();
   }
 
   navigateToListView(): void {

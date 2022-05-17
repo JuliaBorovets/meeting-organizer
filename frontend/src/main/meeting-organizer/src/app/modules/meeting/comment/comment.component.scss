@@ -1,0 +1,39 @@
+.view {
+  width: 100%;
+  display: block ruby;
+}
+
+mat-card {
+  width: 90% !important;
+  margin: 5px auto !important;
+}
+
+.date {
+  margin-right: 5px;
+}
+
+.delete-icon {
+  width: 5px;
+  margin-left: 2vh;
+  right: 2vh;
+}
+
+
+mat-icon {
+  background-repeat: no-repeat;
+  display: flex;
+  fill: currentColor;
+  height: 5px !important;
+  width: 5px;
+  margin-top: -3px;
+  margin-right: 15px !important;
+}
+
+.comment-text {
+  overflow: scroll;
+  max-height: 200px;
+  background-size: cover;
+  table-layout: fixed;
+  width: 95vh;
+  word-wrap: break-word;
+}

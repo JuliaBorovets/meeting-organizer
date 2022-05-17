@@ -9,10 +9,7 @@ import com.meeting.organizer.client.zoom.service.ZoomClientService;
 import com.meeting.organizer.exception.custom.LibraryNotFoundException;
 import com.meeting.organizer.exception.custom.MeetingNotFoundException;
 import com.meeting.organizer.exception.custom.UnsupportedEventException;
-import com.meeting.organizer.model.Event;
-import com.meeting.organizer.model.Library;
-import com.meeting.organizer.model.MeetingType;
-import com.meeting.organizer.model.Stream;
+import com.meeting.organizer.model.*;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.repository.EventRepository;
 import com.meeting.organizer.service.*;
@@ -121,6 +118,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         updatedEvent.setStartDate(eventUpdateDto.getStartDate());
         updatedEvent.setMaxNumberParticipants(eventUpdateDto.getMaxNumberParticipants());
         updatedEvent.setName(eventUpdateDto.getName());
+        updatedEvent.setDescription(eventUpdateDto.getDescription());
         updatedEvent.setPhoto(eventUpdateDto.getPhoto());
         updatedEvent.setMeetingType(eventUpdateDto.getMeetingType());
         updatedEvent.setEndDate(eventUpdateDto.getStartDate().plus(eventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES));
@@ -336,6 +334,10 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     private void setExternalMeetingByType(EventDto eventDto) {
+        if (Objects.isNull(eventDto.getExternalMeetingId())) {
+            return;
+        }
+
         MeetingType eventType = eventDto.getMeetingType();
 
         if (eventType.equals(MeetingType.ZOOM)) {

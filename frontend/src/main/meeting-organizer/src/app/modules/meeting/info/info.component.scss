@@ -28,3 +28,35 @@ mat-card {
 .view {
   cursor: pointer;
 }
+
+.menu-view {
+  display: flex;
+  margin-left: 10vh;
+  justify-content: left;
+  align-items: center;
+  width: 100%;
+}
+
+.mat-tab-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.desc {
+  display: inline flow-root list-item;
+}
+
+.visit-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  width: 80%;
+}
+
+.create-comment-form {
+  width: 90%;
+}

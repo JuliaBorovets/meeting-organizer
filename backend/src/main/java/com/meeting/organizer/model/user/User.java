@@ -69,9 +69,6 @@ public class User implements UserDetails, CredentialsContainer {
     @OneToOne(mappedBy = "user")
     private VerificationToken token;
 
-    @OneToOne(mappedBy = "user")
-    private Reaction reaction;
-
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
 
@@ -130,6 +127,14 @@ public class User implements UserDetails, CredentialsContainer {
     @Builder.Default
     @ManyToMany(mappedBy = "usersFavorite")
     private List<Event> favoriteEvents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<Rating> ratings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 
     @Override
     public void eraseCredentials() {

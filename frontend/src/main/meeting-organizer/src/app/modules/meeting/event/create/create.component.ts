@@ -66,6 +66,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   createCreateForm(): void {
     this.createForm = this.formBuilder.group({
       name: ['', null],
+      description: ['', null],
       startDate: ['', null],
       durationInMinutes: [30, null],
 
@@ -120,6 +121,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       durationInMinutes: this.f.durationInMinutes.value,
       maxNumberParticipants: this.f.maxNumberParticipants.value,
       name: this.f.name.value,
+      description: this.f.description.value,
       photo: this.f.photo.value,
       eventType: this.f.eventType.value,
       state: State.NOT_STARTED,

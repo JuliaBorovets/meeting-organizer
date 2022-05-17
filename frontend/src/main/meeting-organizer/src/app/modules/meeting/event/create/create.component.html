@@ -15,6 +15,14 @@
       </mat-form-field>
     </div>
 
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-event-input" appearance="outline">
+        <mat-label>description</mat-label>
+        <input matInput type="text" id="description" class="form-control" name="description" formControlName="description"
+               [ngClass]="{ 'is-invalid': submitted && f.description.errors }" required>
+      </mat-form-field>
+    </div>
+
 <!--    <mat-form-field>-->
 <!--      <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date & time" [(ngModel)]="myDatePicker">-->
 

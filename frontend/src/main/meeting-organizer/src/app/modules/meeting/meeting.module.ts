@@ -13,9 +13,14 @@ import {ListComponent} from './list/list.component';
 import {EventModule} from './event/event.module';
 import {MatTabsModule} from '@angular/material/tabs';
 import {InfoComponent} from './info/info.component';
+import { ReactionComponent } from './reaction/reaction.component';
+import { CommentComponent } from './comment/comment.component';
+import { RatingComponent } from './reaction/rating/rating.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [ListComponent, InfoComponent],
+  declarations: [ListComponent, InfoComponent, ReactionComponent, CommentComponent, RatingComponent],
   imports: [
     CommonModule,
     MatCardModule,
@@ -28,7 +33,9 @@ import {InfoComponent} from './info/info.component';
     RouterModule,
     MeetingRoutingModule,
     EventModule,
-    MatTabsModule
+    MatTabsModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule
   ],
   entryComponents: []
 })

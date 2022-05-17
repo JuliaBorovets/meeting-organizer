@@ -1,11 +1,14 @@
 package com.meeting.organizer.model;
 
+import com.meeting.organizer.model.user.User;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -22,7 +25,7 @@ public class Comment {
     @EqualsAndHashCode.Include
     private Long commentId;
 
-    private String userName;
+    private String username;
 
     private String text;
 
@@ -34,6 +37,10 @@ public class Comment {
     private Timestamp lastModifiedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reaction_id")
-    private Reaction reaction;
+    @JoinColumn(name = "event_id")
+    private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

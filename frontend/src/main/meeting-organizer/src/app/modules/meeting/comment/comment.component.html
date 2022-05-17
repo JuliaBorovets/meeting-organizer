@@ -1,0 +1,29 @@
+<div class="view">
+  <mat-card>
+    <mat-card-subtitle>
+      <div fxFlex="row">
+        <div fxLayout="column" fxFlex="80">
+          {{comment.username}}
+        </div>
+        <div fxLayout="column">
+          <div fxLayout="row" fxFlex="95" fxLayoutAlign="end start">
+          {{comment.creationDate | date: 'medium'}}
+          <div class="delete-icon">
+            <mat-icon matSuffix (click)="deleteComment()" *ngIf="isCommentOwner()">
+              <a class="fa-solid fa-trash"></a>
+            </mat-icon>
+          </div>
+          </div>
+
+        </div>
+      </div>
+    </mat-card-subtitle>
+    <mat-card-content>
+      <div fxFlex="row">
+        <div fxLayout="column" fxFlex="90" class="comment-text">
+        {{comment.text}}
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

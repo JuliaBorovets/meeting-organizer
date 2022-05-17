@@ -86,11 +86,12 @@ CREATE TABLE actions
 CREATE TABLE comments
 (
     comment_id         BIGSERIAL,
-    user_name          VARCHAR(255),
+    username           VARCHAR(255),
     text               VARCHAR(255),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    reaction_id        BIGINT,
+    event_id           BIGINT,
+    user_id            BIGINT,
 
     CONSTRAINT comments_pkey PRIMARY KEY (comment_id)
 );
@@ -102,6 +103,7 @@ CREATE TABLE events
     end_date                TIMESTAMP,
     max_number_participants INTEGER,
     name                    VARCHAR(255),
+    description             VARCHAR(500),
     photo                   BYTEA,
     event_type              VARCHAR(255),
     state                   VARCHAR(255),
@@ -155,22 +157,15 @@ CREATE TABLE notifications
 CREATE TABLE rating
 (
     rating_id     BIGSERIAL,
-    name          VARCHAR(255),
+    username      VARCHAR(255),
     score         INTEGER NOT NULL,
     creation_date TIMESTAMP,
+    event_id      BIGINT,
+    user_id       BIGINT,
 
     CONSTRAINT rating_pkey PRIMARY KEY (rating_id)
 );
 
-CREATE TABLE reactions
-(
-    reaction_id BIGSERIAL,
-    rating_id   BIGINT,
-    user_id     BIGINT,
-    event_id    BIGINT,
-
-    CONSTRAINT reactions_pkey PRIMARY KEY (reaction_id)
-);
 
 CREATE TABLE streams
 (
@@ -279,11 +274,9 @@ ALTER TABLE notifications
     ADD CONSTRAINT notification_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
 
 
-ALTER TABLE reactions
-    ADD CONSTRAINT reaction_rating_id_fk FOREIGN KEY (rating_id) REFERENCES rating (rating_id) ON DELETE SET NULL,
-    ADD CONSTRAINT reaction_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL,
-    ADD CONSTRAINT reaction_event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL;
-
+ALTER TABLE rating
+    ADD CONSTRAINT rating_event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL,
+    ADD CONSTRAINT rating_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
 
 ALTER TABLE streams
     ADD CONSTRAINT stream_library_id_fk FOREIGN KEY (library_id) REFERENCES libraries (library_id) ON DELETE SET NULL;
@@ -306,7 +299,8 @@ ALTER TABLE user_role
     ADD CONSTRAINT user_role_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
 
 ALTER TABLE comments
-    ADD CONSTRAINT comment_reaction_id_fk FOREIGN KEY (reaction_id) REFERENCES reactions (reaction_id) ON DELETE SET NULL;
+    ADD CONSTRAINT comment_event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL,
+    ADD CONSTRAINT comment_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
 
 ALTER TABLE library_user_fav
     ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL,

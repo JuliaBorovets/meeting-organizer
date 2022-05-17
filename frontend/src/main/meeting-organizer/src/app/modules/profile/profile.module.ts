@@ -25,6 +25,9 @@ import {ViewComponent} from './view/view.component';
     RouterModule,
     ProfileRoutingModule
   ],
+  exports: [
+    ViewComponent
+  ],
   entryComponents: []
 })
 export class ProfileModule {

@@ -9,17 +9,21 @@ import com.meeting.organizer.repository.user.UserRepository;
 import com.meeting.organizer.service.*;
 import com.meeting.organizer.web.dto.v1.user.UserCreateDto;
 import com.meeting.organizer.web.dto.v1.user.UserDto;
+import com.meeting.organizer.web.dto.v1.user.UserResponse;
 import com.meeting.organizer.web.dto.v1.user.UserUpdateDto;
 import com.meeting.organizer.web.mapper.v1.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -114,6 +118,21 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
         return userMapper.userToUserDto(
                 repository.save(user)
         );
+    }
+
+    @Override
+    public UserResponse getEventVisitors(Long eventId, Pageable pageable) {
+        UserResponse response = new UserResponse();
+
+        List<UserDto> userDtoList = repository.findAllByVisitedEvents_EventId(eventId, pageable)
+                .stream().map(userMapper::userToUserDto)
+                .collect(Collectors.toList());
+
+        Long total = repository.countAllByVisitedEvents_EventId(eventId);
+
+        response.setList(userDtoList);
+        response.setTotalItems(total);
+        return response;
     }
 
 }

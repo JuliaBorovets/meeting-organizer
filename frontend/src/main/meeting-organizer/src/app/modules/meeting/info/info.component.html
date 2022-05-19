@@ -21,15 +21,18 @@
           </div>
           <div fxLayout="column" fxFlex="35" style="width: auto; margin-left: 10px;">
             <div class="visit-button">
-              <button mat-stroked-button color="primary">Visit</button>
+              <button mat-stroked-button color="primary" *ngIf="!showDisabledJoinButton() && !isUserAlreadyJoinedEvent()" (click)="joinEvent()">Visit</button>
+              <button mat-stroked-button color="primary" *ngIf="isUserAlreadyJoinedEvent()" (click)="deleteEventFromVisited()">Do not visit</button>
+              <button mat-stroked-button color="primary" disabled *ngIf="showDisabledJoinButton()">Visit</button>
             </div>
             <div class="visit-button">
-              <button mat-raised-button color="primary">Open</button>
+              <button mat-raised-button color="primary" (click)="openMeeting()" *ngIf="isUserAlreadyJoinedEvent()" href=''>Open</button>
             </div>
 
             <div class="participant-count">
               <div class="visit-button">
-                <p><i class="fa-solid fa-users"></i> 4/10</p>
+                <p><i class="fa-solid fa-users"></i> {{eventModel.participantCount}}
+                  /{{eventModel.maxNumberParticipants}}</p>
               </div>
             </div>
 
@@ -61,13 +64,41 @@
           <mat-card class="desc">
             <mat-card-content>
               <div fxFlex="row">
-                <div *ngIf="eventModel.joinUrl">
-                  <b><p class="info">Join Url</p></b>
-                  <p class="info">{{eventModel.joinUrl}}</p>
+                <div>
+                  <b><p class="info">Host</p></b>
+                  <mat-card-header>
+                    <div mat-card-avatar class="example-header-image"></div>
+                    <mat-card-subtitle>{{eventModel.user.firstName}} {{eventModel.user.lastName}}</mat-card-subtitle>
+                    <mat-card-subtitle>{{eventModel.user.email}}</mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <br>
+                <div *ngIf="eventModel.meetingEntity.hostEmail">
+                  <b><p class="info">Host email</p></b>
+                  <p class="info">{{eventModel.meetingEntity.hostEmail}}</p>
+                  <br>
+                </div>
+                <div *ngIf="eventModel.meetingEntity.title">
+                  <b><p class="info">Title</p></b>
+                  <p class="info">{{eventModel.meetingEntity.title}}</p>
+                  <br>
+                </div>
+                <div *ngIf="eventModel.meetingEntity.start_url && isUserHost()">
+                  <b><p class="info">Start Url</p></b>
+                  <a class="info" (click)="startMeeting()">{{eventModel.meetingEntity.start_url | slice:0:75}}...</a>
+                  <br>
+                  <br>
                 </div>
                 <div>
-                  <b><p class="info">Description</p></b>
-                  <p class="info">{{eventModel.description}}</p>
+                  <div fxFlex="row">
+                    <b><p class="info" *ngIf="eventModel.joinUrl && isUserAlreadyJoinedEvent()">Join Url</p></b>
+                    <a class="info" (click)="openMeeting()">{{eventModel.joinUrl}}</a>
+                  </div>
+                  <div>
+                    <b><p class="info" *ngIf="eventModel.meetingEntity.password && isUserAlreadyJoinedEvent()">Password</p></b>
+                    <p class="info">{{eventModel.meetingEntity.password}}</p>
+                    <br>
+                  </div>
                 </div>
                 <div>
                   <div fxFlex="row">
@@ -77,7 +108,17 @@
                   <div>
                     <b><p class="info">Platform</p></b>
                     <p class="info">{{eventModel.meetingType | lowercase | titlecase}}</p>
+                    <br>
                   </div>
+                </div>
+                <div *ngIf="eventModel.meetingEntity.agenda">
+                  <b><p class="info">Agenda</p></b>
+                  <p class="info">{{eventModel.meetingEntity.agenda}}</p>
+                  <br>
+                </div>
+                <div>
+                  <b><p class="info">Description</p></b>
+                  <p class="info">{{eventModel.description}}</p>
                 </div>
               </div>
             </mat-card-content>
@@ -132,6 +173,42 @@
             <div class="container-fluid">
               <div class="text-center mt-5">
                 <p class="text-dark mb-5 lead">Empty comments list</p>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </mat-tab>
+      <mat-tab label="Attendees">
+        <div *ngIf="!isLoading; else loading">
+
+          <div *ngIf="attendees.length>0; else empty">
+
+            <div fxLayoutAlign="center stretch" fxLayout="column" class="visitor-view">
+              <app-visitor *ngFor="let result of attendees"
+                           [user]="result"
+                           [event]="eventModel"
+                           (updateEvent)="searchAttendees()"
+              >
+              </app-visitor>
+            </div>
+
+            <div class="paginator">
+              <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                             [length]="attendeesCount"
+                             [pageSize]="attendeesFilter.pageSize"
+                             (page)="pageEvent = $event; onPaginateChange($event)">
+
+              </mat-paginator>
+            </div>
+          </div>
+
+          <ng-template #empty>
+            <br>
+            <br>
+            <br>
+            <div class="container-fluid">
+              <div class="text-center mt-5">
+                <p class="text-dark mb-5 lead">Empty attendees list</p>
               </div>
             </div>
           </ng-template>

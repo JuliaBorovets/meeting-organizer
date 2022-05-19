@@ -4,6 +4,8 @@ import {Observable} from 'rxjs';
 import {EventModel} from '../../models/event/event.model';
 import {EventFilterModel} from '../../models/event/event-filter.model';
 import {EventResponseModel} from '../../models/event/event-response.model';
+import {AttendeesFilterModel} from "../../models/event/attendees-filter.model";
+import {AttendeesResponseModel} from "../../models/event/attendees-response.model";
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +101,28 @@ export class EventService {
 
   findById(id: number): Observable<EventModel> {
     return this.http.get<EventModel>(`/api/v1/event/${id}`);
+  }
+
+  findAttendeesByEvent(filter: AttendeesFilterModel): Observable<AttendeesResponseModel> {
+    let params = new HttpParams();
+    params = params.append('pageSize', String(filter.pageSize));
+    params = params.append('pageNumber', String(filter.pageNumber));
+    params = params.append('eventId', String(filter.eventId));
+    return this.http.get<AttendeesResponseModel>(`/api/v1/event/visitors`, {params});
+  }
+
+  addVisitorToEvent(eventId: number, userId: number): Observable<EventModel> {
+    let params = new HttpParams();
+    params = params.append('eventId', String(eventId));
+    params = params.append('userId', String(userId));
+    return this.http.put<EventModel>('/api/v1/event/visitor', {}, {params});
+  }
+
+  deleteVisitorFromEvent(eventId: number, userId: number): Observable<EventModel> {
+    let params = new HttpParams();
+    params = params.append('eventId', String(eventId));
+    params = params.append('userId', String(userId));
+    return this.http.delete<EventModel>('/api/v1/event/visitor',  {params});
   }
 
 }

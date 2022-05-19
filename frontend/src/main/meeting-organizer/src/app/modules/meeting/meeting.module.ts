@@ -18,9 +18,10 @@ import { CommentComponent } from './comment/comment.component';
 import { RatingComponent } from './reaction/rating/rating.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { VisitorComponent } from './visitor/visitor.component';
 
 @NgModule({
-  declarations: [ListComponent, InfoComponent, ReactionComponent, CommentComponent, RatingComponent],
+  declarations: [ListComponent, InfoComponent, ReactionComponent, CommentComponent, RatingComponent, VisitorComponent],
   imports: [
     CommonModule,
     MatCardModule,

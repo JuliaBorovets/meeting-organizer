@@ -60,3 +60,14 @@ mat-card {
 .create-comment-form {
   width: 90%;
 }
+
+.visitor-view{
+  width: 100% !important;
+  display: inline-block !important;
+}
+
+
+.example-header-image {
+  background-image: url('/assets/hero-media-illustration-dark.svg');
+  background-size: cover;
+}

@@ -1,6 +1,7 @@
 package com.meeting.organizer.web.dto.v1.event;
 
 import com.meeting.organizer.model.*;
+import com.meeting.organizer.web.dto.v1.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -52,4 +53,8 @@ public class EventDto {
     private Boolean isPrivate;
 
     private String joinUrl;
+
+    private Long participantCount;
+
+    private UserDto user;
 }

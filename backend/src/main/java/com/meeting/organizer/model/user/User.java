@@ -136,6 +136,10 @@ public class User implements UserDetails, CredentialsContainer {
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder.Default
+    @ManyToMany(mappedBy = "visitors")
+    private Set<Event> visitedEvents = new HashSet<>();
+
     @Override
     public void eraseCredentials() {
         setPassword(null);

@@ -87,16 +87,25 @@ public class Event {
     private List<Rating> ratings = new ArrayList<>();
 
     @ManyToMany
+    @Builder.Default
     @JoinTable(name = "event_user_fav",
             joinColumns = {@JoinColumn(name = "event_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> usersFavorite = new ArrayList<>();
 
     @ManyToMany
+    @Builder.Default
     @JoinTable(name = "event_user_access",
             joinColumns = {@JoinColumn(name = "event_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private Set<User> givenAccessList = new HashSet<>();
 
     private String accessToken;
+
+    @ManyToMany
+    @Builder.Default
+    @JoinTable(name = "event_user_visitor",
+            joinColumns = {@JoinColumn(name = "event_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private List<User> visitors = new ArrayList<>();
 }

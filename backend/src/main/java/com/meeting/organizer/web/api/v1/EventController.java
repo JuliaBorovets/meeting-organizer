@@ -1,10 +1,12 @@
 package com.meeting.organizer.web.api.v1;
 
 import com.meeting.organizer.service.EventService;
+import com.meeting.organizer.service.UserService;
 import com.meeting.organizer.web.dto.v1.event.EventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.EventDto;
 import com.meeting.organizer.web.dto.v1.event.EventResponse;
 import com.meeting.organizer.web.dto.v1.event.EventUpdateDto;
+import com.meeting.organizer.web.dto.v1.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,7 @@ public class EventController {
 
     public static final String BASE_URL = "/api/v1/event";
     private final EventService eventService;
+    private final UserService userService;
 
     @PostMapping
     public EventDto createEvent(@RequestBody EventCreateDto eventDto) {
@@ -114,5 +117,28 @@ public class EventController {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
         return eventService.getUserFavoriteEventsPaginated(userId, pageable);
+    }
+
+    @PutMapping("/visitor")
+    public EventDto addVisitorToEvent(@RequestParam(value = "eventId") Long eventId,
+                                        @RequestParam(value = "userId") Long userId) {
+        return eventService.addVisitorToEvent(eventId, userId);
+    }
+
+    @DeleteMapping("/visitor")
+    public EventDto deleteVisitorFromEvent(@RequestParam(value = "eventId") Long eventId,
+                                      @RequestParam(value = "userId") Long userId) {
+        return eventService.deleteVisitorFromEvent(eventId, userId);
+    }
+
+    @GetMapping("/visitors")
+    public UserResponse getEventVisitors(
+            @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam Long eventId) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        return userService.getEventVisitors(eventId, pageable);
     }
 }

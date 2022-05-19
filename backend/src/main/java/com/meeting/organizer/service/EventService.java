@@ -41,4 +41,8 @@ public interface EventService {
     EventDto removeAccessFromEventByUserEmail(List<String> emailList,  Long eventId);
 
     EventDto addAccessToEventByToken(AddEventAccessByTokenDto addEventAccessDto);
+
+    EventDto addVisitorToEvent(Long eventId, Long userId);
+
+    EventDto deleteVisitorFromEvent(Long eventId, Long userId);
 }

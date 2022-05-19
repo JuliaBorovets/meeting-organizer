@@ -77,6 +77,8 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         event.setEndDate(event.getStartDate().plus(eventCreateDto.getDurationInMinutes(), ChronoUnit.MINUTES));
         User user = userCRUDService.findById(eventCreateDto.getUserId());
         event.setUser(user);
+        event.getVisitors().add(user);
+        user.getVisitedEvents().add(event);
         Stream stream = null;
 
         if (Objects.nonNull(eventCreateDto.getStreamId())) {
@@ -208,11 +210,13 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
     @Override
     public EventDto findEventById(Long eventId) {
+        Event event = findById(eventId);
         EventDto eventDto = eventMapper.eventToEventDto(
-                findById(eventId)
+                event
         );
 
         setExternalMeetingByType(eventDto);
+        eventDto.setParticipantCount((long)event.getVisitors().size());
 
         return eventDto;
     }
@@ -331,6 +335,30 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         mailService.sendAddEventAccessMail(user, event);
 
         return convertToDto(repository.save(event));
+    }
+
+    @Transactional
+    @Override
+    public EventDto addVisitorToEvent(Long eventId, Long userId) {
+        Event event = findById(eventId);
+        User user = userCRUDService.findById(userId);
+
+        event.getVisitors().add(user);
+        user.getVisitedEvents().add(event);
+
+        return convertToDto(event);
+    }
+
+    @Transactional
+    @Override
+    public EventDto deleteVisitorFromEvent(Long eventId, Long userId) {
+        Event event = findById(eventId);
+        User user = userCRUDService.findById(userId);
+
+        event.getVisitors().remove(user);
+        user.getVisitedEvents().remove(event);
+
+        return convertToDto(event);
     }
 
     private void setExternalMeetingByType(EventDto eventDto) {

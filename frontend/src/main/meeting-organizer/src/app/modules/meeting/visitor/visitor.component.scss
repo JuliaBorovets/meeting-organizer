@@ -1,0 +1,14 @@
+.example-header-image {
+  background-image: url('/assets/hero-media-illustration-dark.svg');
+  background-size: cover;
+}
+
+
+mat-card {
+  width: 90% !important;
+  margin: 10px 0 !important;
+}
+
+.delete-icon {
+  color: gray;
+}

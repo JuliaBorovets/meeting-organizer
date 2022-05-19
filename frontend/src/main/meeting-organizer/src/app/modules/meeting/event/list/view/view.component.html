@@ -4,35 +4,79 @@
     <mat-card-content>
       <div fxFlex="row">
         <div fxLayout="column" fxFlex="20">
-          <img width="200px" alt="image" class="img-responsive" src="../../../../../../assets/hero-media-illustration-dark.svg">
+          <img width="200px" alt="image" class="img-responsive"
+               src="../../../../../../assets/hero-media-illustration-dark.svg">
         </div>
-        <div fxLayout="column" fxFlex="95" style="width: auto; margin-left: 10px;">
+        <div fxLayout="column" fxFlex="95" style="width: auto; margin-left: 20px;">
           <div fxLayoutAlign="center" (click)="navigateToInfoPage()">
-            <p class="library-name">{{eventModel.name}}</p>
+            <b>
+              <p class="event-name" style="margin-left:50px;">{{eventModel.name}}</p>
+            </b>
           </div>
-          <div fxLayoutAlign="start" (click)="navigateToInfoPage()">
-            <p class="info">{{eventModel.startDate}}</p>
-          </div>
-          <div fxLayout="column" fxFlex="80" (click)="navigateToInfoPage()">
-            <div fxLayout="raw"  fxFlex="50">
-              <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'CONFERENCE'">Conference
-              </button>
-              <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'SEMINAR'">Seminar</button>
-              <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'COLLOQUIUM'">Colloquium
-              </button>
-              <button mat-stroked-button color="primary" *ngIf="eventModel.eventType === 'WORKSHOP'">Workshop</button>
 
-              <button mat-stroked-button color="primary" *ngIf="eventModel.meetingType === 'ZOOM'">Zoom</button>
-              <button mat-stroked-button color="primary" *ngIf="eventModel.meetingType === 'WEBEX'">Webex</button>
+          <div fxFlex="row" (click)="navigateToInfoPage()">
+            <div fxLayout="column" fxFlex="60" style="width: auto; margin-left: 10px; margin-top: 10px;">
+
+              <div class="event-time">
+                <div class="visit-button">
+                  <p><i class="fa-solid fa-calendar"></i> {{eventModel.startDate | date:'fullDate'}}</p>
+                </div>
+              </div>
+
+              <br>
+
+              <div fxLayout="row" style="margin-top: 10px;">
+                <mat-card-subtitle>Platform:</mat-card-subtitle>
+                <br>
+                <p style="margin-left:10px;">   {{eventModel.meetingType | lowercase | titlecase}}</p>
+              </div>
+            </div>
+          </div>
+
+          <div fxFlex="row" (click)="navigateToInfoPage()">
+            <div fxLayout="column" fxFlex style="margin-top: 10px; margin-left: 10px; word-break: break-all">
+              <mat-card-subtitle>Description:</mat-card-subtitle>
+              <br>
+              <p>   {{eventModel.description | slice:0:90}}{{eventModel.description.length > 90 ? '...' : ''}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div fxLayout="column" fxFlex="95" style="width: auto; margin-top: 43px;" (click)="navigateToInfoPage()">
+
+          <div fxFlex="row">
+            <div fxLayout="column" fxFlex style="width: auto; margin-left: 10px;">
+              <div class="event-time">
+                <div class="visit-button">
+                  <p><i class="fa-solid fa-clock"></i> {{eventModel.startDate | date:'mediumTime'}}
+                    - {{eventModel.endDate | date:'mediumTime'}}</p>
+                </div>
+              </div>
+
+              <div fxLayout="row" style="margin-top: 10px;">
+                <mat-card-subtitle>Type:</mat-card-subtitle>
+                <br>
+                <p style="margin-left:10px;">   {{eventModel.eventType | lowercase | titlecase}}</p>
+              </div>
+
+              <div fxLayout="column" style="margin-top: 10px;">
+                <mat-card-subtitle>Visitors:</mat-card-subtitle>
+                <br>
+                <p><i class="fa-solid fa-users"></i>  {{eventModel.participantCount}}
+                  /{{eventModel.maxNumberParticipants}}</p>
+              </div>
+
             </div>
           </div>
         </div>
 
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex="5">
-          <button mat-icon-button  aria-label="delete from favorites" (click)="addToFavorites()" *ngIf="!eventModel.isFavorite">
+          <button mat-icon-button aria-label="delete from favorites" (click)="addToFavorites()"
+                  *ngIf="!eventModel.isFavorite">
             <i class="fa-regular fa-heart"></i>
           </button>
-          <button mat-icon-button  aria-label="delete from favorites" (click)="deleteFromFavorites()" *ngIf="eventModel.isFavorite">
+          <button mat-icon-button aria-label="delete from favorites" (click)="deleteFromFavorites()"
+                  *ngIf="eventModel.isFavorite">
             <i class="fa-solid fa-heart"></i>
           </button>
         </div>

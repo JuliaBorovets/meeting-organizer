@@ -453,6 +453,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         EventDto eventDto = eventMapper.eventToEventDto(event);
         eventDto.setIsFavorite(isFavorite);
+        eventDto.setParticipantCount((long)event.getVisitors().size());
         return eventDto;
     }
 

@@ -4,6 +4,7 @@ import {ToastrService} from 'ngx-toastr';
 import {StorageService} from '../../../../../services/auth/storage.service';
 import {EventModel} from '../../../../../models/event/event.model';
 import {EventService} from '../../../../../services/event/event.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-event-view-fav',
@@ -19,7 +20,8 @@ export class EventViewComponent implements OnInit, OnDestroy {
 
   constructor(private eventService: EventService,
               private toastrService: ToastrService,
-              private storageService: StorageService) {
+              private storageService: StorageService,
+              private router: Router) {
     this.userId = this.storageService.getUser.userId;
   }
 
@@ -37,6 +39,11 @@ export class EventViewComponent implements OnInit, OnDestroy {
           () => this.toastrService.error('Error!', 'Failed to delete!')
         )
     );
+  }
+
+  navigateToInfoPage(): void {
+    this.router.navigateByUrl(`meeting/info/${this.eventItem.eventId}?eventFavorite=true`).then(() => {
+    });
   }
 
   ngOnDestroy(): void {

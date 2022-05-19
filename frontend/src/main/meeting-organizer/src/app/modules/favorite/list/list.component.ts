@@ -27,7 +27,6 @@ export class ListComponent implements OnInit {
 
   constructor(private storageService: StorageService) {
     this.userId = this.storageService.getUser.userId;
-    console.log('userID', this.userId);
   }
 
   ngOnInit(): void {

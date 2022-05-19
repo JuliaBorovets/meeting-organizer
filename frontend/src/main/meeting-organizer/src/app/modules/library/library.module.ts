@@ -9,7 +9,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {CommonModule} from '@angular/common';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {LibraryRoutingModule} from './library-routing.module';
-import { InfoComponent } from './info/info.component';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {FlexModule} from '@angular/flex-layout';
@@ -25,7 +24,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { AddAccessCodeComponent } from './list/add-access-code/add-access-code.component';
 
 @NgModule({
-  declarations: [ListComponent, CreateComponent, UpdateComponent, ViewComponent, SearchComponent, InfoComponent, AddAccessCodeComponent],
+  declarations: [ListComponent, CreateComponent, UpdateComponent, ViewComponent, SearchComponent, AddAccessCodeComponent],
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,
@@ -45,7 +44,7 @@ import { AddAccessCodeComponent } from './list/add-access-code/add-access-code.c
     MatTreeModule,
     MatProgressBarModule
   ],
-  entryComponents: [CreateComponent, InfoComponent]
+  entryComponents: [CreateComponent]
 })
 export class LibraryModule {
 }

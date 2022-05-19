@@ -82,12 +82,11 @@ export class EventListComponent implements OnInit, OnDestroy {
     return this.searchForm.controls;
   }
 
-  findEvents(withLoading: boolean = true): void {
+  findEvents(): void {
     this.isLoading = true;
     this.eventCount = 0;
     let observable: Observable<LibraryResponseModel>;
 
-    console.log(this.libraryId);
     if (this.libraryId) {
       observable = this.eventService.findAllByLibraryId(this.eventFilter);
     } else {

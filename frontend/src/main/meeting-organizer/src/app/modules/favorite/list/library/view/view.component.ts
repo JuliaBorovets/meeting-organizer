@@ -4,6 +4,7 @@ import {Subscription} from 'rxjs';
 import {LibraryService} from '../../../../../services/library/library.service';
 import {ToastrService} from 'ngx-toastr';
 import {StorageService} from '../../../../../services/auth/storage.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-view-favorite',
@@ -19,6 +20,7 @@ export class LibraryFavoriteViewComponent implements OnInit, OnDestroy {
 
   constructor(private libraryService: LibraryService,
               private toastrService: ToastrService,
+              private router: Router,
               private storageService: StorageService) {
     this.userId = this.storageService.getUser.userId;
   }
@@ -37,6 +39,11 @@ export class LibraryFavoriteViewComponent implements OnInit, OnDestroy {
           () => this.toastrService.error('Error!', 'Failed to delete!')
         )
     );
+  }
+
+  openLibraryContent(): void {
+    this.router.navigateByUrl(`library-content/view/${this.libraryItem.libraryId}?libraryFavorite=true`).then(() => {
+    });
   }
 
   ngOnDestroy(): void {

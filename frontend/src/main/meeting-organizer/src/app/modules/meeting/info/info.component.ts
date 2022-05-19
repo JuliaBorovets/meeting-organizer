@@ -28,6 +28,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   libraryContent = false;
   calendarContent = false;
+  favoritesContent = false;
   pageEvent: PageEvent;
   comments: CommentModel[] = [];
   attendees: UserModel[] = [];
@@ -55,6 +56,9 @@ export class InfoComponent implements OnInit, OnDestroy {
       }
       if (params.calendarContent) {
         this.calendarContent = true;
+      }
+      if (params.eventFavorite) {
+        this.favoritesContent = true;
       }
     });
     this.route.params.subscribe(params => {
@@ -178,6 +182,8 @@ export class InfoComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('library').then();
     } else if (this.calendarContent) {
       this.router.navigateByUrl('calendar').then();
+    } else if (this.favoritesContent) {
+      this.router.navigateByUrl('favorite').then();
     } else {
       this.router.navigateByUrl('meeting').then();
     }

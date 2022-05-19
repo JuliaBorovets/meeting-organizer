@@ -3,7 +3,6 @@ import {StorageService} from '../../../../services/auth/storage.service';
 import {MatDialog} from '@angular/material/dialog';
 import {LibraryService} from '../../../../services/library/library.service';
 import {LibraryModel} from '../../../../models/library/library.model';
-import {InfoComponent} from '../../info/info.component';
 import {Subscription} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
 import {DialogService} from '../../../../services/confirm-dialog.service';
@@ -31,14 +30,6 @@ export class ViewComponent implements OnDestroy {
               private dialogService: DialogService,
               private router: Router) {
     this.userId = this.storageService.getUser.userId;
-  }
-
-  openFullInfoView(): void {
-    this.dialog.open(InfoComponent, {
-      height: 'auto',
-      width: '100vh',
-      data: {libraryItem: this.libraryItem}
-    });
   }
 
   openEditView(): void {

@@ -32,12 +32,18 @@ export class ViewComponent implements OnInit, OnDestroy {
     }
   ];
   activeLink = this.links[0];
+  private favoritesContent = false;
 
   constructor(private router: Router,
               public dialog: MatDialog,
               private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
       this.libraryId = +params.libraryId;
+    });
+    this.route.queryParams.subscribe(params => {
+      if (params.libraryFavorite) {
+        this.favoritesContent = true;
+      }
     });
   }
 
@@ -53,7 +59,12 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   navigateToListView(): void {
-    this.router.navigateByUrl('library').then();
+    if (this.favoritesContent) {
+      this.router.navigateByUrl('favorite').then();
+    } else {
+      this.router.navigateByUrl(`library`).then(() => {
+      });
+    }
   }
 
   openCreateStreamView(): void {
@@ -83,7 +94,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   openAddEventView(): void {
-    console.log('-----');
+    // console.log('-----');
 
   }
 

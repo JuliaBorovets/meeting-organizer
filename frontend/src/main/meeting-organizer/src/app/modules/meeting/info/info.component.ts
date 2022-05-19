@@ -12,7 +12,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {StorageService} from '../../../services/auth/storage.service';
 import {UserModel} from '../../../models/user/user.model';
 import {AttendeesFilterModel} from '../../../models/event/attendees-filter.model';
-import {map, mergeMap} from 'rxjs/operators';
+import {debounceTime, map, mergeMap} from 'rxjs/operators';
 import {DOCUMENT} from '@angular/common';
 
 @Component({
@@ -37,7 +37,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   pageSizeOptions: number[] = [5, 10, 25, 50];
   filter: CommentFilterModel = new CommentFilterModel();
   attendeesFilter: AttendeesFilterModel = new AttendeesFilterModel();
-
+  searchForm: FormGroup;
   createCommentForm: FormGroup;
   submitted = false;
 
@@ -71,6 +71,7 @@ export class InfoComponent implements OnInit, OnDestroy {
     this.searchComments();
     this.searchAttendees();
     this.createCreateCommentForm();
+    this.createSearchForm();
   }
 
   findEvent() {
@@ -83,6 +84,24 @@ export class InfoComponent implements OnInit, OnDestroy {
           }
         )
     );
+  }
+
+  createSearchForm() {
+    this.searchForm = this.formBuilder.group({
+      search: [null, null],
+    });
+
+    this.searchForm.get('search')
+      .valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(dataValue => {
+        this.attendeesFilter.username = dataValue;
+        this.searchAttendees();
+      });
+  }
+
+  get attendersF() {
+    return this.searchForm.controls;
   }
 
   createCreateCommentForm(): void {
@@ -228,7 +247,7 @@ export class InfoComponent implements OnInit, OnDestroy {
     link.remove();
   }
 
-  isUserHost(): boolean{
+  isUserHost(): boolean {
     return this.eventModel.user.userId === this.userId;
   }
 

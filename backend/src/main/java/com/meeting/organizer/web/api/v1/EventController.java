@@ -45,38 +45,42 @@ public class EventController {
                                             @RequestParam(value = "streamId", required = false) Long streamId,
                                             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                            @RequestParam(value = "eventName", defaultValue = "") String eventName,
                                             @RequestParam(value = "userId") Long userId) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return eventService.findAllByLibraryId(userId, libraryId, streamId, pageable);
+        return eventService.findAllByLibraryId(userId, libraryId, streamId, eventName,  pageable);
     }
 
     @GetMapping("/list")
     public EventResponse findAll(@RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                  @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                 @RequestParam(value = "eventName", defaultValue = "") String eventName,
                                  @RequestParam(value = "userId") Long userId) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return eventService.findAll(userId, pageable);
+        return eventService.findAll(userId, eventName, pageable);
     }
 
     @GetMapping("/list/user")
     public EventResponse findAllByUser(@RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                        @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                       @RequestParam(value = "eventName", defaultValue = "") String eventName,
                                        @RequestParam(value = "userId") Long userId) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return eventService.findAllByUserPageable(userId, pageable);
+        return eventService.findAllByUserPageable(userId, eventName, pageable);
     }
 
     @GetMapping("/library/not/{libraryId}")
     public EventResponse findAllByLibraryIdNot(@PathVariable Long libraryId,
                                                @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                               @RequestParam(value = "eventName", defaultValue = "") String eventName,
                                                @RequestParam(value = "userId") Long userId) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return eventService.findAllByNotLibraryId(userId, libraryId, pageable);
+        return eventService.findAllByNotLibraryId(userId, libraryId, eventName, pageable);
     }
 
     @GetMapping("/stream/not/{libraryId}")
@@ -85,10 +89,11 @@ public class EventController {
                                                               @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                                               @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                                               @RequestParam(value = "name", defaultValue = "") String name,
+                                                              @RequestParam(value = "eventName", defaultValue = "") String eventName,
                                                               @RequestParam(value = "userId") Long userId
     ) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        return eventService.findAllByNameAndStreamNotContaining(userId, libraryId, streamId, name, pageable);
+        return eventService.findAllByNameAndStreamNotContaining(userId, libraryId, streamId, name, eventName, pageable);
     }
 
     @GetMapping("/{id}")
@@ -112,11 +117,12 @@ public class EventController {
     public EventResponse getLibraryFavoriteListByUser(
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(value = "eventName", defaultValue = "") String eventName,
             @RequestParam Long userId) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return eventService.getUserFavoriteEventsPaginated(userId, pageable);
+        return eventService.getUserFavoriteEventsPaginated(userId, eventName, pageable);
     }
 
     @PutMapping("/visitor")
@@ -135,10 +141,11 @@ public class EventController {
     public UserResponse getEventVisitors(
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(value = "username", defaultValue = "") String username,
             @RequestParam Long eventId) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return userService.getEventVisitors(eventId, pageable);
+        return userService.getEventVisitors(eventId, username, pageable);
     }
 }

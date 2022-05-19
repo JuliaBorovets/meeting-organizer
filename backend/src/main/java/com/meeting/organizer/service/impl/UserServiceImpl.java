@@ -121,10 +121,11 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
     }
 
     @Override
-    public UserResponse getEventVisitors(Long eventId, Pageable pageable) {
+    public UserResponse getEventVisitors(Long eventId, String username, Pageable pageable) {
         UserResponse response = new UserResponse();
+        String usernamePattern = username + "%";
 
-        List<UserDto> userDtoList = repository.findAllByVisitedEvents_EventId(eventId, pageable)
+        List<UserDto> userDtoList = repository.findAllByVisitedEvents_EventIdAndUsernameLike(eventId, usernamePattern, pageable)
                 .stream().map(userMapper::userToUserDto)
                 .collect(Collectors.toList());
 

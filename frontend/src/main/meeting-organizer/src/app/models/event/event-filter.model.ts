@@ -4,4 +4,5 @@ export class EventFilterModel {
   libraryId: number;
   streamId?: number;
   userId?: number;
+  eventName?: number;
 }

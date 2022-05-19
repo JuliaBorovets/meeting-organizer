@@ -59,6 +59,7 @@ mat-card {
 
 .create-comment-form {
   width: 90%;
+  margin-top: 2%;
 }
 
 .visitor-view{
@@ -66,8 +67,12 @@ mat-card {
   display: inline-block !important;
 }
 
-
 .example-header-image {
   background-image: url('/assets/hero-media-illustration-dark.svg');
   background-size: cover;
+}
+
+.search {
+  width: 90%;
+  margin-top: 2%;
 }

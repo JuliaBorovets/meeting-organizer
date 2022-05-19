@@ -17,7 +17,7 @@ public interface StreamService {
 
     StreamDto findStreamById(Long id);
 
-    StreamResponse getAllByLibraryIdPaginated(Long libraryId, Pageable pageable);
+    StreamResponse getAllByLibraryIdPaginated(Long libraryId, String streamName, Pageable pageable);
 
     StreamDto addEventToStream(AddEventToStreamDto eventList);
 

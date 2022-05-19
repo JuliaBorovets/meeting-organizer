@@ -9,6 +9,8 @@ import {LibraryResponseModel} from '../../../models/library/library-response.mod
 import {CreateComponent} from '../create/create.component';
 import {LibraryService} from '../../../services/library/library.service';
 import {AddAccessCodeComponent} from './add-access-code/add-access-code.component';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'app-list',
@@ -39,9 +41,12 @@ export class ListComponent implements OnInit, OnDestroy {
     }
   ];
   activeLink = this.links[0];
+  searchForm: FormGroup;
+  submitted = false;
 
   constructor(private libraryService: LibraryService,
               public dialog: MatDialog,
+              private formBuilder: FormBuilder,
               private storageService: StorageService) {
     this.userId = this.storageService.getUser.userId;
   }
@@ -49,7 +54,27 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.filter.userId = this.storageService.getUser.userId;
     this.searchLibraries();
+    this.createSearchForm();
   }
+
+  createSearchForm() {
+    this.searchForm = this.formBuilder.group({
+      search: [null, null],
+    });
+
+    this.searchForm.get('search')
+      .valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(dataValue => {
+        this.filter.libraryName = dataValue;
+        this.searchLibraries();
+      });
+  }
+
+  get f() {
+    return this.searchForm.controls;
+  }
+
 
   searchLibraries() {
     this.isLoading = true;

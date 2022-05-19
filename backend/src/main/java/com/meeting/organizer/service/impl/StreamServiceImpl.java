@@ -81,11 +81,13 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
     }
 
     @Override
-    public StreamResponse getAllByLibraryIdPaginated(Long libraryId, Pageable pageable) {
+    public StreamResponse getAllByLibraryIdPaginated(Long libraryId, String streamName, Pageable pageable) {
+
+        String streamNamePattern = streamName + "%";
 
         StreamResponse response = new StreamResponse();
 
-        List<StreamDto> streamDtoList = repository.findByLibrary_LibraryId(libraryId, pageable)
+        List<StreamDto> streamDtoList = repository.findByLibrary_LibraryIdAndNameLike(libraryId, streamNamePattern,  pageable)
                 .stream()
                 .map(this::streamToStreamDto)
                 .collect(Collectors.toList());

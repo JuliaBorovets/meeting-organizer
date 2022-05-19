@@ -5,6 +5,8 @@ import {Subscription} from 'rxjs';
 import {LibraryFilterModel} from '../../../../models/library/library-filter.model';
 import {PageEvent} from '@angular/material/paginator';
 import {StorageService} from '../../../../services/auth/storage.service';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {debounceTime} from "rxjs/operators";
 
 @Component({
   selector: 'app-library',
@@ -20,14 +22,37 @@ export class LibraryComponent implements OnInit, OnDestroy {
   pageEvent: PageEvent;
   libraryCount = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
+  searchForm: FormGroup;
+  submitted = false;
 
   constructor(private libraryService: LibraryService,
+              private formBuilder: FormBuilder,
               private storageService: StorageService) {
     this.filter.userId = this.storageService.getUser.userId;
   }
 
   ngOnInit(): void {
     this.findFavorites();
+    this.createSearchForm();
+  }
+
+
+  createSearchForm() {
+    this.searchForm = this.formBuilder.group({
+      search: [null, null],
+    });
+
+    this.searchForm.get('search')
+      .valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(dataValue => {
+        this.filter.libraryName = dataValue;
+        this.findFavorites();
+      });
+  }
+
+  get f() {
+    return this.searchForm.controls;
   }
 
   findFavorites(): void {

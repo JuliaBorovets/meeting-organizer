@@ -83,19 +83,19 @@
                   <p class="info">{{eventModel.meetingEntity.title}}</p>
                   <br>
                 </div>
-                <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.start_url && isUserHost()">
+                <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.start_url && isUserHost() && isUserAlreadyJoinedEvent()">
                   <b><p class="info">Start Url</p></b>
                   <a class="info" (click)="startMeeting()">{{eventModel.meetingEntity.start_url | slice:0:75}}...</a>
                   <br>
                   <br>
                 </div>
                 <div>
-                  <div fxFlex="row">
-                    <b><p class="info" *ngIf="eventModel.joinUrl && isUserAlreadyJoinedEvent()">Join Url</p></b>
+                  <div fxFlex="row" *ngIf="isUserAlreadyJoinedEvent()">
+                    <b><p class="info" *ngIf="eventModel.joinUrl">Join Url</p></b>
                     <a class="info" (click)="openMeeting()">{{eventModel.joinUrl}}</a>
                   </div>
                   <br *ngIf="!eventModel.meetingEntity">
-                  <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.password">
+                  <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.password && isUserAlreadyJoinedEvent()">
                     <b><p class="info" *ngIf="isUserAlreadyJoinedEvent()">Password</p></b>
                     <p class="info">{{eventModel.meetingEntity.password}}</p>
                     <br>
@@ -180,6 +180,20 @@
         </div>
       </mat-tab>
       <mat-tab label="Attendees">
+        <div class="search">
+          <form [formGroup]="searchForm">
+            <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+              <mat-form-field class="full-width-input" appearance="outline">
+                <mat-label>Search by username</mat-label>
+                <input matInput type="text" id="search" class="form-control" name="search" formControlName="search"
+                       [ngClass]="{ 'is-invalid': submitted && f.search.errors }">
+                <mat-icon matSuffix>
+                  <i class="fa-solid fa-search"> </i>
+                </mat-icon>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
         <div *ngIf="!isLoading; else loading">
 
           <div *ngIf="attendees.length>0; else empty">

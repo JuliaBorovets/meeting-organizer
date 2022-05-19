@@ -16,7 +16,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     Optional<User> findByToken_VerificationTokenId(Long tokenId);
 
-    List<User> findAllByVisitedEvents_EventId(Long eventId, Pageable pageable);
+    List<User> findAllByVisitedEvents_EventIdAndUsernameLike(Long eventId, String username, Pageable pageable);
 
     Long countAllByVisitedEvents_EventId(Long eventId);
 

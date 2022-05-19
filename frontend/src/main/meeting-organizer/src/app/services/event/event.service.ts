@@ -4,8 +4,8 @@ import {Observable} from 'rxjs';
 import {EventModel} from '../../models/event/event.model';
 import {EventFilterModel} from '../../models/event/event-filter.model';
 import {EventResponseModel} from '../../models/event/event-response.model';
-import {AttendeesFilterModel} from "../../models/event/attendees-filter.model";
-import {AttendeesResponseModel} from "../../models/event/attendees-response.model";
+import {AttendeesFilterModel} from '../../models/event/attendees-filter.model';
+import {AttendeesResponseModel} from '../../models/event/attendees-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,9 @@ export class EventService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('userId', String(filter.userId));
+    if (filter.eventName) {
+      params = params.append('eventName', String(filter.eventName));
+    }
 
     if (filter.streamId) {
       params = params.append('streamId', String(filter.streamId));
@@ -37,6 +40,9 @@ export class EventService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('userId', String(filter.userId));
+    if (filter.eventName) {
+      params = params.append('eventName', String(filter.eventName));
+    }
     return this.http.get<EventResponseModel>(`/api/v1/event/list`, {params});
   }
 
@@ -45,6 +51,9 @@ export class EventService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('userId', String(filter.userId));
+    if (filter.eventName) {
+      params = params.append('eventName', String(filter.eventName));
+    }
     return this.http.get<EventResponseModel>(`/api/v1/event/list/user`, {params});
   }
 
@@ -53,6 +62,9 @@ export class EventService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('userId', String(filter.userId));
+    if (filter.eventName) {
+      params = params.append('eventName', String(filter.eventName));
+    }
     return this.http.get<EventResponseModel>(`/api/v1/event/access`, {params});
   }
 
@@ -60,11 +72,14 @@ export class EventService {
     return this.http.get<EventResponseModel>(`/api/v1/event/library/${libraryId}`);
   }
 
-  findAllByStreamNotContaining(userId: number, libraryId: number, streamId: number, name: string): Observable<EventModel[]> {
+  findAllByStreamNotContaining(userId: number, libraryId: number, streamId: number, name: string, eventName: string): Observable<EventModel[]> {
     let params = new HttpParams();
     params = params.append('name', name);
     params = params.append('streamId', String(streamId));
     params = params.append('userId', String(userId));
+    if (eventName) {
+      params = params.append('eventName', eventName);
+    }
     return this.http.get<EventModel[]>(`/api/v1/event/stream/not/${libraryId}`, {params});
   }
 
@@ -95,7 +110,9 @@ export class EventService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('userId', String(filter.userId));
-
+    if (filter.eventName) {
+      params = params.append('eventName', String(filter.eventName));
+    }
     return this.http.get<EventResponseModel>(`/api/v1/event/favorite`, {params});
   }
 
@@ -108,6 +125,9 @@ export class EventService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('eventId', String(filter.eventId));
+    if (filter.username) {
+      params = params.append('username', String(filter.username));
+    }
     return this.http.get<AttendeesResponseModel>(`/api/v1/event/visitors`, {params});
   }
 
@@ -122,7 +142,7 @@ export class EventService {
     let params = new HttpParams();
     params = params.append('eventId', String(eventId));
     params = params.append('userId', String(userId));
-    return this.http.delete<EventModel>('/api/v1/event/visitor',  {params});
+    return this.http.delete<EventModel>('/api/v1/event/visitor', {params});
   }
 
 }

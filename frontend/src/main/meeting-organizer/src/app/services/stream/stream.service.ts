@@ -22,6 +22,9 @@ export class StreamService {
     const libraryId = filter.libraryId;
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
+    if (filter.streamName) {
+      params = params.append('streamName', String(filter.streamName));
+    }
     return this.http.get<StreamResponseModel>(`/api/v1/stream/list/${libraryId}`, {params});
   }
 

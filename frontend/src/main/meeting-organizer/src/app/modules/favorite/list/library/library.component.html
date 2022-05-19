@@ -1,3 +1,18 @@
+<div class="search">
+  <form [formGroup]="searchForm">
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-input" appearance="outline">
+        <mat-label>Search by name</mat-label>
+        <input matInput type="text" id="search" class="form-control" name="search" formControlName="search"
+               [ngClass]="{ 'is-invalid': submitted && f.search.errors }">
+        <mat-icon matSuffix>
+          <i class="fa-solid fa-search"> </i>
+        </mat-icon>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+
 <div *ngIf="!isLoading; else loading">
 
   <div *ngIf="resultList.length>0; else empty">

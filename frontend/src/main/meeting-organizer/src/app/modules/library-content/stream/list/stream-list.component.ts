@@ -5,6 +5,8 @@ import {ActivatedRoute} from '@angular/router';
 import {PageEvent} from '@angular/material/paginator';
 import {Subscription} from 'rxjs';
 import {StreamModel} from '../../../../models/stream/stream.model';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'app-stream-list',
@@ -22,8 +24,11 @@ export class StreamListComponent implements OnInit, OnDestroy {
   pageEvent: PageEvent;
   streamList: StreamModel[] = [];
   private subscription: Subscription = new Subscription();
+  searchForm: FormGroup;
+  submitted = false;
 
   constructor(private streamService: StreamService,
+              private formBuilder: FormBuilder,
               private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
       this.libraryId = +params.libraryId;
@@ -33,6 +38,25 @@ export class StreamListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.findStreamListByLibraryId();
+    this.createSearchForm();
+  }
+
+  createSearchForm() {
+    this.searchForm = this.formBuilder.group({
+      search: [null, null],
+    });
+
+    this.searchForm.get('search')
+      .valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(dataValue => {
+        this.streamFilter.streamName = dataValue;
+        this.findStreamListByLibraryId();
+      });
+  }
+
+  get f() {
+    return this.searchForm.controls;
   }
 
   findStreamListByLibraryId(): void {

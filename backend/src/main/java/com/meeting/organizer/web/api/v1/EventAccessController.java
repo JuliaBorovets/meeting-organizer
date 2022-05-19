@@ -26,11 +26,12 @@ public class EventAccessController {
     public EventResponse getEventsGivenAccessListByUser(
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(value = "eventName", defaultValue = "") String eventName,
             @RequestParam Long userId) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return eventService.getEventsGivenAccessListByUser(userId, pageable);
+        return eventService.getEventsGivenAccessListByUser(userId, eventName, pageable);
     }
 
     @PutMapping

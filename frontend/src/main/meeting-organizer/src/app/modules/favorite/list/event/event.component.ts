@@ -5,6 +5,8 @@ import {StorageService} from '../../../../services/auth/storage.service';
 import {EventModel} from '../../../../models/event/event.model';
 import {EventFilterModel} from '../../../../models/event/event-filter.model';
 import {EventService} from '../../../../services/event/event.service';
+import {debounceTime} from "rxjs/operators";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-event',
@@ -21,14 +23,37 @@ export class EventComponent implements OnInit, OnDestroy {
   pageEvent: PageEvent;
   eventCount = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
+  searchForm: FormGroup;
+  submitted = false;
 
   constructor(private eventService: EventService,
+              private formBuilder: FormBuilder,
               private storageService: StorageService) {
     this.filter.userId = this.storageService.getUser.userId;
   }
 
   ngOnInit(): void {
     this.findFavorites();
+    this.createSearchForm();
+  }
+
+
+  createSearchForm() {
+    this.searchForm = this.formBuilder.group({
+      search: [null, null],
+    });
+
+    this.searchForm.get('search')
+      .valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(dataValue => {
+        this.filter.eventName = dataValue;
+        this.findFavorites();
+      });
+  }
+
+  get f() {
+    return this.searchForm.controls;
   }
 
   findFavorites(): void {

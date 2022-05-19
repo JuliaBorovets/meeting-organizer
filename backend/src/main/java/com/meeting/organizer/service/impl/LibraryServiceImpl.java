@@ -88,26 +88,29 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
     }
 
     @Override
-    public LibraryResponse getUserLibraryListPaginated(Long userId, Pageable pageable) {
+    public LibraryResponse getUserLibraryListPaginated(Long userId, String libraryName, Pageable pageable) {
         LibraryResponse response = new LibraryResponse();
 
-        List<LibraryDto> libraryDtoList = repository.findByUser_UserId(userId, pageable)
+        String libraryNamePattern = libraryName + "%";
+
+        List<LibraryDto> libraryDtoList = repository.findByUser_UserIdAndNameLike(userId, libraryNamePattern, pageable)
                 .stream()
                 .map(l -> convertToDto(l, userId))
                 .collect(Collectors.toList());
 
         response.setList(libraryDtoList);
-        response.setTotalItems(calculateTotalUserLibraryCount(userId));
+        response.setTotalItems(calculateTotalUserLibraryCount(userId, libraryNamePattern));
 
         return response;
     }
 
     @Override
-    public LibraryResponse getLibraryListPaginated(Long userId, Pageable pageable) {
+    public LibraryResponse getLibraryListPaginated(Long userId, String libraryName, Pageable pageable) {
         LibraryResponse response = new LibraryResponse();
         User user = userCRUDService.findById(userId);
+        String libraryNamePattern = libraryName + "%";
 
-        List<LibraryDto> libraryDtoList = repository.findLibrariesByIsPrivateOrGivenAccessListContainsOrUser(false, user, user, pageable)
+        List<LibraryDto> libraryDtoList = repository.findLibrariesByIsPrivateAndNameLikeOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(false, libraryNamePattern, user, libraryNamePattern, user, libraryNamePattern, pageable)
                 .stream()
                 .map(l -> convertToDto(l, userId))
                 .collect(Collectors.toList());
@@ -144,8 +147,10 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
     }
 
     @Override
-    public LibraryResponse getUserFavoriteLibrariesPaginated(Long userId, Pageable pageable) {
-        List<LibraryDto> libraryDtoList = repository.findLibrariesByUsersFavorite_UserId(userId, pageable).stream()
+    public LibraryResponse getUserFavoriteLibrariesPaginated(Long userId, String libraryName, Pageable pageable) {
+        String libraryNamePattern = libraryName + "%";
+
+        List<LibraryDto> libraryDtoList = repository.findLibrariesByUsersFavorite_UserIdAndNameLike(userId, libraryNamePattern, pageable).stream()
                 .map(l -> convertToDto(l, userId))
                 .collect(Collectors.toList());
 
@@ -211,8 +216,10 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
     }
 
     @Override
-    public LibraryResponse getLibraryGivenAccessListByUser(Long userId, Pageable pageable) {
-        List<LibraryDto> libraryDtoList = repository.findLibrariesByGivenAccessList_UserId(userId, pageable)
+    public LibraryResponse getLibraryGivenAccessListByUser(Long userId, String libraryName, Pageable pageable) {
+        String libraryNamePattern = libraryName + "%";
+
+        List<LibraryDto> libraryDtoList = repository.findLibrariesByGivenAccessList_UserIdAndNameLike(userId, libraryNamePattern, pageable)
                 .stream().map(l -> convertToDto(l, userId))
                 .collect(Collectors.toList());
 
@@ -229,8 +236,8 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
                 .orElseThrow(() -> new LibraryNotFoundException("Library not found with id=" + id));
     }
 
-    private Long calculateTotalUserLibraryCount(Long userId) {
-        return repository.countByUser_UserId(userId);
+    private Long calculateTotalUserLibraryCount(Long userId, String libraryName) {
+        return repository.countByUser_UserIdAndNameLike(userId, libraryName);
     }
 
     private Long calculateTotalLibraryCount() {

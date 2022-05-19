@@ -14,27 +14,27 @@ public interface EventService {
 
     void deleteEvent(Long id);
 
-    EventResponse findAllByLibraryId(Long userId, Long libraryId, Long streamId, Pageable pageable);
+    EventResponse findAllByLibraryId(Long userId, Long libraryId, Long streamId, String eventName, Pageable pageable);
 
-    EventResponse findAll(Long userId, Pageable pageable);
+    EventResponse findAll(Long userId, String eventName, Pageable pageable);
 
     List<Event> findAllByUser(Long userId);
 
-    EventResponse findAllByUserPageable(Long userId, Pageable pageable);
+    EventResponse findAllByUserPageable(Long userId, String eventName, Pageable pageable);
 
-    EventResponse findAllByNotLibraryId(Long userId, Long libraryId, Pageable pageable);
+    EventResponse findAllByNotLibraryId(Long userId, Long libraryId, String eventName, Pageable pageable);
 
     EventDto findEventById(Long eventId);
 
-    List<EventDto> findAllByNameAndStreamNotContaining(Long userId, Long libraryId, Long streamId, String name, Pageable pageable);
+    List<EventDto> findAllByNameAndStreamNotContaining(Long userId, Long libraryId, Long streamId, String name, String eventName, Pageable pageable);
 
     EventDto addEventToFavorites(Long eventId, Long userId);
 
     EventDto removeEventFromFavorites(Long eventId, Long userId);
 
-    EventResponse getUserFavoriteEventsPaginated(Long userId, Pageable pageable);
+    EventResponse getUserFavoriteEventsPaginated(Long userId, String eventName, Pageable pageable);
 
-    EventResponse getEventsGivenAccessListByUser(Long userId, Pageable pageable);
+    EventResponse getEventsGivenAccessListByUser(Long userId, String eventName, Pageable pageable);
 
     EventDto addAccessToEventByUserEmail(AddEventAccessDto addEventAccessDto);
 

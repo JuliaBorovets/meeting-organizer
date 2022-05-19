@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface StreamRepository extends PagingAndSortingRepository<Stream, Long> {
 
-    List<Stream> findByLibrary_LibraryId(Long libraryId, Pageable pageable);
+    List<Stream> findByLibrary_LibraryIdAndNameLike(Long libraryId, String streamName, Pageable pageable);
 }

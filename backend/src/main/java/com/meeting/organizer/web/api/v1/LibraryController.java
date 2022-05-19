@@ -44,22 +44,24 @@ public class LibraryController {
     public LibraryResponse getLibraryList(
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(value = "libraryName", defaultValue = "") String libraryName,
             @RequestParam Long userId) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return libraryService.getLibraryListPaginated(userId, pageable);
+        return libraryService.getLibraryListPaginated(userId, libraryName, pageable);
     }
 
     @GetMapping("/list")
     public LibraryResponse getLibraryListByUser(
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(value = "libraryName", defaultValue = "") String libraryName,
             @RequestParam Long userId) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return libraryService.getUserLibraryListPaginated(userId, pageable);
+        return libraryService.getUserLibraryListPaginated(userId, libraryName, pageable);
     }
 
 
@@ -79,11 +81,12 @@ public class LibraryController {
     public LibraryResponse getLibraryFavoriteListByUser(
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(value = "libraryName", defaultValue = "") String libraryName,
             @RequestParam Long userId) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return libraryService.getUserFavoriteLibrariesPaginated(userId, pageable);
+        return libraryService.getUserFavoriteLibrariesPaginated(userId, libraryName, pageable);
     }
 
 }

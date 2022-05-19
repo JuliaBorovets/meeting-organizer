@@ -47,9 +47,10 @@ public class StreamController {
     @GetMapping("/list/{libraryId}")
     public StreamResponse getAllByLibraryId(@PathVariable Long libraryId,
                                             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                            @RequestParam(value = "streamName", defaultValue = "") String streamName,
                                             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        return streamService.getAllByLibraryIdPaginated(libraryId, pageable);
+        return streamService.getAllByLibraryIdPaginated(libraryId, streamName, pageable);
     }
 
     @PatchMapping("/add_event")

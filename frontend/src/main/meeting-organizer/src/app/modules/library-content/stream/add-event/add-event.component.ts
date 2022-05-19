@@ -57,7 +57,7 @@ export class AddEventComponent implements OnInit, OnDestroy {
   }
 
   findEvents(event: string): Observable<EventModel[]> {
-    return this.eventService.findAllByStreamNotContaining(this.userId, this.libraryId, this.streamId, event);
+    return this.eventService.findAllByStreamNotContaining(this.userId, this.libraryId, this.streamId, event, '');
   }
 
   add(event: MatChipInputEvent): void {

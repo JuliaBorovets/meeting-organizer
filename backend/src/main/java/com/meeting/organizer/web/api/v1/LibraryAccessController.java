@@ -26,11 +26,12 @@ public class LibraryAccessController {
     public LibraryResponse getLibraryGivenAccessListByUser(
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(value = "libraryName", defaultValue = "") String libraryName,
             @RequestParam Long userId) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        return libraryService.getLibraryGivenAccessListByUser(userId, pageable);
+        return libraryService.getLibraryGivenAccessListByUser(userId, libraryName, pageable);
     }
 
     @PutMapping

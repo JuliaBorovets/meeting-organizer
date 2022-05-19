@@ -23,6 +23,9 @@ export class LibraryService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('userId', String(filter.userId));
+    if (filter.libraryName) {
+      params = params.append('libraryName', String(filter.libraryName));
+    }
 
     return this.http.get<LibraryResponseModel>(`/api/v1/library`, {params});
   }
@@ -32,6 +35,9 @@ export class LibraryService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('userId', String(filter.userId));
+    if (filter.libraryName) {
+      params = params.append('libraryName', String(filter.libraryName));
+    }
 
     return this.http.get<LibraryResponseModel>(`/api/v1/library/list`, {params});
   }
@@ -41,6 +47,9 @@ export class LibraryService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('userId', String(filter.userId));
+    if (filter.libraryName) {
+      params = params.append('libraryName', String(filter.libraryName));
+    }
 
     return this.http.get<LibraryResponseModel>(`/api/v1/library/favorite`, {params});
   }
@@ -76,6 +85,9 @@ export class LibraryService {
     params = params.append('pageSize', String(filter.pageSize));
     params = params.append('pageNumber', String(filter.pageNumber));
     params = params.append('userId', String(filter.userId));
+    if (filter.libraryName) {
+      params = params.append('libraryName', String(filter.libraryName));
+    }
 
     return this.http.get<LibraryResponseModel>(`/api/v1/library/access`, {params});
   }

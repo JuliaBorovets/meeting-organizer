@@ -15,15 +15,15 @@ public interface LibraryService {
 
     LibraryDto getLibraryDtoById(Long id);
 
-    LibraryResponse getUserLibraryListPaginated(Long userId, Pageable pageable);
+    LibraryResponse getUserLibraryListPaginated(Long userId, String libraryName, Pageable pageable);
 
-    LibraryResponse getLibraryListPaginated(Long userId, Pageable pageable);
+    LibraryResponse getLibraryListPaginated(Long userId, String libraryName, Pageable pageable);
 
     LibraryDto addLibraryToFavorites(Long libraryId, Long userId);
 
     LibraryDto removeLibraryFromFavorites(Long libraryId, Long userId);
 
-    LibraryResponse getUserFavoriteLibrariesPaginated(Long userId, Pageable pageable);
+    LibraryResponse getUserFavoriteLibrariesPaginated(Long userId, String libraryName, Pageable pageable);
 
     LibraryDto addAccessToLibraryByUserEmail(AddLibraryAccessDto addLibraryAccessDto);
 
@@ -31,6 +31,6 @@ public interface LibraryService {
 
     LibraryDto addAccessToLibraryByToken(AddLibraryAccessByTokenDto addLibraryAccessDto);
 
-    LibraryResponse getLibraryGivenAccessListByUser(Long userId, Pageable pageable);
+    LibraryResponse getLibraryGivenAccessListByUser(Long userId, String libraryName, Pageable pageable);
 
 }

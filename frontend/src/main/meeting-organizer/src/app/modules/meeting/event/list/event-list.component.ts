@@ -7,8 +7,10 @@ import {EventModel} from '../../../../models/event/event.model';
 import {EventService} from '../../../../services/event/event.service';
 import {StorageService} from '../../../../services/auth/storage.service';
 import {LibraryResponseModel} from '../../../../models/library/library-response.model';
-import {CreateEventComponent} from "../create/create.component";
-import {MatDialog} from "@angular/material/dialog";
+import {CreateEventComponent} from '../create/create.component';
+import {MatDialog} from '@angular/material/dialog';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'app-event-list',
@@ -40,10 +42,13 @@ export class EventListComponent implements OnInit, OnDestroy {
     }
   ];
   activeLink = this.links[0];
+  searchForm: FormGroup;
+  submitted = false;
 
   constructor(private eventService: EventService,
               private route: ActivatedRoute,
               private storageService: StorageService,
+              private formBuilder: FormBuilder,
               public dialog: MatDialog) {
     this.route.params.subscribe(params => {
       this.libraryId = +params.libraryId;
@@ -56,9 +61,28 @@ export class EventListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.findEvents();
+    this.createSearchForm();
   }
 
-  findEvents(): void {
+  createSearchForm() {
+    this.searchForm = this.formBuilder.group({
+      search: [null, null],
+    });
+
+    this.searchForm.get('search')
+      .valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(dataValue => {
+        this.eventFilter.eventName = dataValue;
+        this.findEvents();
+      });
+  }
+
+  get f() {
+    return this.searchForm.controls;
+  }
+
+  findEvents(withLoading: boolean = true): void {
     this.isLoading = true;
     this.eventCount = 0;
     let observable: Observable<LibraryResponseModel>;

@@ -10,6 +10,11 @@
     </div>
   </div>
   <div fxFlex="column">
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <p>Username: <mat-card-subtitle>{{user.username}}</mat-card-subtitle></p>
+    </div>
+  </div>
+  <div fxFlex="column">
     <div fxLayout="column" fxLayoutAlign="center end" class="delete-icon">
       <mat-icon matSuffix *ngIf="isUserHost()" (click)="deleteEventFromVisited()">
         <i class="fa-solid fa-trash"> </i>

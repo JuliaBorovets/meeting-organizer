@@ -22,6 +22,6 @@ public interface UserService {
 
     UserDto update(UserUpdateDto userUpdateDto);
 
-    UserResponse getEventVisitors(Long eventId, Pageable pageable);
+    UserResponse getEventVisitors(Long eventId, String username, Pageable pageable);
 
 }

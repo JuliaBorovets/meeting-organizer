@@ -6,10 +6,12 @@ import com.meeting.organizer.client.webex.model.WebexMeeting;
 import com.meeting.organizer.client.webex.service.WebexClientService;
 import com.meeting.organizer.client.zoom.model.ZoomMeeting;
 import com.meeting.organizer.client.zoom.service.ZoomClientService;
-import com.meeting.organizer.exception.custom.LibraryNotFoundException;
 import com.meeting.organizer.exception.custom.MeetingNotFoundException;
 import com.meeting.organizer.exception.custom.UnsupportedEventException;
-import com.meeting.organizer.model.*;
+import com.meeting.organizer.model.Event;
+import com.meeting.organizer.model.Library;
+import com.meeting.organizer.model.MeetingType;
+import com.meeting.organizer.model.Stream;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.repository.EventRepository;
 import com.meeting.organizer.service.*;
@@ -29,7 +31,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -143,10 +144,11 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
-    public EventResponse findAllByLibraryId(Long userId, Long libraryId, Long streamId, Pageable pageable) {
+    public EventResponse findAllByLibraryId(Long userId, Long libraryId, Long streamId, String eventName, Pageable pageable) {
         EventResponse eventResponse = new EventResponse();
+        String eventNamePattern = eventName + "%";
 
-        List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdAndStream_StreamId(libraryId, streamId, pageable)
+        List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdAndStream_StreamIdAndNameLike(libraryId, streamId, eventNamePattern, pageable)
                 .stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
@@ -158,11 +160,15 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
-    public EventResponse findAll(Long userId, Pageable pageable) {
+    public EventResponse findAll(Long userId, String eventName, Pageable pageable) {
         EventResponse eventResponse = new EventResponse();
         User user = userCRUDService.findById(userId);
 
-        List<EventDto> eventDtoList = repository.findEventsByIsPrivateOrGivenAccessListContainsOrUser(false, user, user, pageable)
+        String eventNamePattern = eventName + "%";
+
+        log.info(eventNamePattern);
+
+        List<EventDto> eventDtoList = repository.findEventsByNameLikeAndIsPrivateOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(eventNamePattern, false, user, eventNamePattern, user, eventNamePattern, pageable)
                 .stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
@@ -176,14 +182,16 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     //todo add not only creator, but also participant
     @Override
     public List<Event> findAllByUser(Long userId) {
-        return repository.findAllByUser_UserId(userId, null);
+        return repository.findAllByUser_UserIdAndNameLike(userId, "%", null);
     }
 
     @Override
-    public EventResponse findAllByUserPageable(Long userId, Pageable pageable) {
+    public EventResponse findAllByUserPageable(Long userId, String eventName, Pageable pageable) {
         EventResponse eventResponse = new EventResponse();
 
-        List<EventDto> eventDtoList = repository.findAllByUser_UserId(userId, pageable).stream()
+        String eventNamePattern = eventName + "%";
+
+        List<EventDto> eventDtoList = repository.findAllByUser_UserIdAndNameLike(userId, eventNamePattern, pageable).stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
 
@@ -194,10 +202,12 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
-    public EventResponse findAllByNotLibraryId(Long userId, Long libraryId, Pageable pageable) {
+    public EventResponse findAllByNotLibraryId(Long userId, Long libraryId, String eventName, Pageable pageable) {
         EventResponse eventResponse = new EventResponse();
 
-        List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdNotContaining(libraryId, pageable)
+        String eventNamePattern = eventName + "%";
+
+        List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdNotContainingAndNameLike(libraryId, eventNamePattern, pageable)
                 .stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
@@ -216,16 +226,18 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         );
 
         setExternalMeetingByType(eventDto);
-        eventDto.setParticipantCount((long)event.getVisitors().size());
+        eventDto.setParticipantCount((long) event.getVisitors().size());
 
         return eventDto;
     }
 
     @Override
-    public List<EventDto> findAllByNameAndStreamNotContaining(Long userId, Long libraryId, Long streamId, String name, Pageable pageable) {
+    public List<EventDto> findAllByNameAndStreamNotContaining(Long userId, Long libraryId, Long streamId, String name, String eventName, Pageable pageable) {
+
+        String eventNamePattern = eventName + "%";
 
         List<Event> result = repository.findByLibrary_LibraryIdAndStream_StreamIdAndNameLike(
-                libraryId, null, name + "%", pageable);
+                libraryId, null, eventNamePattern, pageable);
 
         return result.stream()
                 .map(e -> convertToDto(e, userId))
@@ -259,8 +271,10 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
-    public EventResponse getUserFavoriteEventsPaginated(Long userId, Pageable pageable) {
-        List<EventDto> eventDtoList = repository.findEventsByUsersFavorite_UserId(userId, pageable).stream()
+    public EventResponse getUserFavoriteEventsPaginated(Long userId, String eventName, Pageable pageable) {
+        String eventNamePattern = eventName + "%";
+
+        List<EventDto> eventDtoList = repository.findEventsByUsersFavorite_UserIdAndNameLike(userId, eventNamePattern, pageable).stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
 
@@ -272,8 +286,11 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
-    public EventResponse getEventsGivenAccessListByUser(Long userId, Pageable pageable) {
-        List<EventDto> eventDtoList = repository.findEventsByGivenAccessList_UserId(userId, pageable).stream()
+    public EventResponse getEventsGivenAccessListByUser(Long userId, String eventName, Pageable pageable) {
+
+        String eventNamePattern = eventName + "%";
+
+        List<EventDto> eventDtoList = repository.findEventsByGivenAccessList_UserIdAndNameLike(userId, eventNamePattern, pageable).stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
 
@@ -453,7 +470,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         EventDto eventDto = eventMapper.eventToEventDto(event);
         eventDto.setIsFavorite(isFavorite);
-        eventDto.setParticipantCount((long)event.getVisitors().size());
+        eventDto.setParticipantCount((long) event.getVisitors().size());
         return eventDto;
     }
 

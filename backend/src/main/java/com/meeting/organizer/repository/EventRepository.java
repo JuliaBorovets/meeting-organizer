@@ -13,23 +13,19 @@ import java.util.Optional;
 
 public interface EventRepository extends PagingAndSortingRepository<Event, Long> {
 
-    List<Event> findByLibrary_LibraryId(Long libraryId, Pageable pageable);
+    List<Event> findByLibrary_LibraryIdAndStream_StreamIdAndNameLike(Long libraryId, Long streamId, String eventName, Pageable pageable);
 
-    List<Event> findByLibrary_LibraryIdAndStream_StreamId(Long libraryId, Long streamId, Pageable pageable);
-
-    List<Event> findByLibrary_LibraryIdNotContaining(Long libraryId, Pageable pageable);
+    List<Event> findByLibrary_LibraryIdNotContainingAndNameLike(Long libraryId, String eventName, Pageable pageable);
 
     Long countByLibrary_LibraryId(Long libraryId);
 
-    List<Event> findByLibrary_LibraryIdAndStream_StreamIdAndNameLike(Long libraryId, Long stream, String name,  Pageable pageable);
+    List<Event> findEventsByUsersFavorite_UserIdAndNameLike(Long userId, String eventName, Pageable pageable);
 
-    List<Event> findEventsByUsersFavorite_UserId(Long userId, Pageable pageable);
+    List<Event> findEventsByNameLikeAndIsPrivateOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(String eventName, Boolean isPrivate, User user, String eventName2, User creator, String eventName3,Pageable pageable);
 
-    List<Event> findEventsByIsPrivateOrGivenAccessListContainsOrUser(Boolean isPrivate, User user, User creator, Pageable pageable);
+    List<Event> findAllByUser_UserIdAndNameLike(Long userId, String eventName,Pageable pageable);
 
-    List<Event> findAllByUser_UserId(Long userId, Pageable pageable);
-
-    List<Event> findEventsByGivenAccessList_UserId(Long userId, Pageable pageable);
+    List<Event> findEventsByGivenAccessList_UserIdAndNameLike(Long userId, String eventName, Pageable pageable);
 
     Optional<Event> findByAccessToken(String accessToken);
 }

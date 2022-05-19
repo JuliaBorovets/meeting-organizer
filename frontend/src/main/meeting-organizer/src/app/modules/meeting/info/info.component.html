@@ -73,17 +73,17 @@
                   </mat-card-header>
                 </div>
                 <br>
-                <div *ngIf="eventModel.meetingEntity.hostEmail">
+                <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.hostEmail">
                   <b><p class="info">Host email</p></b>
                   <p class="info">{{eventModel.meetingEntity.hostEmail}}</p>
                   <br>
                 </div>
-                <div *ngIf="eventModel.meetingEntity.title">
+                <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.title">
                   <b><p class="info">Title</p></b>
                   <p class="info">{{eventModel.meetingEntity.title}}</p>
                   <br>
                 </div>
-                <div *ngIf="eventModel.meetingEntity.start_url && isUserHost()">
+                <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.start_url && isUserHost()">
                   <b><p class="info">Start Url</p></b>
                   <a class="info" (click)="startMeeting()">{{eventModel.meetingEntity.start_url | slice:0:75}}...</a>
                   <br>
@@ -94,8 +94,9 @@
                     <b><p class="info" *ngIf="eventModel.joinUrl && isUserAlreadyJoinedEvent()">Join Url</p></b>
                     <a class="info" (click)="openMeeting()">{{eventModel.joinUrl}}</a>
                   </div>
-                  <div>
-                    <b><p class="info" *ngIf="eventModel.meetingEntity.password && isUserAlreadyJoinedEvent()">Password</p></b>
+                  <br *ngIf="!eventModel.meetingEntity">
+                  <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.password">
+                    <b><p class="info" *ngIf="isUserAlreadyJoinedEvent()">Password</p></b>
                     <p class="info">{{eventModel.meetingEntity.password}}</p>
                     <br>
                   </div>
@@ -111,7 +112,7 @@
                     <br>
                   </div>
                 </div>
-                <div *ngIf="eventModel.meetingEntity.agenda">
+                <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.agenda">
                   <b><p class="info">Agenda</p></b>
                   <p class="info">{{eventModel.meetingEntity.agenda}}</p>
                   <br>

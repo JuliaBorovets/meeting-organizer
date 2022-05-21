@@ -94,6 +94,10 @@
               <mat-icon>delete_outline</mat-icon>
               <span>Delete from stream</span>
             </button>
+            <button mat-menu-item aria-label="Delete" *ngIf="!eventModel.streamId && isLibraryContent" (click)="deleteEventFromLibrary()">
+              <mat-icon>delete_outline</mat-icon>
+              <span>Delete from library</span>
+            </button>
             <button mat-menu-item aria-label="Delete">
               <mat-icon>delete_outline</mat-icon>
               <span>Delete</span>

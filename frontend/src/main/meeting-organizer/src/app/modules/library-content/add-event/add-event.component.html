@@ -1,0 +1,43 @@
+<div class="add-event-form">
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <p class="header-title"> Add Events to Library </p>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <mat-form-field class="full-width-input" appearance="fill">
+      <mat-label>Select Events</mat-label>
+      <mat-chip-list #chipList aria-label="Fruit selection">
+        <mat-chip
+          *ngFor="let event of eventsToAdd"
+          (removed)="remove(event)">
+          {{event.name}}
+          <span aria-label="Cancel" matChipRemove>
+               <mat-icon>cancel</mat-icon>
+            </span>
+        </mat-chip>
+        <input
+          placeholder="New Event"
+          #eventsInput
+          [ngModel]="name"
+          [formControl]="eventsFormCtrl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let event of filteredEvents | async" [value]="event">
+          {{event.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+
+  <button mat-button (click)="onSubmit()">Add</button>
+
+  <div class="more-info">
+    <a class="btn btn-outline-primary login" (click)="onNoClick()">Cancel</a>
+  </div>
+
+</div>
+

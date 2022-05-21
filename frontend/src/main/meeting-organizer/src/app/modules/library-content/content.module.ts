@@ -19,9 +19,12 @@ import {StreamModule} from './stream/stream.module';
 import {EventModule} from '../meeting/event/event.module';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import { AddEventToLibraryComponent } from './add-event/add-event.component';
+import {MatChipsModule} from "@angular/material/chips";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 @NgModule({
-  declarations: [ViewComponent],
+  declarations: [ViewComponent, AddEventToLibraryComponent],
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,
@@ -41,7 +44,9 @@ import {MatNativeDateModule} from '@angular/material/core';
     StreamModule,
     EventModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatChipsModule,
+    MatAutocompleteModule
   ],
   entryComponents: []
 })

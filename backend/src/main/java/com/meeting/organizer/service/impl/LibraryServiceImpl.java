@@ -1,7 +1,9 @@
 package com.meeting.organizer.service.impl;
 
 import com.meeting.organizer.exception.custom.LibraryNotFoundException;
+import com.meeting.organizer.model.Event;
 import com.meeting.organizer.model.Library;
+import com.meeting.organizer.model.Stream;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.repository.LibraryRepository;
 import com.meeting.organizer.service.*;
@@ -9,6 +11,7 @@ import com.meeting.organizer.web.dto.v1.library.*;
 import com.meeting.organizer.web.mapper.v1.LibraryMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +28,13 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
     private final CRUDService<User> userCRUDService;
     private final UserService userService;
     private final MailService mailService;
-
+    private final CRUDService<Event> eventService;
 
     public LibraryServiceImpl(LibraryRepository libraryRepository,
                               LibraryMapper libraryMapper,
                               @Qualifier("userServiceImpl") CRUDService<User> userCRUDService,
                               UserService userService,
+                              @Lazy @Qualifier("eventServiceImpl") CRUDService<Event> eventService,
                               MailService mailService
     ) {
         super(libraryRepository);
@@ -38,6 +42,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
         this.userCRUDService = userCRUDService;
         this.userService = userService;
         this.mailService = mailService;
+        this.eventService = eventService;
     }
 
     @Transactional
@@ -228,6 +233,33 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
         libraryResponse.setTotalItems((long) libraryDtoList.size());
 
         return libraryResponse;
+    }
+
+    @Transactional
+    @Override
+    public LibraryDto addEventToLibrary(AddEventToLibraryDto addEventToStreamDto) {
+        Library library = findById(addEventToStreamDto.getLibraryId());
+        List<Event> eventList = addEventToStreamDto.getEventIdsList().stream()
+                .map(eventService::findById)
+                .peek(event -> event.setLibrary(library))
+                .collect(Collectors.toList());
+
+        library.getEvents().addAll(eventList);
+
+        return convertToDto(library);
+    }
+
+    @Transactional
+    @Override
+    public LibraryDto deleteEventFromLibrary(Long libraryId, Long eventId) {
+        Library library = findById(libraryId);
+        Event event = eventService.findById(eventId);
+
+        library.getEvents().remove(event);
+        event.setLibrary(null);
+        event.setStream(null);
+
+        return convertToDto(library);
     }
 
     @Override

@@ -232,7 +232,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     }
 
     @Override
-    public List<EventDto> findAllByNameAndStreamNotContaining(Long userId, Long libraryId, Long streamId, String name, String eventName, Pageable pageable) {
+    public List<EventDto> findAllByNameAndStreamNotContaining(Long userId, Long libraryId, Long streamId, String eventName, Pageable pageable) {
 
         String eventNamePattern = eventName + "%";
 
@@ -376,6 +376,18 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         user.getVisitedEvents().remove(event);
 
         return convertToDto(event);
+    }
+
+    @Override
+    public List<EventDto> findAllByNameAndLibraryNotContaining(Long userId, Long libraryId, String eventName, Pageable pageable) {
+        String eventNamePattern = eventName + "%";
+
+        List<Event> result = repository.findByLibrary_LibraryIdAndNameLike(
+                null, eventNamePattern, pageable);
+
+        return result.stream()
+                .map(e -> convertToDto(e, userId))
+                .collect(Collectors.toList());
     }
 
     private void setExternalMeetingByType(EventDto eventDto) {

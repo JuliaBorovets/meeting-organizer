@@ -157,4 +157,13 @@ export class EventService {
     return this.http.delete<EventModel>('/api/v1/event/access', {params});
   }
 
+  findAllByLibraryNotContaining(userId: number, libraryId: number, name: string, eventName: string): Observable<EventModel[]> {
+    let params = new HttpParams();
+    params = params.append('name', name);
+    params = params.append('userId', String(userId));
+    if (eventName) {
+      params = params.append('eventName', eventName);
+    }
+    return this.http.get<EventModel[]>(`/api/v1/event/library/not-contains/${libraryId}`, {params});
+  }
 }

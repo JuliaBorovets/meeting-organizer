@@ -54,7 +54,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   openAddEventView(): void {
     const creatEventDialogRef = this.dialog.open(AddEventComponent, {
-      height: '90vh',
+      height: 'auto',
       width: 'auto',
       data: {
         libraryId: this.libraryId,

@@ -5,6 +5,7 @@ import {LibraryModel} from '../../models/library/library.model';
 import {LibraryFilterModel} from '../../models/library/library-filter.model';
 import {LibraryResponseModel} from '../../models/library/library-response.model';
 import {LibraryCreateModel} from '../../models/library/library-create.model';
+import {StreamModel} from "../../models/stream/stream.model";
 
 @Injectable({
   providedIn: 'root'
@@ -101,5 +102,13 @@ export class LibraryService {
     params = params.append('emailList', String(emailList));
     params = params.append('libraryId', String(libraryId));
     return this.http.delete<LibraryModel>('/api/v1/library/access', {params});
+  }
+
+  addEventToLibrary(libraryId: number, eventIdsList: string[]): Observable<LibraryModel> {
+    return this.http.patch<LibraryModel>(`/api/v1/library/add_event`, {eventIdsList, libraryId});
+  }
+
+  deleteEventFromLibrary(eventId: number, libraryId: number): Observable<StreamModel> {
+    return this.http.patch<StreamModel>(`/api/v1/library/remove_event?eventId=${eventId}&libraryId=${libraryId}`, {});
   }
 }

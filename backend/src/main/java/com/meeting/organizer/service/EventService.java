@@ -26,7 +26,7 @@ public interface EventService {
 
     EventDto findEventById(Long eventId);
 
-    List<EventDto> findAllByNameAndStreamNotContaining(Long userId, Long libraryId, Long streamId, String name, String eventName, Pageable pageable);
+    List<EventDto> findAllByNameAndStreamNotContaining(Long userId, Long libraryId, Long streamId, String eventName, Pageable pageable);
 
     EventDto addEventToFavorites(Long eventId, Long userId);
 
@@ -45,4 +45,6 @@ public interface EventService {
     EventDto addVisitorToEvent(Long eventId, Long userId);
 
     EventDto deleteVisitorFromEvent(Long eventId, Long userId);
+
+    List<EventDto> findAllByNameAndLibraryNotContaining(Long userId, Long libraryId, String eventName, Pageable pageable);
 }

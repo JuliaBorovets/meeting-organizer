@@ -1,10 +1,7 @@
 package com.meeting.organizer.web.api.v1;
 
 import com.meeting.organizer.service.LibraryService;
-import com.meeting.organizer.web.dto.v1.library.LibraryCreateDto;
-import com.meeting.organizer.web.dto.v1.library.LibraryDto;
-import com.meeting.organizer.web.dto.v1.library.LibraryResponse;
-import com.meeting.organizer.web.dto.v1.library.LibraryUpdateDto;
+import com.meeting.organizer.web.dto.v1.library.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -73,7 +70,7 @@ public class LibraryController {
 
     @DeleteMapping("/favorite")
     public LibraryDto removeLibraryFromFavorites(@RequestParam(value = "libraryId") Long libraryId,
-                                               @RequestParam(value = "userId") Long userId) {
+                                                 @RequestParam(value = "userId") Long userId) {
         return libraryService.removeLibraryFromFavorites(libraryId, userId);
     }
 
@@ -87,6 +84,17 @@ public class LibraryController {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
         return libraryService.getUserFavoriteLibrariesPaginated(userId, libraryName, pageable);
+    }
+
+    @PatchMapping("/add_event")
+    public LibraryDto addEventToLibrary(@RequestBody AddEventToLibraryDto eventIdList) {
+        return libraryService.addEventToLibrary(eventIdList);
+    }
+
+    @PatchMapping("/remove_event")
+    public LibraryDto deleteEventFromLibrary(@RequestParam(value = "libraryId") Long libraryId,
+                                             @RequestParam(value = "eventId") Long eventId) {
+        return libraryService.deleteEventFromLibrary(libraryId, eventId);
     }
 
 }

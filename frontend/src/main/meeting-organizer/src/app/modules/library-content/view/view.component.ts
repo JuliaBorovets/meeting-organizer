@@ -6,6 +6,8 @@ import {CreateStreamComponent} from '../stream/create/create.component';
 import {CreateEventComponent} from '../../meeting/event/create/create.component';
 import {StreamListComponent} from '../stream/list/stream-list.component';
 import {EventListComponent} from '../../meeting/event/list/event-list.component';
+import {AddEventComponent} from "../stream/add-event/add-event.component";
+import {AddEventToLibraryComponent} from "../add-event/add-event.component";
 
 @Component({
   selector: 'app-view',
@@ -93,9 +95,20 @@ export class ViewComponent implements OnInit, OnDestroy {
       ));
   }
 
-  openAddEventView(): void {
-    // console.log('-----');
 
+  openAddEventView(): void {
+    const creatEventDialogRef = this.dialog.open(AddEventToLibraryComponent, {
+      height: 'auto',
+      width: 'auto',
+      data: {
+        libraryId: this.libraryId,
+      }
+    });
+
+    this.subscription.add(
+      creatEventDialogRef.afterClosed().subscribe(
+        () => this.updateEventList()
+      ));
   }
 
   ngOnDestroy(): void {

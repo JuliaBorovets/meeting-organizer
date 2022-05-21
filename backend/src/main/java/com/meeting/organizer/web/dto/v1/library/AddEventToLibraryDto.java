@@ -1,4 +1,4 @@
-package com.meeting.organizer.web.dto.v1.event;
+package com.meeting.organizer.web.dto.v1.library;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddEventToStreamDto {
+public class AddEventToLibraryDto {
 
-    Long streamId;
+    Long libraryId;
 
     List<Long> eventIdsList = new ArrayList<>();
 }

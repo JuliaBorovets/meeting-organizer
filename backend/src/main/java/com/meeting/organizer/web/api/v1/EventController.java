@@ -88,12 +88,11 @@ public class EventController {
                                                               @RequestParam(value = "streamId", required = false) Long streamId,
                                                               @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                                               @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                                              @RequestParam(value = "name", defaultValue = "") String name,
                                                               @RequestParam(value = "eventName", defaultValue = "") String eventName,
                                                               @RequestParam(value = "userId") Long userId
     ) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        return eventService.findAllByNameAndStreamNotContaining(userId, libraryId, streamId, name, eventName, pageable);
+        return eventService.findAllByNameAndStreamNotContaining(userId, libraryId, streamId, eventName, pageable);
     }
 
     @GetMapping("/{id}")
@@ -147,5 +146,16 @@ public class EventController {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
         return userService.getEventVisitors(eventId, username, pageable);
+    }
+
+    @GetMapping("/library/not-contains/{libraryId}")
+    public List<EventDto> findAllByNameAndLibraryNotContaining(@PathVariable Long libraryId,
+                                                              @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                                              @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                                              @RequestParam(value = "eventName", defaultValue = "") String eventName,
+                                                              @RequestParam(value = "userId") Long userId
+    ) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        return eventService.findAllByNameAndLibraryNotContaining(userId, libraryId, eventName, pageable);
     }
 }

@@ -116,6 +116,7 @@ CREATE TABLE events
     stream_id               BIGINT,
     join_url                VARCHAR(255),
     access_token            VARCHAR(255),
+    creation_date           TIMESTAMP,
     is_private              BOOLEAN,
 
     CONSTRAINT events_pkey PRIMARY KEY (event_id)

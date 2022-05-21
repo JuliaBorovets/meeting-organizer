@@ -2,8 +2,10 @@ package com.meeting.organizer.model;
 
 import com.meeting.organizer.model.user.User;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,6 +52,10 @@ public class Event {
     private String externalMeetingId;
 
     private String joinUrl;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp creationDate;
 
     @Builder.Default
     private Boolean isPrivate = false;

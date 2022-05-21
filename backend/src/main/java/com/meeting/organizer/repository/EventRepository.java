@@ -13,21 +13,21 @@ import java.util.Optional;
 
 public interface EventRepository extends PagingAndSortingRepository<Event, Long> {
 
-    List<Event> findByLibrary_LibraryIdAndStream_StreamIdAndNameLike(Long libraryId, Long streamId, String eventName, Pageable pageable);
+    List<Event> findByLibrary_LibraryIdAndStream_StreamIdAndNameLikeOrderByCreationDateDesc(Long libraryId, Long streamId, String eventName, Pageable pageable);
 
-    List<Event> findByLibrary_LibraryIdNotContainingAndNameLike(Long libraryId, String eventName, Pageable pageable);
+    List<Event> findByLibrary_LibraryIdNotContainingAndNameLikeOrderByCreationDateDesc(Long libraryId, String eventName, Pageable pageable);
 
     Long countByLibrary_LibraryId(Long libraryId);
 
-    List<Event> findEventsByUsersFavorite_UserIdAndNameLike(Long userId, String eventName, Pageable pageable);
+    List<Event> findEventsByUsersFavorite_UserIdAndNameLikeOrderByCreationDateDesc(Long userId, String eventName, Pageable pageable);
 
-    List<Event> findEventsByNameLikeAndIsPrivateOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(String eventName, Boolean isPrivate, User user, String eventName2, User creator, String eventName3,Pageable pageable);
+    List<Event> findEventsByNameLikeAndIsPrivateOrGivenAccessListContainsAndNameLikeOrUserAndNameLikeOrderByCreationDateDesc(String eventName, Boolean isPrivate, User user, String eventName2, User creator, String eventName3,Pageable pageable);
 
-    List<Event> findAllByUser_UserIdAndNameLike(Long userId, String eventName,Pageable pageable);
+    List<Event> findAllByUser_UserIdAndNameLikeOrderByCreationDateDesc(Long userId, String eventName,Pageable pageable);
 
-    List<Event> findEventsByGivenAccessList_UserIdAndNameLike(Long userId, String eventName, Pageable pageable);
+    List<Event> findEventsByGivenAccessList_UserIdAndNameLikeOrderByCreationDateDesc(Long userId, String eventName, Pageable pageable);
 
     Optional<Event> findByAccessToken(String accessToken);
 
-    List<Event> findByLibrary_LibraryIdAndNameLike(Long libraryId, String eventName, Pageable pageable);
+    List<Event> findByLibrary_LibraryIdAndNameLikeOrderByCreationDateDesc(Long libraryId, String eventName, Pageable pageable);
 }

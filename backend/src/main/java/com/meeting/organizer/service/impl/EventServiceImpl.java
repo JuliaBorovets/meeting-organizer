@@ -148,7 +148,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         EventResponse eventResponse = new EventResponse();
         String eventNamePattern = eventName + "%";
 
-        List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdAndStream_StreamIdAndNameLike(libraryId, streamId, eventNamePattern, pageable)
+        List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdAndStream_StreamIdAndNameLikeOrderByCreationDateDesc(libraryId, streamId, eventNamePattern, pageable)
                 .stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
@@ -168,7 +168,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         log.info(eventNamePattern);
 
-        List<EventDto> eventDtoList = repository.findEventsByNameLikeAndIsPrivateOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(eventNamePattern, false, user, eventNamePattern, user, eventNamePattern, pageable)
+        List<EventDto> eventDtoList = repository.findEventsByNameLikeAndIsPrivateOrGivenAccessListContainsAndNameLikeOrUserAndNameLikeOrderByCreationDateDesc(eventNamePattern, false, user, eventNamePattern, user, eventNamePattern, pageable)
                 .stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
@@ -182,7 +182,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     //todo add not only creator, but also participant
     @Override
     public List<Event> findAllByUser(Long userId) {
-        return repository.findAllByUser_UserIdAndNameLike(userId, "%", null);
+        return repository.findAllByUser_UserIdAndNameLikeOrderByCreationDateDesc(userId, "%", null);
     }
 
     @Override
@@ -191,7 +191,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         String eventNamePattern = eventName + "%";
 
-        List<EventDto> eventDtoList = repository.findAllByUser_UserIdAndNameLike(userId, eventNamePattern, pageable).stream()
+        List<EventDto> eventDtoList = repository.findAllByUser_UserIdAndNameLikeOrderByCreationDateDesc(userId, eventNamePattern, pageable).stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
 
@@ -207,7 +207,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         String eventNamePattern = eventName + "%";
 
-        List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdNotContainingAndNameLike(libraryId, eventNamePattern, pageable)
+        List<EventDto> eventDtoList = repository.findByLibrary_LibraryIdNotContainingAndNameLikeOrderByCreationDateDesc(libraryId, eventNamePattern, pageable)
                 .stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
@@ -236,7 +236,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         String eventNamePattern = eventName + "%";
 
-        List<Event> result = repository.findByLibrary_LibraryIdAndStream_StreamIdAndNameLike(
+        List<Event> result = repository.findByLibrary_LibraryIdAndStream_StreamIdAndNameLikeOrderByCreationDateDesc(
                 libraryId, null, eventNamePattern, pageable);
 
         return result.stream()
@@ -274,7 +274,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     public EventResponse getUserFavoriteEventsPaginated(Long userId, String eventName, Pageable pageable) {
         String eventNamePattern = eventName + "%";
 
-        List<EventDto> eventDtoList = repository.findEventsByUsersFavorite_UserIdAndNameLike(userId, eventNamePattern, pageable).stream()
+        List<EventDto> eventDtoList = repository.findEventsByUsersFavorite_UserIdAndNameLikeOrderByCreationDateDesc(userId, eventNamePattern, pageable).stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
 
@@ -290,7 +290,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         String eventNamePattern = eventName + "%";
 
-        List<EventDto> eventDtoList = repository.findEventsByGivenAccessList_UserIdAndNameLike(userId, eventNamePattern, pageable).stream()
+        List<EventDto> eventDtoList = repository.findEventsByGivenAccessList_UserIdAndNameLikeOrderByCreationDateDesc(userId, eventNamePattern, pageable).stream()
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
 
@@ -382,7 +382,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     public List<EventDto> findAllByNameAndLibraryNotContaining(Long userId, Long libraryId, String eventName, Pageable pageable) {
         String eventNamePattern = eventName + "%";
 
-        List<Event> result = repository.findByLibrary_LibraryIdAndNameLike(
+        List<Event> result = repository.findByLibrary_LibraryIdAndNameLikeOrderByCreationDateDesc(
                 null, eventNamePattern, pageable);
 
         return result.stream()

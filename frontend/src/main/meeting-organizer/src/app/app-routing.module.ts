@@ -8,7 +8,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'main-page',
+        redirectTo: 'calendar',
         pathMatch: 'full'
       },
       {
@@ -34,10 +34,6 @@ const routes: Routes = [
       {
         path: 'meeting',
         loadChildren: () => import('src/app/modules/meeting/meeting.module').then(m => m.MeetingModule)
-      },
-      {
-        path: 'main-page',
-        loadChildren: () => import('src/app/modules/shared/shared.module').then(m => m.SharedModule)
       },
       {
         path: '404',

@@ -1,28 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {MainPageComponent} from './main-page/main-page.component';
-import {AuthGuard} from '../../services/auth/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     data: {
-      breadcrumb: 'Welcome Page'
     },
     children: [
-      {
-        path: '',
-        redirectTo: 'main-page',
-        pathMatch: 'full'
-      },
-      {
-        path: 'main-page',
-        data: {
-          breadcrumb: 'Main Page'
-        },
-        component: MainPageComponent,
-        canActivate: [AuthGuard]
-      },
       {
         path: 'auth',
         data: {

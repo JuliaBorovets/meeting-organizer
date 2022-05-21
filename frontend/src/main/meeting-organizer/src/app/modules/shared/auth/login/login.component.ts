@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         window.sessionStorage.setItem('user', JSON.stringify(user));
         window.sessionStorage.setItem('token', user.token);
         this.storageService.setUser(user);
-        this.router.navigateByUrl('/main-page').then();
+        this.router.navigateByUrl('/calendar').then();
         this.dialogRef.close();
       },
       err => {

@@ -6,6 +6,7 @@ import {EventFilterModel} from '../../models/event/event-filter.model';
 import {EventResponseModel} from '../../models/event/event-response.model';
 import {AttendeesFilterModel} from '../../models/event/attendees-filter.model';
 import {AttendeesResponseModel} from '../../models/event/attendees-response.model';
+import {LibraryModel} from "../../models/library/library.model";
 
 @Injectable({
   providedIn: 'root'
@@ -143,6 +144,17 @@ export class EventService {
     params = params.append('eventId', String(eventId));
     params = params.append('userId', String(userId));
     return this.http.delete<EventModel>('/api/v1/event/visitor', {params});
+  }
+
+  addAccessToEventByToken(request: any): Observable<EventModel> {
+    return this.http.put<EventModel>('/api/v1/event/access/token', request);
+  }
+
+  removeAccessToEventEventByUserEmail(emailList: string[], eventId: number): Observable<EventModel> {
+    let params = new HttpParams();
+    params = params.append('emailList', String(emailList));
+    params = params.append('eventId', String(eventId));
+    return this.http.delete<EventModel>('/api/v1/event/access', {params});
   }
 
 }

@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {PageEvent} from '@angular/material/paginator';
 import {Observable, Subscription} from 'rxjs';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {EventFilterModel} from '../../../../models/event/event-filter.model';
 import {EventModel} from '../../../../models/event/event.model';
 import {EventService} from '../../../../services/event/event.service';
@@ -11,6 +11,7 @@ import {CreateEventComponent} from '../create/create.component';
 import {MatDialog} from '@angular/material/dialog';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {debounceTime} from 'rxjs/operators';
+import {AddEventAccessCodeComponent} from '../../add-access-code/add-access-code.component';
 
 @Component({
   selector: 'app-event-list',
@@ -141,6 +142,19 @@ export class EventListComponent implements OnInit, OnDestroy {
 
   isFindAccessSelected(): boolean {
     return this.activeLink === this.links[2];
+  }
+
+  openAddAccessCodeDialog(): void {
+    const addAccessDialogRef = this.dialog.open(AddEventAccessCodeComponent, {
+      height: 'auto',
+      width: '65vh'
+    });
+
+    this.subscription.add(
+      addAccessDialogRef.afterClosed().subscribe(
+        () => this.findEvents(),
+        () => this.isError = true)
+    );
   }
 
   ngOnDestroy(): void {

@@ -135,9 +135,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
     const addExistingEventRequest = {
       ...baseCreateRequest,
-      meetingEntity: {
-        joinUrl: this.f.joinUrl.value
-      },
+      joinUrl: this.f.joinUrl.value,
     };
 
     const zoomCreateRequest = {
@@ -174,7 +172,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
     let request;
 
-    if (this.generateMeeting) {
+    if (this.f.generateMeeting.value) {
       if (this.f.meetingType.value === MeetingType.ZOOM) {
         request = zoomCreateRequest;
       } else if (this.f.meetingType.value === MeetingType.WEBEX) {

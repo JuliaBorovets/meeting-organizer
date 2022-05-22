@@ -153,10 +153,16 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   navigateToInfoPage(): void {
     if (this.libraryId) {
-      this.router.navigateByUrl(`meeting/info/${this.eventModel.eventId}?libraryContent=true`).then(() => {});
+      this.router.navigateByUrl(`meeting/info/${this.eventModel.eventId}?libraryContent=true`).then(() => {
+      });
     } else {
-      this.router.navigateByUrl(`meeting/info/${this.eventModel.eventId}`).then(() => {});
+      this.router.navigateByUrl(`meeting/info/${this.eventModel.eventId}`).then(() => {
+      });
     }
+  }
+
+  isCreator(): boolean {
+    return this.userId === this.eventModel.user.userId;
   }
 
   ngOnDestroy(): void {

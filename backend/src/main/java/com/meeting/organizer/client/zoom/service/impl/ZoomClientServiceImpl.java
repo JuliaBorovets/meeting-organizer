@@ -10,10 +10,7 @@ import com.meeting.organizer.exception.custom.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -83,7 +80,7 @@ public class ZoomClientServiceImpl implements ZoomClientService {
     @Override
     public void deleteMeeting(Long id) {
         HttpHeaders headers = createHeaders();
-        HttpEntity<ZoomMeeting> httpEntity = new HttpEntity<>(headers);
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
         try {
             String uri = UriComponentsBuilder.fromUriString(meetingDeleteUrl)
@@ -93,11 +90,15 @@ public class ZoomClientServiceImpl implements ZoomClientService {
             log.info("Deleting meeting, url: {}, httpEntity {}", uri, httpEntity);
 
             nonIdempotentRetryTemplate.execute(retryContext -> {
-                        restTemplate.delete(uri, httpEntity);
+                        restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, String.class);
                         return null;
                     }
             );
         } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                log.error("Not found with id={}", id);
+                return;
+            }
             throw new MeetingCanNotDeleteException(e);
         }
     }

@@ -138,8 +138,13 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     public void deleteEvent(Long id) {
         log.info("deleting event with={}", id);
         Event event = findById(id);
-        //todo delete also external meeting
-        //deleteMeetingByType(event.getMeetingType(), event.getExternalMeetingId());
+        if (Objects.nonNull(event.getExternalMeetingId())) {
+            if (event.getMeetingType() == MeetingType.ZOOM) {
+                zoomClientService.deleteMeeting(Long.parseLong(event.getExternalMeetingId()));
+            } else if (event.getMeetingType() == MeetingType.WEBEX) {
+                webexClientService.deleteMeeting(event.getExternalMeetingId());
+            }
+        }
         super.deleteById(id);
     }
 

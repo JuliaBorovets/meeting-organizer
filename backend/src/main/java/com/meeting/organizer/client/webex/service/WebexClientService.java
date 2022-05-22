@@ -7,7 +7,7 @@ public interface WebexClientService {
 
     WebexMeeting createMeeting(WebexCreateMeeting createEntity);
 
-    void deleteMeeting(Long id);
+    void deleteMeeting(String id);
 
     WebexMeeting getById(String id);
 }

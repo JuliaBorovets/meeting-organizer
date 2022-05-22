@@ -98,7 +98,7 @@
               <mat-icon>delete_outline</mat-icon>
               <span>Delete from library</span>
             </button>
-            <button mat-menu-item aria-label="Delete">
+            <button mat-menu-item aria-label="Delete" (click)="deleteEvent()" *ngIf="isCreator()">
               <mat-icon>delete_outline</mat-icon>
               <span>Delete</span>
             </button>

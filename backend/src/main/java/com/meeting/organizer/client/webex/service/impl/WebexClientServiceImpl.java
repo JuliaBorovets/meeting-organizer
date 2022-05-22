@@ -6,14 +6,12 @@ import com.meeting.organizer.client.webex.service.WebexClientService;
 import com.meeting.organizer.client.webex.service.WebexTokenService;
 import com.meeting.organizer.client.zoom.model.ZoomMeeting;
 import com.meeting.organizer.exception.custom.MeetingCanNotCreateException;
+import com.meeting.organizer.exception.custom.MeetingCanNotDeleteException;
 import com.meeting.organizer.exception.custom.MeetingNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -35,6 +33,8 @@ public class WebexClientServiceImpl implements WebexClientService {
     private String meetingCreateUrl;
     @Value("${webex.url.meeting-get}")
     private String meetingGetUrl;
+    @Value("${webex.url.meeting-delete}")
+    private String meetingDeleteUrl;
 
     public WebexClientServiceImpl(RestTemplate restTemplate,
                                   @Qualifier("nonIdempotentRetryTemplate") RetryTemplate nonIdempotentRetryTemplate,
@@ -47,8 +47,29 @@ public class WebexClientServiceImpl implements WebexClientService {
     }
 
     @Override
-    public void deleteMeeting(Long id) {
-        //todo
+    public void deleteMeeting(String id) {
+        HttpHeaders headers = createHeaders();
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+
+        try {
+            String uri = UriComponentsBuilder.fromUriString(meetingDeleteUrl)
+                    .buildAndExpand(id)
+                    .toUriString();
+
+            log.info("Deleting webex meeting, url: {}, httpEntity {}", uri, httpEntity);
+
+            nonIdempotentRetryTemplate.execute(retryContext -> {
+                        restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, String.class);
+                        return null;
+                    }
+            );
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                log.error("Not found with id={}", id);
+                return;
+            }
+            throw new MeetingCanNotDeleteException(e);
+        }
     }
 
     @Override

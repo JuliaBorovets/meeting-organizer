@@ -3,6 +3,7 @@ package com.meeting.organizer.service;
 import com.meeting.organizer.model.Event;
 import com.meeting.organizer.web.dto.v1.event.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -11,6 +12,8 @@ public interface EventService {
     EventDto createEvent(EventCreateDto eventCreateDto);
 
     EventDto updateEvent(EventUpdateDto eventUpdateDto);
+
+    EventDto  uploadEventImage(Long eventId, MultipartFile image);
 
     void deleteEvent(Long id);
 

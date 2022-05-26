@@ -1,1 +1,312 @@
-<p>update works!</p>
+<div class="update-event-form" *ngIf="!isLoading; else loading">
+  <form (ngSubmit)="onSubmit()" [formGroup]="updateForm">
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <p class="header-title"> Update Event </p>
+    </div>
+
+    <br>
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-event-input" appearance="outline">
+        <mat-label>name</mat-label>
+        <input matInput type="text" id="name" class="form-control" name="name" formControlName="name"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }" required>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-event-input" appearance="outline">
+        <mat-label>description</mat-label>
+        <input matInput type="text" id="description" class="form-control" name="description"
+               formControlName="description"
+               [ngClass]="{ 'is-invalid': submitted && f.description.errors }" required>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+      <div fxLayout="column" fxFlex="50">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Choose a start date</mat-label>
+          <input matInput [ngxMatDatetimePicker]="picker" formControlName="startDate" placeholder="Start date"
+                 required>
+          <mat-datepicker-toggle matSuffix [for]="$any(picker)">
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxFlex="50">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Event Type</mat-label>
+          <mat-select id="eventType" formControlName="eventType" required>
+            <mat-option *ngFor="let type of eventTypes" [value]="type">
+              {{type}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+      <div fxLayout="column" fxFlex="50">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Duration in minutes</mat-label>
+          <input matInput type="number" id="durationInMinutes" class="form-control" min="1" name="durationInMinutes"
+                 formControlName="durationInMinutes"
+                 [ngClass]="{ 'is-invalid': submitted && f.durationInMinutes.errors }" required>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxFlex="50">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Max number of participants</mat-label>
+          <input matInput type="number" id="maxNumberParticipants" class="form-control" min="1"
+                 name="maxNumberParticipants" formControlName="maxNumberParticipants"
+                 [ngClass]="{ 'is-invalid': submitted && f.maxNumberParticipants.errors }" required>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+      <mat-form-field class="full-width-event-input" appearance="outline">
+        <mat-label>Meeting Type</mat-label>
+        <mat-select id="meetingType" formControlName="meetingType" required>
+          <mat-option *ngFor="let type of meetingTypes" [value]="type">
+            {{type}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+      <div>
+        <mat-slide-toggle
+          formControlName="isPrivate"
+          [color]="'accent'">
+        </mat-slide-toggle>
+        <mat-label class="toggle-class">Private</mat-label>
+      </div>
+    </div>
+
+    <br>
+
+    <div *ngIf="!isGenerateNewEventSelected()">
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>join Url</mat-label>
+          <input matInput type="text" id="joinUrl" class="form-control" name="joinUrl" formControlName="joinUrl"
+                 [ngClass]="{ 'is-invalid': submitted && f.joinUrl.errors }">
+        </mat-form-field>
+      </div>
+    </div>
+
+
+    <div *ngIf="isZoomTypeSelected() && isGenerateNewEventSelected()">
+
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>agenda</mat-label>
+          <input matInput type="text" id="agenda" class="form-control" name="agenda" formControlName="agenda"
+                 [ngClass]="{ 'is-invalid': submitted && f.agenda.errors }">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>password</mat-label>
+          <input matInput [type]="hidePasswordField ? 'password' : 'text'" id="password" class="form-control"
+                 name="password"
+                 formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+          <mat-icon matSuffix (click)="hidePasswordField = !hidePasswordField">
+            {{hidePasswordField ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+        <div fxLayout="column" fxFlex="40">
+          <div>
+            <mat-slide-toggle
+              formControlName="allowMultipleDevices"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Allow multiple devices</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="30">
+          <div>
+            <mat-slide-toggle
+              formControlName="hostVideo"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Host video</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="26">
+          <div>
+            <mat-slide-toggle
+              formControlName="meetingAuthentication"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Meeting Authentication</mat-label>
+          </div>
+        </div>
+      </div>
+
+      <br>
+
+      <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+        <div fxLayout="column" fxFlex="40">
+          <div>
+            <mat-slide-toggle
+              formControlName="muteUponEntry"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Mute upon entry</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="30">
+          <div>
+            <mat-slide-toggle
+              formControlName="participantVideo"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Participant video</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="26">
+          <div>
+            <mat-slide-toggle
+              formControlName="waitingRoom"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Waiting room</mat-label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isWebexTypeSelected() && isGenerateNewEventSelected()">
+
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput type="text" id="webexTitle" class="form-control" name="webexTitle"
+                 formControlName="webexTitle"
+                 [ngClass]="{ 'is-invalid': submitted && f.webexTitle.errors }">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Agenda</mat-label>
+          <input matInput type="text" id="webexAgenda" class="form-control" name="webexAgenda"
+                 formControlName="webexAgenda"
+                 [ngClass]="{ 'is-invalid': submitted && f.webexAgenda.errors }">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput type="text" id="webexPassword" class="form-control" name="webexPassword"
+                 formControlName="webexPassword"
+                 [ngClass]="{ 'is-invalid': submitted && f.webexPassword.errors }">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+        <mat-form-field class="full-width-event-input" appearance="outline">
+          <mat-label>Host email</mat-label>
+          <input matInput type="text" id="webexHostEmail" class="form-control" name="webexHostEmail"
+                 formControlName="webexHostEmail"
+                 [ngClass]="{ 'is-invalid': submitted && f.webexHostEmail.errors }">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+        <div fxLayout="column" fxFlex="40">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexEnabledAutoRecordMeeting"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Enable AutoRecording</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="30">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexEnabledJoinBeforeHost"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Enable Join Before Host</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="26">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexAutoAcceptRequest"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Auto Accept Request</mat-label>
+          </div>
+        </div>
+      </div>
+
+      <br>
+
+      <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
+        <div fxLayout="column" fxFlex="40">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexRequireFirstName"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Require First Name</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="30">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexRequireLastName"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Require Last Name</mat-label>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="26">
+          <div>
+            <mat-slide-toggle
+              formControlName="webexRequireEmail"
+              [color]="'accent'">
+            </mat-slide-toggle>
+            <mat-label class="toggle-class">Require Email</mat-label>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <br>
+
+    <mat-error *ngIf="isUpdateFailed" class="error-info">
+      Cannot update Event
+    </mat-error>
+
+    <button mat-button>Update</button>
+
+    <div class="more-info">
+      <a class="btn btn-outline-primary login" (click)="onNoClick()">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+
+<ng-template #loading>
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

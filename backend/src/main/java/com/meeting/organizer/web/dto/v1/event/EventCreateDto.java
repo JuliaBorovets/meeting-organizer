@@ -28,7 +28,7 @@ public class EventCreateDto {
 
     private String description;
 
-    private Byte[] photo;
+    private String imagePath;
 
     private EventType eventType;
 

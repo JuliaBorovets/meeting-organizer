@@ -1,6 +1,7 @@
 package com.meeting.organizer.web.api.v1;
 
 import com.meeting.organizer.service.EventService;
+import com.meeting.organizer.service.FileStorageService;
 import com.meeting.organizer.service.UserService;
 import com.meeting.organizer.web.dto.v1.event.EventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.EventDto;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,6 +30,11 @@ public class EventController {
     @PostMapping
     public EventDto createEvent(@RequestBody EventCreateDto eventDto) {
         return eventService.createEvent(eventDto);
+    }
+
+    @PatchMapping("/image/{eventId}")
+    public EventDto uploadEventImage( @RequestParam(value = "image") MultipartFile image, @PathVariable Long eventId) {
+        return eventService.uploadEventImage(eventId, image);
     }
 
     @PutMapping

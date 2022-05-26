@@ -1,0 +1,26 @@
+.form-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //flex-direction: column;
+  margin-left: 5px;
+  overflow: scroll;
+}
+
+.create-update-form {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  //display: flex;
+  justify-content: center;
+  overflow: scroll;
+}
+
+.full-width-event-input {
+  width: 98%;
+  margin-left: 1px;
+  min-width: 60vh;
+}
+
+
+.toggle-class {
+  margin-left: 5px;
+}

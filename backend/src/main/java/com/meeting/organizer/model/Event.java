@@ -37,8 +37,7 @@ public class Event {
 
     private String description;
 
-    @Lob
-    private Byte[] photo;
+    private String imagePath;
 
     @Enumerated(EnumType.STRING)
     private EventType eventType;

@@ -1,4 +1,4 @@
-package com.meeting.organizer.web;
+package com.meeting.organizer.web.api.v1;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

@@ -6,7 +6,7 @@ import {EventService} from '../../../../services/event/event.service';
 import {EventType} from '../../../../models/event/event-type.model';
 import {State} from '../../../../models/event/state.model';
 import {MeetingType} from '../../../../models/event/meeting-type.model';
-import {StorageService} from "../../../../services/auth/storage.service";
+import {StorageService} from '../../../../services/auth/storage.service';
 
 @Component({
   selector: 'app-create',

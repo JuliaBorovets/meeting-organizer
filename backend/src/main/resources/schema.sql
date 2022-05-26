@@ -105,7 +105,7 @@ CREATE TABLE events
     max_number_participants INTEGER,
     name                    VARCHAR(255),
     description             VARCHAR(500),
-    photo                   BYTEA,
+    image_path              VARCHAR(500),
     event_type              VARCHAR(255),
     state                   VARCHAR(255),
     meeting_type            VARCHAR(255),

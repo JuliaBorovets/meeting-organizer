@@ -30,7 +30,7 @@ public class EventDto {
 
     private String description;
 
-    private Byte[] photo;
+    private String imagePath;
 
     private EventType eventType;
 
@@ -57,4 +57,6 @@ public class EventDto {
     private Long participantCount;
 
     private UserDto user;
+
+    private Long durationInMinutes;
 }

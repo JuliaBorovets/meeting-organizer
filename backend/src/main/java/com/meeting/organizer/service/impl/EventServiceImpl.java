@@ -17,6 +17,7 @@ import com.meeting.organizer.repository.EventRepository;
 import com.meeting.organizer.service.*;
 import com.meeting.organizer.web.dto.v1.event.*;
 import com.meeting.organizer.web.dto.v1.event.webex.WebexEventCreateDto;
+import com.meeting.organizer.web.dto.v1.event.webex.WebexEventDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventDto;
 import com.meeting.organizer.web.mapper.v1.EventMapper;
@@ -26,8 +27,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -48,7 +51,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     private final CRUDService<User> userCRUDService;
     private final UserService userService;
     private final MailService mailService;
-
+    private final FileStorageService fileStorageService;
 
     public EventServiceImpl(EventRepository eventRepository,
                             ZoomClientService zoomClientService,
@@ -57,6 +60,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                             @Qualifier("libraryServiceImpl") CRUDService<Library> libraryService,
                             @Lazy @Qualifier("streamServiceImpl") CRUDService<Stream> streamService,
                             @Qualifier("userServiceImpl") CRUDService<User> userCRUDService,
+                            FileStorageService fileStorageService,
                             UserService userService,
                             MailService mailService) {
         super(eventRepository);
@@ -68,6 +72,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         this.userCRUDService = userCRUDService;
         this.userService = userService;
         this.mailService = mailService;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
@@ -113,6 +118,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         return eventMapper.eventToEventDto(savedEvent);
     }
 
+    //todo
     @Transactional
     @Override
     public EventDto updateEvent(EventUpdateDto eventUpdateDto) {
@@ -122,7 +128,6 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         updatedEvent.setMaxNumberParticipants(eventUpdateDto.getMaxNumberParticipants());
         updatedEvent.setName(eventUpdateDto.getName());
         updatedEvent.setDescription(eventUpdateDto.getDescription());
-        updatedEvent.setPhoto(eventUpdateDto.getPhoto());
         updatedEvent.setMeetingType(eventUpdateDto.getMeetingType());
         updatedEvent.setEndDate(eventUpdateDto.getStartDate().plus(eventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES));
 
@@ -133,11 +138,22 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         return eventMapper.eventToEventDto(updatedEvent);
     }
 
+    @Override
+    public EventDto uploadEventImage(Long eventId, MultipartFile image) {
+        Event event = findById(eventId);
+        if (Objects.nonNull(event.getImagePath())) {
+            fileStorageService.deleteFile(event.getImagePath());
+        }
+        event.setImagePath(fileStorageService.storeFile(image));
+        return convertToDto(event);
+    }
+
     @Transactional
     @Override
     public void deleteEvent(Long id) {
         log.info("deleting event with={}", id);
         Event event = findById(id);
+        fileStorageService.deleteFile(event.getImagePath());
         if (Objects.nonNull(event.getExternalMeetingId())) {
             if (event.getMeetingType() == MeetingType.ZOOM) {
                 zoomClientService.deleteMeeting(Long.parseLong(event.getExternalMeetingId()));
@@ -226,7 +242,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     @Override
     public EventDto findEventById(Long eventId) {
         Event event = findById(eventId);
-        EventDto eventDto = eventMapper.eventToEventDto(
+        EventDto eventDto = convertToDto(
                 event
         );
 
@@ -462,12 +478,16 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         throw new UnsupportedEventException("Not supported type for event " + type.name());
     }
 
+    //todo
     private void updateMeetingByType(MeetingType type, MeetingDto meetingDto) {
         if (type.equals(MeetingType.ZOOM) && Objects.nonNull(meetingDto)) {
             ZoomEventDto zoomEventUpdateDto = (ZoomEventDto) meetingDto;
             ZoomMeeting zoomMeeting = eventMapper.zoomMeetingDtoToMeeting(zoomEventUpdateDto);
-            log.info("zoomMeeting {}", zoomMeeting);
             zoomClientService.updateMeeting(zoomMeeting);
+        } else if (type.equals(MeetingType.WEBEX) && Objects.nonNull(meetingDto)) {
+            WebexEventDto webexEventDto = (WebexEventDto) meetingDto;
+            WebexMeeting webexMeeting = eventMapper.zoomMeetingDtoToMeeting(webexEventDto);
+            //  webexClientService.updateMeeting(webexMeeting);
         }
     }
 
@@ -488,11 +508,17 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         EventDto eventDto = eventMapper.eventToEventDto(event);
         eventDto.setIsFavorite(isFavorite);
         eventDto.setParticipantCount((long) event.getVisitors().size());
+
+        Duration duration = Duration.between(event.getStartDate(), event.getEndDate());
+        eventDto.setDurationInMinutes(duration.toMinutes());
         return eventDto;
     }
 
     private EventDto convertToDto(Event event) {
-        return eventMapper.eventToEventDto(event);
+        EventDto eventDto = eventMapper.eventToEventDto(event);
+        Duration duration = Duration.between(event.getStartDate(), event.getEndDate());
+        eventDto.setDurationInMinutes(duration.toMinutes());
+        return eventDto;
     }
 
 }

@@ -12,7 +12,7 @@ export class EventModel {
   durationInMinutes?: number;
   name?: string;
   description?: string;
-  image?: Blob;
+  imagePath?: string;
   eventType?: EventType;
   state?: State;
   meetingType?: MeetingType;
@@ -37,4 +37,19 @@ export class MeetingEntity {
   start_url?: string;
   title?: string;
   hostEmail?: string;
+  allowMultipleDevices?: boolean;
+  hostVideo?: boolean;
+  meetingAuthentication?: boolean;
+  muteUponEntry?: boolean;
+  participantVideo?: boolean;
+  waitingRoom?: boolean;
+  isPrivate?: boolean;
+  start?: any;
+  durationInMinutes?: any;
+  enabledAutoRecordMeeting?: any;
+  enabledJoinBeforeHost?: any;
+  autoAcceptRequest?: any;
+  requireFirstName?: any;
+  requireLastName?: any;
+  requireEmail?: any;
 }

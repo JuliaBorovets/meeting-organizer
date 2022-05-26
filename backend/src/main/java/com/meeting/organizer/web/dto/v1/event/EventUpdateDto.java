@@ -29,7 +29,7 @@ public class EventUpdateDto {
 
     private String description;
 
-    private Byte[] photo;
+    private String imagePath;
 
     private Location location;
 

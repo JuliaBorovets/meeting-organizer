@@ -86,7 +86,10 @@
                   <div class="nav-item dropdown no-arrow">
                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                       <span class="d-none d-lg-inline me-2 text-gray-600 small">{{user.firstName}} {{user.lastName}}</span>
-                      <img class="border rounded-circle img-profile" src="assets/hero-media-illustration-dark.svg">
+                      <img class="border rounded-circle img-profile" alt="image" *ngIf="user && !user.imagePath"
+                           src="assets/hero-media-illustration-dark.svg">
+                      <img class="border rounded-circle img-profile" alt="image" *ngIf="user&& user.imagePath"
+                           src="http://localhost:8080/api/v1/storage/downloadFile/{{user.imagePath}}">
                     </a>
                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                       <a class="dropdown-item" (click)="logout()"><i

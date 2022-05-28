@@ -50,8 +50,7 @@ public class User implements UserDetails, CredentialsContainer {
 
     private String bio;
 
-    @Lob
-    private Byte[] image;
+    private String imagePath;
 
     private String phoneNumber;
 

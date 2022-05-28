@@ -27,6 +27,8 @@ public class UserDto {
 
     private String lastName;
 
+    private String imagePath;
+
     private List<RoleDto> roles = new ArrayList<>();
 
 }

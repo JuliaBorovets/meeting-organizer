@@ -20,5 +20,7 @@ public class UserLoginDto {
 
     private String token;
 
+    private String imagePath;
+
     private List<String> roles;
 }

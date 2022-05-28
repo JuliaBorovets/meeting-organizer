@@ -4,6 +4,9 @@ import {Subscription} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
 import {UserService} from '../../../services/user-service.service';
 import {StorageService} from '../../../services/auth/storage.service';
+import {UserModel} from '../../../models/user/user.model';
+import {MatDialog} from '@angular/material/dialog';
+import {UploadUserPhotoComponent} from '../upload-photo/upload-photo.component';
 
 @Component({
   selector: 'app-view',
@@ -18,9 +21,11 @@ export class ViewComponent implements OnInit, OnDestroy {
   hideConfirmPasswordField = true;
   subscription: Subscription = new Subscription();
   userId: number;
+  user: UserModel;
 
   constructor(private userService: UserService,
               private formBuilder: FormBuilder,
+              public dialog: MatDialog,
               private toastrService: ToastrService,
               private storageService: StorageService) {
     this.userId = this.storageService.getUser.userId;
@@ -39,6 +44,7 @@ export class ViewComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.userService.getUserById(this.userId).subscribe(
         data => {
+          this.user = data;
           this.updateForm.setValue(data);
           this.updateForm.controls.password.setValue('');
         },
@@ -72,6 +78,7 @@ export class ViewComponent implements OnInit, OnDestroy {
         Validators.maxLength(30),
         Validators.pattern('[A-Za-z0-9]*')])
       ],
+      imagePath: null
     });
   }
 
@@ -113,6 +120,21 @@ export class ViewComponent implements OnInit, OnDestroy {
     this.initForm();
   }
 
+
+  showChangePhoto() {
+    const uploadDialogRef = this.dialog.open(UploadUserPhotoComponent, {
+      height: 'auto',
+      width: '80vh',
+      data: {
+        userId: this.userId
+      }
+    });
+
+    this.subscription.add(
+      uploadDialogRef.afterClosed().subscribe(
+        () => this.initForm()
+      ));
+  }
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();

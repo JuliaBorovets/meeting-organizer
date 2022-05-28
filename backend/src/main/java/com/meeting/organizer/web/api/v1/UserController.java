@@ -2,6 +2,7 @@ package com.meeting.organizer.web.api.v1;
 
 import com.meeting.organizer.service.AuthorizationService;
 import com.meeting.organizer.service.UserService;
+import com.meeting.organizer.web.dto.v1.event.EventDto;
 import com.meeting.organizer.web.dto.v1.user.UserCreateDto;
 import com.meeting.organizer.web.dto.v1.user.UserDto;
 import com.meeting.organizer.web.dto.v1.user.UserLoginDto;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -42,5 +44,10 @@ public class UserController {
     @PutMapping
     public UserDto update(@RequestBody UserUpdateDto userUpdateDto) {
         return userService.update(userUpdateDto);
+    }
+
+    @PatchMapping("/image/{userId}")
+    public UserDto uploadUserImage(@RequestParam(value = "image") MultipartFile image, @PathVariable Long userId) {
+        return userService.uploadUserImage(userId, image);
     }
 }

@@ -48,7 +48,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 .collect(Collectors.toList());
 
         return new UserLoginDto(user.getUserId(), user.getUsername(), user.getFirstName(),
-                user.getLastName(), user.getEmail(), bearer + jwt, roles);
+                user.getLastName(), user.getEmail(), bearer + jwt, user.getImagePath(), roles);
     }
 
 }

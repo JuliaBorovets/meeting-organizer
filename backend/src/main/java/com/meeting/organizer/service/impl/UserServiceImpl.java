@@ -19,9 +19,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,7 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private final VerificationTokenService verificationTokenService;
+    private final FileStorageService fileStorageService;
 
     @Value("${registration.confirm.link}")
     private String registrationConfirmLink;
@@ -43,6 +46,7 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
                            RoleService roleService,
                            PasswordEncoder passwordEncoder,
                            MailService mailService,
+                           FileStorageService fileStorageService,
                            @Lazy VerificationTokenService verificationTokenService) {
         super(repository);
         this.userMapper = userMapper;
@@ -50,6 +54,7 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
         this.verificationTokenService = verificationTokenService;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
@@ -134,6 +139,17 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
         response.setList(userDtoList);
         response.setTotalItems(total);
         return response;
+    }
+
+    @Transactional
+    @Override
+    public UserDto uploadUserImage(Long userId, MultipartFile image) {
+        User user = findById(userId);
+        if (Objects.nonNull(user.getImagePath())) {
+            fileStorageService.deleteFile(user.getImagePath());
+        }
+        user.setImagePath(fileStorageService.storeFile(image));
+        return userMapper.userToUserDto(user);
     }
 
 }

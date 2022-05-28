@@ -48,7 +48,7 @@ CREATE TABLE users
     last_name               VARCHAR(255),
     birthday                DATE,
     bio                     VARCHAR(255),
-    image                   BYTEA,
+    image_path               VARCHAR(255),
     phone_number            VARCHAR(255),
     creation_date           TIMESTAMP,
     last_modified_date      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -23,9 +23,9 @@
       </mat-form-field>
     </div>
 
-    <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
-      <div fxLayout="column" fxFlex="50">
-        <mat-form-field class="full-width-event-input" appearance="outline">
+    <div fxLayout="raw" fxLayoutAlign="start center" class="form-input">
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <mat-form-field class="full-width-event-input-half" appearance="outline">
           <mat-label>Choose a start date</mat-label>
           <input matInput [ngxMatDatetimePicker]="picker" formControlName="startDate" placeholder="Start date" required>
           <mat-datepicker-toggle matSuffix [for]="$any(picker)">
@@ -34,8 +34,8 @@
           <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
         </mat-form-field>
       </div>
-      <div fxLayout="column" fxFlex="50">
-        <mat-form-field class="full-width-event-input" appearance="outline">
+      <div fxLayout="column" fxLayoutAlign="right right">
+        <mat-form-field class="full-width-event-input-half" appearance="outline">
           <mat-label>Event Type</mat-label>
           <mat-select id="eventType" formControlName="eventType" required>
             <mat-option *ngFor="let type of eventTypes" [value]="type">
@@ -46,17 +46,17 @@
       </div>
     </div>
 
-    <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
-      <div fxLayout="column" fxFlex="50">
-        <mat-form-field class="full-width-event-input" appearance="outline">
+    <div fxLayout="raw" fxLayoutAlign="start center" class="form-input">
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <mat-form-field class="full-width-event-input-half" appearance="outline">
           <mat-label>Duration in minutes</mat-label>
           <input matInput type="number" id="durationInMinutes" class="form-control" min="1" name="durationInMinutes"
                  formControlName="durationInMinutes"
                  [ngClass]="{ 'is-invalid': submitted && f.durationInMinutes.errors }" required>
         </mat-form-field>
       </div>
-      <div fxLayout="column" fxFlex="50">
-        <mat-form-field class="full-width-event-input" appearance="outline">
+      <div fxLayout="column" fxLayoutAlign="right right">
+        <mat-form-field class="full-width-event-input-half" appearance="outline">
           <mat-label>Max number of participants</mat-label>
           <input matInput type="number" id="maxNumberParticipants" class="form-control" min="1"
                  name="maxNumberParticipants" formControlName="maxNumberParticipants"
@@ -237,7 +237,7 @@
       </div>
 
       <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
-        <div fxLayout="column" fxFlex="40">
+        <div fxLayout="column" fxFlex="50" style="margin-left: 50px;">
           <div>
             <mat-slide-toggle
               formControlName="webexEnabledAutoRecordMeeting"
@@ -246,7 +246,7 @@
             <mat-label class="toggle-class">Enable AutoRecording</mat-label>
           </div>
         </div>
-        <div fxLayout="column" fxFlex="30">
+        <div fxLayout="column" fxFlex="40">
           <div>
             <mat-slide-toggle
               formControlName="webexEnabledJoinBeforeHost"
@@ -255,50 +255,8 @@
             <mat-label class="toggle-class">Enable Join Before Host</mat-label>
           </div>
         </div>
-        <div fxLayout="column" fxFlex="26">
-          <div>
-            <mat-slide-toggle
-              formControlName="webexAutoAcceptRequest"
-              [color]="'accent'">
-            </mat-slide-toggle>
-            <mat-label class="toggle-class">Auto Accept Request</mat-label>
-          </div>
-        </div>
       </div>
-
       <br>
-
-      <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
-        <div fxLayout="column" fxFlex="40">
-          <div>
-            <mat-slide-toggle
-              formControlName="webexRequireFirstName"
-              [color]="'accent'">
-            </mat-slide-toggle>
-            <mat-label class="toggle-class">Require First Name</mat-label>
-          </div>
-        </div>
-        <div fxLayout="column" fxFlex="30">
-          <div>
-            <mat-slide-toggle
-              formControlName="webexRequireLastName"
-              [color]="'accent'">
-            </mat-slide-toggle>
-            <mat-label class="toggle-class">Require Last Name</mat-label>
-          </div>
-        </div>
-        <div fxLayout="column" fxFlex="26">
-          <div>
-            <mat-slide-toggle
-              formControlName="webexRequireEmail"
-              [color]="'accent'">
-            </mat-slide-toggle>
-            <mat-label class="toggle-class">Require Email</mat-label>
-          </div>
-        </div>
-
-      </div>
-
     </div>
 
     <br>

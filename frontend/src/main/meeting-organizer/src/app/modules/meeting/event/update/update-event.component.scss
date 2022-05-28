@@ -2,16 +2,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  //flex-direction: column;
   margin-left: 5px;
   overflow: scroll;
 }
 
-.create-update-form {
+.form-input-half {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: scroll;
+}
+
+.update-event-form {
   background-color: rgba(255, 255, 255, 0.04) !important;
-  //display: flex;
   justify-content: center;
   overflow: scroll;
+  max-height: 80vh;
 }
 
 .full-width-event-input {
@@ -23,4 +29,10 @@
 
 .toggle-class {
   margin-left: 5px;
+}
+
+.full-width-event-input-half {
+  margin-left: 1vh;
+  min-width: 40vh;
+  margin-right: 1vh;
 }

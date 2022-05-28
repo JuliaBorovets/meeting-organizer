@@ -3,6 +3,7 @@ package com.meeting.organizer.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meeting.organizer.client.webex.model.WebexCreateMeeting;
 import com.meeting.organizer.client.webex.model.WebexMeeting;
+import com.meeting.organizer.client.webex.model.WebexUpdateMeeting;
 import com.meeting.organizer.client.webex.service.WebexClientService;
 import com.meeting.organizer.client.zoom.model.ZoomMeeting;
 import com.meeting.organizer.client.zoom.service.ZoomClientService;
@@ -17,9 +18,9 @@ import com.meeting.organizer.repository.EventRepository;
 import com.meeting.organizer.service.*;
 import com.meeting.organizer.web.dto.v1.event.*;
 import com.meeting.organizer.web.dto.v1.event.webex.WebexEventCreateDto;
-import com.meeting.organizer.web.dto.v1.event.webex.WebexEventDto;
+import com.meeting.organizer.web.dto.v1.event.webex.WebexEventUpdateDto;
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventCreateDto;
-import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventDto;
+import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventUpdateDto;
 import com.meeting.organizer.web.mapper.v1.EventMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -130,11 +131,11 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         updatedEvent.setDescription(eventUpdateDto.getDescription());
         updatedEvent.setMeetingType(eventUpdateDto.getMeetingType());
         updatedEvent.setEndDate(eventUpdateDto.getStartDate().plus(eventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES));
-
-        repository.save(updatedEvent);
-
-        updateMeetingByType(eventUpdateDto.getMeetingType(), eventUpdateDto.getMeetingEntity());
-
+        if (Objects.isNull(updatedEvent.getExternalMeetingId())) {
+            updatedEvent.setJoinUrl(eventUpdateDto.getJoinUrl());
+        } else {
+            updateMeetingByType(eventUpdateDto.getMeetingType(), eventUpdateDto.getMeetingEntity(), updatedEvent.getExternalMeetingId());
+        }
         return eventMapper.eventToEventDto(updatedEvent);
     }
 
@@ -441,9 +442,9 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
     @SneakyThrows
     private void createMeetingByType(MeetingType type, Object meetingDto, Event event) {
-        if (type.equals(MeetingType.ZOOM) && Objects.nonNull(meetingDto)) {
-            ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
+        if (type.equals(MeetingType.ZOOM) && Objects.nonNull(meetingDto)) {
             ZoomEventCreateDto zoomEventCreateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), ZoomEventCreateDto.class);
 
             ZoomMeeting zoomMeeting = eventMapper.zoomMeetingCreateDtoToMeeting(zoomEventCreateDto);
@@ -457,8 +458,6 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         }
 
         if (type.equals(MeetingType.WEBEX) && Objects.nonNull(meetingDto)) {
-            ObjectMapper mapper = new ObjectMapper();
-
             WebexEventCreateDto webexEventCreateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), WebexEventCreateDto.class);
 
 
@@ -479,16 +478,34 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         throw new UnsupportedEventException("Not supported type for event " + type.name());
     }
 
-    //todo
-    private void updateMeetingByType(MeetingType type, MeetingDto meetingDto) {
+    @SneakyThrows
+    private void updateMeetingByType(MeetingType type, Object meetingDto, String externalMeetingId) {
+        ObjectMapper mapper = new ObjectMapper();
+
         if (type.equals(MeetingType.ZOOM) && Objects.nonNull(meetingDto)) {
-            ZoomEventDto zoomEventUpdateDto = (ZoomEventDto) meetingDto;
-            ZoomMeeting zoomMeeting = eventMapper.zoomMeetingDtoToMeeting(zoomEventUpdateDto);
-            zoomClientService.updateMeeting(zoomMeeting);
+            ZoomEventUpdateDto zoomEventUpdateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), ZoomEventUpdateDto.class);
+            ZoomMeeting zoomMeeting = eventMapper.zoomMeetingUpdateDtoToMeeting(zoomEventUpdateDto);
+            zoomClientService.updateMeeting(Long.parseLong(externalMeetingId), zoomMeeting);
         } else if (type.equals(MeetingType.WEBEX) && Objects.nonNull(meetingDto)) {
-            WebexEventDto webexEventDto = (WebexEventDto) meetingDto;
-            WebexMeeting webexMeeting = eventMapper.zoomMeetingDtoToMeeting(webexEventDto);
-            //  webexClientService.updateMeeting(webexMeeting);
+            WebexEventUpdateDto webexEventUpdateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), WebexEventUpdateDto.class);
+
+            DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            String end;
+            try {
+                end = LocalDateTime.parse(webexEventUpdateDto.getStart(), FORMATTER)
+                        .plus(webexEventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES)
+                        .toString();
+            } catch (Exception e) {
+                FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
+                end = LocalDateTime.parse(webexEventUpdateDto.getStart(), FORMATTER)
+                        .plus(webexEventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES)
+                        .toString();
+            }
+
+            WebexUpdateMeeting webexMeeting = eventMapper.webexMeetingUpdateDtoToMeeting(webexEventUpdateDto);
+            webexMeeting.setEnd(end);
+
+            webexClientService.updateMeeting(externalMeetingId, webexMeeting);
         }
     }
 

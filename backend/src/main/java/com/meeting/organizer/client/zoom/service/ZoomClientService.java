@@ -11,7 +11,7 @@ public interface ZoomClientService {
 
     ZoomMeeting getById(Long id);
 
-    ZoomMeeting updateMeeting(ZoomMeeting updateEntity);
+    ZoomMeeting updateMeeting(Long externalMeetingId, ZoomMeeting updateEntity);
 
     ZoomInvitation getMeetingInvitation(Long meetingId);
 

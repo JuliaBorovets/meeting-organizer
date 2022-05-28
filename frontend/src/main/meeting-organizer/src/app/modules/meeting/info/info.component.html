@@ -14,13 +14,13 @@
               <p class="library-name">{{eventModel.name }}</p>
             </div>
             <br>
-            <div fxLayoutAlign="center">
+            <div fxLayoutAlign="center" style="margin-bottom: 5px;">
               <img width="200px" alt="image" class="img-responsive"
                    src="../../../../assets/hero-media-illustration-dark.svg" *ngIf="!eventModel.imagePath">
               <img width="200px" alt="image" class="img-responsive" *ngIf="eventModel.imagePath"
                    src="http://localhost:8080/api/v1/storage/downloadFile/{{eventModel.imagePath}}">
             </div>
-            <div fxLayoutAlign="center" fxFlex="10">
+            <div fxLayoutAlign="center" fxFlex="10" *ngIf="isUserHost()">
               <div class="photo-button">
                 <button mat-stroked-button color="primary" (click)="showChangePhoto()">Change photo</button>
               </div>

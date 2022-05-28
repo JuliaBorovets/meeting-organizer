@@ -99,10 +99,6 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       webexHostEmail: ['', null],
       webexEnabledAutoRecordMeeting: [false, null],
       webexEnabledJoinBeforeHost: [true, null],
-      webexAutoAcceptRequest: [true, null],
-      webexRequireFirstName: [true, null],
-      webexRequireLastName: [true, null],
-      webexRequireEmail: [false, null],
     });
   }
 

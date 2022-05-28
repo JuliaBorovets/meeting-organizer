@@ -50,7 +50,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   openUpdateDialog(): void {
     const updateDialogRef = this.dialog.open(UpdateEventComponent, {
-      width: '95vh',
+      width: '90vh',
       height: 'auto',
       data: {
         eventModel: this.eventModel,

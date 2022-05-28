@@ -35,7 +35,9 @@ public class EventUpdateDto {
 
     private MeetingType meetingType;
 
-    private MeetingDto meetingEntity;
+    private Object meetingEntity;
 
     private Boolean isPrivate;
+
+    private String joinUrl;
 }

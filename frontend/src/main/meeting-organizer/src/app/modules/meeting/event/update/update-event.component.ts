@@ -24,7 +24,7 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
   isInValid = false;
   userId: number;
   eventId: number;
-  eventItem: EventModel;
+  eventItem: any;
   hidePasswordField = true;
   isLoading = true;
 
@@ -72,6 +72,7 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
   }
 
   createUpdateForm(): void {
+    console.log(this.eventItem);
     this.updateForm = this.formBuilder.group({
       name: [this.eventItem.name, null],
       description: [this.eventItem.description, null],
@@ -86,13 +87,13 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
 
       agenda: [this.eventItem.meetingEntity?.agenda, null],
       password: [this.eventItem.meetingEntity?.password, null],
-      allowMultipleDevices: [this.eventItem.meetingEntity?.allowMultipleDevices, null],
-      hostVideo: [this.eventItem.meetingEntity?.hostVideo, null],
-      meetingAuthentication: [this.eventItem.meetingEntity?.meetingAuthentication, null],
+      allowMultipleDevices: [this.eventItem.meetingEntity?.settings?.allow_multiple_devices, null],
+      hostVideo: [this.eventItem.meetingEntity?.settings?.host_video, null],
+      meetingAuthentication: [this.eventItem.meetingEntity?.settings?.meeting_authentication, null],
 
-      muteUponEntry: [this.eventItem.meetingEntity?.muteUponEntry, null],
-      participantVideo: [this.eventItem.meetingEntity?.participantVideo, null],
-      waitingRoom: [this.eventItem.meetingEntity?.waitingRoom, null],
+      muteUponEntry: [this.eventItem.meetingEntity?.settings?.mute_upon_entry, null],
+      participantVideo: [this.eventItem.meetingEntity?.settings?.participant_video, null],
+      waitingRoom: [this.eventItem.meetingEntity?.settings?.waiting_room, null],
 
       isPrivate: [this.eventItem.isPrivate, null],
 
@@ -106,10 +107,6 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
       webexHostEmail: [this.eventItem.meetingEntity?.hostEmail, null],
       webexEnabledAutoRecordMeeting: [this.eventItem.meetingEntity?.enabledAutoRecordMeeting, null],
       webexEnabledJoinBeforeHost: [this.eventItem.meetingEntity?.enabledJoinBeforeHost, null],
-      webexAutoAcceptRequest: [this.eventItem.meetingEntity?.autoAcceptRequest, null],
-      webexRequireFirstName: [this.eventItem.meetingEntity?.requireFirstName, null],
-      webexRequireLastName: [this.eventItem.meetingEntity?.requireLastName, null],
-      webexRequireEmail: [this.eventItem.meetingEntity?.requireEmail, null],
     });
   }
 

@@ -126,19 +126,19 @@ public class ZoomClientServiceImpl implements ZoomClientService {
     }
 
     @Override
-    public ZoomMeeting updateMeeting(ZoomMeeting updateEntity) {
+    public ZoomMeeting updateMeeting(Long externalMeetingId, ZoomMeeting updateEntity) {
         HttpHeaders headers = createHeaders();
         HttpEntity<ZoomMeeting> httpEntity = new HttpEntity<>(updateEntity, headers);
 
         try {
             URI uri = UriComponentsBuilder.fromUriString(meetingUpdateUrl)
-                    .buildAndExpand(updateEntity.getId())
+                    .buildAndExpand(externalMeetingId)
                     .toUri();
 
             log.info("Patching meeting, url: {}, httpEntity {}", uri, httpEntity);
 
-            ResponseEntity<ZoomMeeting> responseEntity = idempotentRetryTemplate.execute(retryContext ->
-                    restTemplate.exchange(uri, HttpMethod.PATCH, httpEntity, ZoomMeeting.class)
+            ResponseEntity<ZoomMeeting> responseEntity = nonIdempotentRetryTemplate.execute(retryContext ->
+                        restTemplate.exchange(uri, HttpMethod.PATCH, httpEntity, ZoomMeeting.class)
             );
 
             return responseEntity.getBody();

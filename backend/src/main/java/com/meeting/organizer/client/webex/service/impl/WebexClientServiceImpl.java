@@ -2,6 +2,7 @@ package com.meeting.organizer.client.webex.service.impl;
 
 import com.meeting.organizer.client.webex.model.WebexCreateMeeting;
 import com.meeting.organizer.client.webex.model.WebexMeeting;
+import com.meeting.organizer.client.webex.model.WebexUpdateMeeting;
 import com.meeting.organizer.client.webex.service.WebexClientService;
 import com.meeting.organizer.client.webex.service.WebexTokenService;
 import com.meeting.organizer.client.zoom.model.ZoomMeeting;
@@ -35,6 +36,8 @@ public class WebexClientServiceImpl implements WebexClientService {
     private String meetingGetUrl;
     @Value("${webex.url.meeting-delete}")
     private String meetingDeleteUrl;
+    @Value("${webex.url.meeting-update}")
+    private String meetingUpdateUrl;
 
     public WebexClientServiceImpl(RestTemplate restTemplate,
                                   @Qualifier("nonIdempotentRetryTemplate") RetryTemplate nonIdempotentRetryTemplate,
@@ -114,6 +117,29 @@ public class WebexClientServiceImpl implements WebexClientService {
             return responseEntity.getBody();
         } catch (HttpClientErrorException e) {
             throw new MeetingCanNotCreateException(e);
+        }
+    }
+
+    @Override
+    public WebexMeeting updateMeeting(String id, WebexUpdateMeeting updateMeeting) {
+        HttpHeaders headers = createHeaders();
+        HttpEntity<?> httpEntity = new HttpEntity<>(updateMeeting, headers);
+
+
+        try {
+            URI uri = UriComponentsBuilder.fromUriString(meetingUpdateUrl)
+                    .buildAndExpand(id)
+                    .toUri();
+
+            log.info("Getting meeting by id, url: {}, httpEntity {}", uri, httpEntity);
+
+            ResponseEntity<WebexMeeting> responseEntity = nonIdempotentRetryTemplate.execute(retryContext ->
+                    restTemplate.exchange(uri, HttpMethod.PUT, httpEntity, WebexMeeting.class)
+            );
+
+            return responseEntity.getBody();
+        } catch (HttpClientErrorException e) {
+            throw new MeetingNotFoundException(e);
         }
     }
 

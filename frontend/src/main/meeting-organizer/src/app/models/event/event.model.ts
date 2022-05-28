@@ -37,12 +37,6 @@ export class MeetingEntity {
   start_url?: string;
   title?: string;
   hostEmail?: string;
-  allowMultipleDevices?: boolean;
-  hostVideo?: boolean;
-  meetingAuthentication?: boolean;
-  muteUponEntry?: boolean;
-  participantVideo?: boolean;
-  waitingRoom?: boolean;
   isPrivate?: boolean;
   start?: any;
   durationInMinutes?: any;

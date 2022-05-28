@@ -5,7 +5,9 @@
       <div fxFlex="row">
         <div fxLayout="column" fxFlex="20">
           <img width="200px" alt="image" class="img-responsive"
-               src="./././././././julia/IdeaProjects/diploma-work/file-system/46BD88B5-DEB4-447A-9C85-1D0E5D112377.heic">
+               src="/assets/hero-media-illustration-dark.svg" *ngIf="!eventModel.imagePath">
+          <img width="200px" alt="image" class="img-responsive" *ngIf="eventModel.imagePath"
+               src="http://localhost:8080/api/v1/storage/downloadFile/{{eventModel.imagePath}}">
         </div>
         <div fxLayout="column" fxFlex="95" style="width: auto; margin-left: 20px;">
           <div fxLayoutAlign="center" (click)="navigateToInfoPage()">

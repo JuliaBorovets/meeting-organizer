@@ -57,6 +57,16 @@ mat-card {
   width: 80%;
 }
 
+.photo-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  width: 40%;
+}
+
 .create-comment-form {
   width: 90%;
   margin-top: 2%;

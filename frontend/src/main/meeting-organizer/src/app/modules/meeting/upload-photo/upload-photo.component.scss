@@ -1,0 +1,31 @@
+mat-form-field {
+  width: 60vh !important;
+}
+.mat-toolbar-single-row {
+  height: auto !important;
+  background: transparent;
+}
+.mat-toolbar-single-row button {
+  margin-left: auto;
+  margin-right: auto;
+  width: 250px;
+}
+.mat-form-field {
+  width: 90%;
+}
+#uploadFile {
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9;
+  opacity: 0;
+  height: 100%;
+  cursor: pointer;
+  position: absolute;
+}
+
+
+.filename {
+  font-size: 14px;
+}
+

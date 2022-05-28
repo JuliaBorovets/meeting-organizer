@@ -1,0 +1,31 @@
+<div class="add-photo-form">
+  <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+    <p class="header-title"> Change Photo </p>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
+    <mat-form-field>
+      <div>
+        <mat-toolbar>
+          <input matInput [(ngModel)]="fileAttr" class="filename" readonly name="name"/>
+          <button mat-flat-button color="primary">Browse File</button>
+        </mat-toolbar>
+        <input
+          type="file"
+          #fileInput
+          id="uploadFile"
+          (change)="uploadFileEvt($event)"
+          name="uploadFile"
+          multiple="multiple"
+          accept="image/*"
+        />
+      </div>
+    </mat-form-field>
+  </div>
+
+  <button mat-button (click)="onSubmit()">Change</button>
+
+  <div class="more-info">
+    <a class="btn btn-outline-primary login" (click)="onNoClick()">Cancel</a>
+  </div>
+</div>

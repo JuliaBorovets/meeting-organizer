@@ -166,4 +166,21 @@ export class EventService {
     }
     return this.http.get<EventModel[]>(`/api/v1/event/library/not-contains/${libraryId}`, {params});
   }
+
+  uploadEventImage(eventId: number, photo: any): Observable<any> {
+    return Observable.create ((observer)  => {
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = ()  => {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            observer.next(xhr);
+          } else {
+            observer.error(xhr);
+          }
+        }
+      };
+      xhr.open('PATCH', `/api/v1/event/image/${eventId}`);
+      xhr.send(photo);
+    });
+  }
 }

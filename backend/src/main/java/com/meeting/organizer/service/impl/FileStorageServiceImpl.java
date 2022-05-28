@@ -4,17 +4,21 @@ import com.meeting.organizer.config.storage.FileStorageProperties;
 import com.meeting.organizer.exception.custom.FileStorageException;
 import com.meeting.organizer.service.FileStorageService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -32,9 +36,9 @@ public class FileStorageServiceImpl implements FileStorageService {
         if (Objects.isNull(file.getOriginalFilename())) {
             throw new FileStorageException("File is null and cannot be saved.");
         }
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = UUID.randomUUID() + StringUtils.cleanPath(file.getOriginalFilename());
         try {
-            if(fileName.contains("..")) {
+            if (fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
@@ -49,10 +53,28 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public void deleteFile(String fileName) {
         try {
+            if (Objects.equals(fileName, "")) {
+                return;
+            }
             Path filePath = this.fileStorageLocation.resolve(fileName);
             Files.deleteIfExists(filePath);
         } catch (Exception ex) {
-            throw new FileStorageException("Could not delete file with name=" + fileName, ex);
+            log.info("Could not delete file with name={}", fileName);
+        }
+    }
+
+    @Override
+    public Resource loadFileAsResource(String fileName) {
+        try {
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                return resource;
+            } else {
+                throw new FileStorageException("File not found " + fileName);
+            }
+        } catch (MalformedURLException ex) {
+            throw new FileStorageException("File not found " + fileName, ex);
         }
     }
 

@@ -47,6 +47,16 @@ public class RetryConfiguration {
     @Value("${rest-client.retries.multiplier}")
     private float multiplier;
 
+    @Bean("idempotentRetryTemplate")
+    @Primary
+    public RetryTemplate getIdempotentRetryTemplate() {
+        RetryTemplate retryTemplate = new RetryTemplate();
+        retryTemplate.setBackOffPolicy(getBackOffPolicy());
+        retryTemplate.setRetryPolicy(new IntegrationsExceptionRetryPolicy(retryIdempotentStatuses));
+        retryTemplate.setListeners(retryListeners());
+        return retryTemplate;
+    }
+
     private static RetryListener[] retryListeners() {
         return ImmutableList.of(new RetryListenerSupport() {
 
@@ -67,16 +77,6 @@ public class RetryConfiguration {
         }).toArray(new RetryListener[]{});
     }
 
-
-    @Bean("idempotentRetryTemplate")
-    @Primary
-    public RetryTemplate getIdempotentRetryTemplate() {
-        RetryTemplate retryTemplate = new RetryTemplate();
-        retryTemplate.setBackOffPolicy(getBackOffPolicy());
-        retryTemplate.setRetryPolicy(new IntegrationsExceptionRetryPolicy(retryIdempotentStatuses));
-        retryTemplate.setListeners(retryListeners());
-        return retryTemplate;
-    }
 
     @Bean("nonIdempotentRetryTemplate")
     @Primary

@@ -138,6 +138,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         return eventMapper.eventToEventDto(updatedEvent);
     }
 
+    @Transactional
     @Override
     public EventDto uploadEventImage(Long eventId, MultipartFile image) {
         Event event = findById(eventId);

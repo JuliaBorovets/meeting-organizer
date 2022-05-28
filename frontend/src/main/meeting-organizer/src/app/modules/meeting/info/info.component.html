@@ -16,17 +16,30 @@
             <br>
             <div fxLayoutAlign="center">
               <img width="200px" alt="image" class="img-responsive"
-                   src="../../../../assets/hero-media-illustration-dark.svg">
+                   src="../../../../assets/hero-media-illustration-dark.svg" *ngIf="!eventModel.imagePath">
+              <img width="200px" alt="image" class="img-responsive" *ngIf="eventModel.imagePath"
+                   src="http://localhost:8080/api/v1/storage/downloadFile/{{eventModel.imagePath}}">
+            </div>
+            <div fxLayoutAlign="center" fxFlex="10">
+              <div class="photo-button">
+                <button mat-stroked-button color="primary" (click)="showChangePhoto()">Change photo</button>
+              </div>
             </div>
           </div>
           <div fxLayout="column" fxFlex="35" style="width: auto; margin-left: 10px;">
             <div class="visit-button">
-              <button mat-stroked-button color="primary" *ngIf="!showDisabledJoinButton() && !isUserAlreadyJoinedEvent()" (click)="joinEvent()">Visit</button>
-              <button mat-stroked-button color="primary" *ngIf="isUserAlreadyJoinedEvent()" (click)="deleteEventFromVisited()">Do not visit</button>
+              <button mat-stroked-button color="primary"
+                      *ngIf="!showDisabledJoinButton() && !isUserAlreadyJoinedEvent()" (click)="joinEvent()">Visit
+              </button>
+              <button mat-stroked-button color="primary" *ngIf="isUserAlreadyJoinedEvent()"
+                      (click)="deleteEventFromVisited()">Do not visit
+              </button>
               <button mat-stroked-button color="primary" disabled *ngIf="showDisabledJoinButton()">Visit</button>
             </div>
             <div class="visit-button">
-              <button mat-raised-button color="primary" (click)="openMeeting()" *ngIf="isUserAlreadyJoinedEvent()" href=''>Open</button>
+              <button mat-raised-button color="primary" (click)="openMeeting()" *ngIf="isUserAlreadyJoinedEvent()"
+                      href=''>Open
+              </button>
             </div>
 
             <div class="participant-count">
@@ -83,7 +96,8 @@
                   <p class="info">{{eventModel.meetingEntity.title}}</p>
                   <br>
                 </div>
-                <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.start_url && isUserHost() && isUserAlreadyJoinedEvent()">
+                <div
+                  *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.start_url && isUserHost() && isUserAlreadyJoinedEvent()">
                   <b><p class="info">Start Url</p></b>
                   <a class="info" (click)="startMeeting()">{{eventModel.meetingEntity.start_url | slice:0:75}}...</a>
                   <br>
@@ -95,7 +109,8 @@
                     <a class="info" (click)="openMeeting()">{{eventModel.joinUrl}}</a>
                   </div>
                   <br *ngIf="!eventModel.meetingEntity">
-                  <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.password && isUserAlreadyJoinedEvent()">
+                  <div
+                    *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.password && isUserAlreadyJoinedEvent()">
                     <b><p class="info" *ngIf="isUserAlreadyJoinedEvent()">Password</p></b>
                     <p class="info">{{eventModel.meetingEntity.password}}</p>
                     <br>

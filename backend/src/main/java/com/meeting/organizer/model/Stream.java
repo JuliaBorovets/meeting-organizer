@@ -31,3 +31,4 @@ public class Stream {
     @OneToMany(mappedBy = "stream", fetch = FetchType.LAZY)
     private List<Event> events = new ArrayList<>();
 }
+

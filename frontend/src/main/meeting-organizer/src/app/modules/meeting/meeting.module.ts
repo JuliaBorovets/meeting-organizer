@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {FlexModule} from '@angular/flex-layout';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {RouterModule} from '@angular/router';
 import {MeetingRoutingModule} from './meeting-routing.module';
@@ -20,9 +20,11 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { VisitorComponent } from './visitor/visitor.component';
 import { AddEventAccessCodeComponent } from './add-access-code/add-access-code.component';
+import {MatToolbarModule} from "@angular/material/toolbar";
+import { UploadPhotoComponent } from './upload-photo/upload-photo.component';
 
 @NgModule({
-  declarations: [ListComponent, InfoComponent, ReactionComponent, CommentComponent, RatingComponent, VisitorComponent, AddEventAccessCodeComponent],
+  declarations: [ListComponent, InfoComponent, ReactionComponent, CommentComponent, RatingComponent, VisitorComponent, AddEventAccessCodeComponent, UploadPhotoComponent],
   imports: [
     CommonModule,
     MatCardModule,
@@ -37,7 +39,9 @@ import { AddEventAccessCodeComponent } from './add-access-code/add-access-code.c
     EventModule,
     MatTabsModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    FormsModule,
+    MatToolbarModule
   ],
   entryComponents: []
 })

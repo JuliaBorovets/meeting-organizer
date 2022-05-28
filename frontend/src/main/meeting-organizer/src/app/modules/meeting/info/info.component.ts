@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EventModel} from '../../../models/event/event.model';
 import {EventService} from '../../../services/event/event.service';
@@ -14,6 +14,9 @@ import {UserModel} from '../../../models/user/user.model';
 import {AttendeesFilterModel} from '../../../models/event/attendees-filter.model';
 import {debounceTime, map, mergeMap} from 'rxjs/operators';
 import {DOCUMENT} from '@angular/common';
+import {AddAccessCodeComponent} from "../../library/list/add-access-code/add-access-code.component";
+import {UploadPhotoComponent} from "../upload-photo/upload-photo.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-info',
@@ -43,6 +46,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   submitted = false;
 
   constructor(private router: Router,
+              public dialog: MatDialog,
               private eventService: EventService,
               private route: ActivatedRoute,
               private formBuilder: FormBuilder,
@@ -251,6 +255,21 @@ export class InfoComponent implements OnInit, OnDestroy {
     link.href = this.eventModel.meetingEntity.start_url;
     link.click();
     link.remove();
+  }
+
+  showChangePhoto() {
+    const uploadDialogRef = this.dialog.open(UploadPhotoComponent, {
+      height: 'auto',
+      width: '80vh',
+      data: {
+        eventId: this.eventId
+      }
+    });
+
+    this.subscription.add(
+      uploadDialogRef.afterClosed().subscribe(
+        () => this.findEvent()
+      ));
   }
 
   isUserHost(): boolean {

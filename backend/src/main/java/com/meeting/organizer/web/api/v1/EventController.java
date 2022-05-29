@@ -1,7 +1,6 @@
 package com.meeting.organizer.web.api.v1;
 
 import com.meeting.organizer.service.EventService;
-import com.meeting.organizer.service.FileStorageService;
 import com.meeting.organizer.service.UserService;
 import com.meeting.organizer.web.dto.v1.event.EventCreateDto;
 import com.meeting.organizer.web.dto.v1.event.EventDto;

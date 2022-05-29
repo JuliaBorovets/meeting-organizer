@@ -3,15 +3,12 @@ package com.meeting.organizer.service.impl;
 import com.meeting.organizer.exception.custom.LibraryNotFoundException;
 import com.meeting.organizer.model.Event;
 import com.meeting.organizer.model.Library;
-import com.meeting.organizer.model.Stream;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.repository.LibraryRepository;
 import com.meeting.organizer.service.*;
 import com.meeting.organizer.web.dto.v1.library.*;
 import com.meeting.organizer.web.mapper.v1.LibraryMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -90,7 +87,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
                 .collect(Collectors.toList());
 
         response.setList(libraryDtoList);
-        response.setTotalItems(calculateTotalUserLibraryCount(userId, libraryNamePattern));
+        response.setTotalItems(repository.countByUser_UserIdAndNameLike(userId, libraryNamePattern));
 
         return response;
     }
@@ -107,7 +104,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
                 .collect(Collectors.toList());
 
         response.setList(libraryDtoList);
-        response.setTotalItems(calculateTotalLibraryCount());
+        response.setTotalItems(repository.countByIsPrivateAndNameLikeOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(false, libraryNamePattern, user, libraryNamePattern, user, libraryNamePattern));
         return response;
     }
 
@@ -146,7 +143,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
                 .collect(Collectors.toList());
 
         LibraryResponse libraryResponse = new LibraryResponse();
-        libraryResponse.setTotalItems((long) libraryDtoList.size());
+        libraryResponse.setTotalItems(repository.countByUsersFavorite_UserIdAndNameLike(userId, libraryNamePattern));
         libraryResponse.setList(libraryDtoList);
 
         return libraryResponse;
@@ -215,7 +212,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
 
         LibraryResponse libraryResponse = new LibraryResponse();
         libraryResponse.setList(libraryDtoList);
-        libraryResponse.setTotalItems((long) libraryDtoList.size());
+        libraryResponse.setTotalItems(repository.countByGivenAccessList_UserIdAndNameLike(userId, libraryNamePattern));
 
         return libraryResponse;
     }
@@ -251,14 +248,6 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
     public Library findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new LibraryNotFoundException("Library not found with id=" + id));
-    }
-
-    private Long calculateTotalUserLibraryCount(Long userId, String libraryName) {
-        return repository.countByUser_UserIdAndNameLike(userId, libraryName);
-    }
-
-    private Long calculateTotalLibraryCount() {
-        return repository.count();
     }
 
     private LibraryDto convertToDto(Library library, Long userId) {

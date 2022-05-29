@@ -134,10 +134,8 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
                 .stream().map(userMapper::userToUserDto)
                 .collect(Collectors.toList());
 
-        Long total = repository.countAllByVisitedEvents_EventId(eventId);
-
         response.setList(userDtoList);
-        response.setTotalItems(total);
+        response.setTotalItems(repository.countByVisitedEvents_EventIdAndUsernameLike(eventId, usernamePattern));
         return response;
     }
 

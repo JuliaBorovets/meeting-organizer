@@ -2,7 +2,6 @@ package com.meeting.organizer.web.dto.v1.user;
 
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 

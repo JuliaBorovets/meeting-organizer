@@ -1,6 +1,5 @@
 package com.meeting.organizer.service;
 
-import com.meeting.organizer.model.Event;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.web.dto.v1.user.UserCreateDto;
 import com.meeting.organizer.web.dto.v1.user.UserDto;

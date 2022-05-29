@@ -1,9 +1,7 @@
 package com.meeting.organizer.service;
 
 import com.meeting.organizer.model.Library;
-import com.meeting.organizer.web.dto.v1.event.AddEventToStreamDto;
 import com.meeting.organizer.web.dto.v1.library.*;
-import com.meeting.organizer.web.dto.v1.stream.StreamDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

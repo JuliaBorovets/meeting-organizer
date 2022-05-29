@@ -1,7 +1,10 @@
 package com.meeting.organizer.web.dto.v1.event.webex;
 
 import com.meeting.organizer.web.dto.v1.event.MeetingDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)

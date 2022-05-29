@@ -5,7 +5,10 @@ import com.meeting.organizer.model.Comment;
 import com.meeting.organizer.model.Event;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.repository.CommentRepository;
-import com.meeting.organizer.service.*;
+import com.meeting.organizer.service.AbstractService;
+import com.meeting.organizer.service.CommentService;
+import com.meeting.organizer.service.EventService;
+import com.meeting.organizer.service.UserService;
 import com.meeting.organizer.web.dto.v1.reaction.CommentCreateDto;
 import com.meeting.organizer.web.dto.v1.reaction.CommentDto;
 import com.meeting.organizer.web.dto.v1.reaction.CommentResponse;
@@ -86,7 +89,7 @@ public class CommentServiceImpl extends AbstractService<Comment, CommentReposito
                 .collect(Collectors.toList());
 
         response.setList(commentDtos);
-        response.setTotalItems(repository.countAllByEvent_EventIdOrderByCreationDateDesc(eventId));
+        response.setTotalItems(repository.countAllByEvent_EventId(eventId));
 
         return response;
     }

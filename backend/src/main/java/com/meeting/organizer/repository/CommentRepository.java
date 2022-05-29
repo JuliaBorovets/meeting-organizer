@@ -10,5 +10,5 @@ public interface CommentRepository extends PagingAndSortingRepository<Comment, L
 
     List<Comment> findAllByEvent_EventIdOrderByCreationDateDesc(Long eventId, Pageable pageable);
 
-    Long countAllByEvent_EventIdOrderByCreationDateDesc(Long eventId);
+    Long countAllByEvent_EventId(Long eventId);
 }

@@ -1,7 +1,6 @@
 package com.meeting.organizer.service;
 
 import com.meeting.organizer.exception.custom.GeneralNotFoundException;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 

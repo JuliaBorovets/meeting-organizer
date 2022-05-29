@@ -24,13 +24,11 @@
       </app-event-view-fav>
     </div>
 
-    <div class="paginator">
-      <mat-paginator [pageSizeOptions]="pageSizeOptions"
-                     [length]="eventCount"
-                     [pageSize]="filter.pageSize"
-                     (page)="pageEvent = $event; onPaginateChange($event)">
-      </mat-paginator>
-    </div>
+    <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                   [length]="eventCount"
+                   [pageSize]="filter.pageSize"
+                   (page)="pageEvent = $event; onPaginateChange($event)">
+    </mat-paginator>
   </div>
 
   <ng-template #empty>

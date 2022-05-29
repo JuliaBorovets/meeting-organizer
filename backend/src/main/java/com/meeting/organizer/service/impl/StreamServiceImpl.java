@@ -5,7 +5,10 @@ import com.meeting.organizer.model.Event;
 import com.meeting.organizer.model.Library;
 import com.meeting.organizer.model.Stream;
 import com.meeting.organizer.repository.StreamRepository;
-import com.meeting.organizer.service.*;
+import com.meeting.organizer.service.AbstractService;
+import com.meeting.organizer.service.EventService;
+import com.meeting.organizer.service.LibraryService;
+import com.meeting.organizer.service.StreamService;
 import com.meeting.organizer.web.dto.v1.event.AddEventToStreamDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamCreateDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamDto;
@@ -13,7 +16,6 @@ import com.meeting.organizer.web.dto.v1.stream.StreamResponse;
 import com.meeting.organizer.web.dto.v1.stream.StreamUpdateDto;
 import com.meeting.organizer.web.mapper.v1.StreamMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +84,7 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
                 .collect(Collectors.toList());
 
         response.setList(streamDtoList);
-        response.setTotalItems((long) streamDtoList.size());
+        response.setTotalItems(repository.countByLibrary_LibraryIdAndNameLike(libraryId, streamNamePattern));
 
         return response;
     }

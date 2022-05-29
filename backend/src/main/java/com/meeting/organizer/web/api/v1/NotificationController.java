@@ -3,7 +3,6 @@ package com.meeting.organizer.web.api.v1;
 import com.meeting.organizer.service.NotificationService;
 import com.meeting.organizer.web.dto.v1.notification.NotificationReadDto;
 import com.meeting.organizer.web.dto.v1.notification.NotificationResponse;
-import com.meeting.organizer.web.dto.v1.subscription.SubscriptionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;

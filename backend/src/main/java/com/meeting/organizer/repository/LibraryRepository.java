@@ -16,9 +16,15 @@ public interface LibraryRepository extends PagingAndSortingRepository<Library, L
 
     List<Library> findLibrariesByUsersFavorite_UserIdAndNameLike(Long userId, String libraryName, Pageable pageable);
 
+    Long countByUsersFavorite_UserIdAndNameLike(Long userId, String libraryName);
+
     List<Library> findLibrariesByIsPrivateAndNameLikeOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(Boolean isPrivate, String libraryName, User user, String libraryName1, User creator, String libraryName2, Pageable pageable);
+
+    Long countByIsPrivateAndNameLikeOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(Boolean isPrivate, String libraryName, User user, String libraryName1, User creator, String libraryName2);
 
     Optional<Library> findByAccessToken(String accessToken);
 
     List<Library> findLibrariesByGivenAccessList_UserIdAndNameLike(Long userId, String libraryName, Pageable pageable);
+
+    Long countByGivenAccessList_UserIdAndNameLike(Long userId, String libraryName);
 }

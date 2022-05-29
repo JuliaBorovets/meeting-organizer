@@ -6,8 +6,7 @@ import {CreateStreamComponent} from '../stream/create/create.component';
 import {CreateEventComponent} from '../../meeting/event/create/create.component';
 import {StreamListComponent} from '../stream/list/stream-list.component';
 import {EventListComponent} from '../../meeting/event/list/event-list.component';
-import {AddEventComponent} from "../stream/add-event/add-event.component";
-import {AddEventToLibraryComponent} from "../add-event/add-event.component";
+import {AddEventToLibraryComponent} from '../add-event/add-event.component';
 
 @Component({
   selector: 'app-view',

@@ -1,7 +1,10 @@
 package com.meeting.organizer.client.zoom.model;
 
 import com.meeting.organizer.web.dto.v1.event.zoom.ZoomMeetingSettingCreateDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor

@@ -6,11 +6,9 @@ import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.model.user.VerificationToken;
 import com.meeting.organizer.repository.user.VerificationTokenRepository;
 import com.meeting.organizer.service.AbstractService;
-import com.meeting.organizer.service.CRUDService;
 import com.meeting.organizer.service.UserService;
 import com.meeting.organizer.service.VerificationTokenService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

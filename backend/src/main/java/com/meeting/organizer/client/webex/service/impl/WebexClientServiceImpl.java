@@ -5,7 +5,6 @@ import com.meeting.organizer.client.webex.model.WebexMeeting;
 import com.meeting.organizer.client.webex.model.WebexUpdateMeeting;
 import com.meeting.organizer.client.webex.service.WebexClientService;
 import com.meeting.organizer.client.webex.service.WebexTokenService;
-import com.meeting.organizer.client.zoom.model.ZoomMeeting;
 import com.meeting.organizer.exception.custom.MeetingCanNotCreateException;
 import com.meeting.organizer.exception.custom.MeetingCanNotDeleteException;
 import com.meeting.organizer.exception.custom.MeetingNotFoundException;

@@ -24,7 +24,6 @@ import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventUpdateDto;
 import com.meeting.organizer.web.mapper.v1.EventMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.validator.GenericValidator;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -157,7 +156,6 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     @Transactional
     @Override
     public void deleteEvent(Long id) {
-        log.info("deleting event with={}", id);
         Event event = findById(id);
         fileStorageService.deleteFile(event.getImagePath());
         if (Objects.nonNull(event.getExternalMeetingId())) {
@@ -182,7 +180,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 .collect(Collectors.toList());
 
         eventResponse.setList(eventDtoList);
-        eventResponse.setTotalItems(countAllByLibraryId(libraryId));
+        eventResponse.setTotalItems(repository.countByLibrary_LibraryIdAndStream_StreamIdAndNameLike(libraryId, streamId, eventNamePattern));
 
         return eventResponse;
     }
@@ -199,7 +197,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 .map(e -> convertToDto(e, userId))
                 .collect(Collectors.toList());
 
-        eventResponse.setTotalItems((long) eventDtoList.size());
+        eventResponse.setTotalItems((repository.countByNameLikeAndIsPrivateOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(eventNamePattern, false, user, eventNamePattern, user, eventNamePattern)));
         eventResponse.setList(eventDtoList);
 
         return eventResponse;
@@ -221,7 +219,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 .collect(Collectors.toList());
 
         eventResponse.setList(eventDtoList);
-        eventResponse.setTotalItems((long) eventDtoList.size());
+        eventResponse.setTotalItems(repository.countByUser_UserIdAndNameLike(userId, eventNamePattern));
 
         return eventResponse;
     }
@@ -238,7 +236,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 .collect(Collectors.toList());
 
         eventResponse.setList(eventDtoList);
-        eventResponse.setTotalItems(countAllByLibraryId(libraryId));
+        eventResponse.setTotalItems(repository.countByLibrary_LibraryIdNotContainingAndNameLike(libraryId, eventNamePattern));
 
         return eventResponse;
     }
@@ -302,7 +300,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 .collect(Collectors.toList());
 
         EventResponse eventResponse = new EventResponse();
-        eventResponse.setTotalItems((long) eventDtoList.size());
+        eventResponse.setTotalItems(repository.countByUsersFavorite_UserIdAndNameLike(userId, eventNamePattern));
         eventResponse.setList(eventDtoList);
 
         return eventResponse;
@@ -319,7 +317,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         EventResponse eventResponse = new EventResponse();
         eventResponse.setList(eventDtoList);
-        eventResponse.setTotalItems((long) eventDtoList.size());
+        eventResponse.setTotalItems(repository.countByGivenAccessList_UserIdAndNameLike(userId, eventNamePattern));
 
         return eventResponse;
     }
@@ -514,10 +512,6 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         if (type.equals(MeetingType.ZOOM)) {
             zoomClientService.deleteMeeting(meetingId);
         }
-    }
-
-    private Long countAllByLibraryId(Long libraryId) {
-        return repository.countByLibrary_LibraryId(libraryId);
     }
 
     private EventDto convertToDto(Event event, Long userId) {

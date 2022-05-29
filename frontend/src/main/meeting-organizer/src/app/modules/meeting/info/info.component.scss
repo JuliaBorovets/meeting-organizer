@@ -76,8 +76,10 @@ mat-card {
 }
 
 .example-header-image {
-  background-image: url('/assets/hero-media-illustration-dark.svg');
   background-size: cover;
+  max-height: 50px;
+  max-width: 50px;
+  border-radius: 50%;
 }
 
 .search {

@@ -79,11 +79,20 @@
               <div fxFlex="row">
                 <div>
                   <b><p class="info">Host</p></b>
-                  <mat-card-header>
-                    <div mat-card-avatar class="example-header-image"></div>
-                    <mat-card-subtitle>{{eventModel.user.firstName}} {{eventModel.user.lastName}}</mat-card-subtitle>
-                    <mat-card-subtitle>{{eventModel.user.email}}</mat-card-subtitle>
-                  </mat-card-header>
+                </div>
+                <div>
+                  <div fxFlex="4">
+                    <img class="example-header-image" alt="image" *ngIf="eventModel.user && !eventModel.user.imagePath"
+                         src="assets/hero-media-illustration-dark.svg">
+                    <img class="example-header-image" alt="image" *ngIf="eventModel.user && eventModel.user.imagePath"
+                         src="http://localhost:8080/api/v1/storage/downloadFile/{{eventModel.user.imagePath}}">
+                  </div>
+                  <div fxFlex="column">
+                    <mat-card-header>
+                      <mat-card-subtitle>{{eventModel.user.firstName}} {{eventModel.user.lastName}}</mat-card-subtitle>
+                      <mat-card-subtitle>{{eventModel.user.email}}</mat-card-subtitle>
+                    </mat-card-header>
+                  </div>
                 </div>
                 <br>
                 <div *ngIf="eventModel.meetingEntity && eventModel.meetingEntity.hostEmail">

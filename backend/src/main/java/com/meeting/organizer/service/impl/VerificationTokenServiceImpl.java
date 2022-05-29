@@ -7,6 +7,7 @@ import com.meeting.organizer.model.user.VerificationToken;
 import com.meeting.organizer.repository.user.VerificationTokenRepository;
 import com.meeting.organizer.service.AbstractService;
 import com.meeting.organizer.service.CRUDService;
+import com.meeting.organizer.service.UserService;
 import com.meeting.organizer.service.VerificationTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,10 +20,10 @@ import java.util.UUID;
 @Service
 public class VerificationTokenServiceImpl extends AbstractService<VerificationToken, VerificationTokenRepository> implements VerificationTokenService {
 
-    private final CRUDService<User> userService;
+    private final UserService userService;
 
     public VerificationTokenServiceImpl(VerificationTokenRepository verificationTokenRepository,
-                                        @Qualifier("userServiceImpl") CRUDService<User> userService) {
+                                        UserService userService) {
         super(verificationTokenRepository);
         this.userService = userService;
     }

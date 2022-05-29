@@ -29,7 +29,7 @@ public class LibraryController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        libraryService.deleteLibrary(id);
+        libraryService.deleteById(id);
     }
 
     @GetMapping("/{id}")

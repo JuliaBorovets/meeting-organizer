@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -18,6 +20,7 @@ public class ContactUsServiceImpl implements ContactUsService {
     @Value("${contact-us.email}")
     private String contactUsEmail;
 
+    @Transactional
     @Override
     public ContactUsDto createContactUsRequest(ContactUsDto contactUsDto) {
 

@@ -36,7 +36,7 @@ public class StreamController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        streamService.deleteStreamById(id);
+        streamService.deleteById(id);
     }
 
     @GetMapping("/{id}")

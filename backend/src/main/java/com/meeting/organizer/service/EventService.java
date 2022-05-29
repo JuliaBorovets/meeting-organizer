@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface EventService {
+public interface EventService extends CRUDService<Event> {
 
     EventDto createEvent(EventCreateDto eventCreateDto);
 

@@ -7,6 +7,7 @@ import com.meeting.organizer.repository.SubscriptionRepository;
 import com.meeting.organizer.service.AbstractService;
 import com.meeting.organizer.service.CRUDService;
 import com.meeting.organizer.service.SubscriptionService;
+import com.meeting.organizer.service.UserService;
 import com.meeting.organizer.web.dto.v1.subscription.SubscriptionCreateDto;
 import com.meeting.organizer.web.dto.v1.subscription.SubscriptionDto;
 import com.meeting.organizer.web.mapper.v1.SubscriptionMapper;
@@ -22,11 +23,11 @@ import java.util.Optional;
 public class SubscriptionServiceImpl extends AbstractService<Subscription, SubscriptionRepository>
         implements SubscriptionService {
 
-    private final CRUDService<User> userService;
+    private final UserService userService;
     private final SubscriptionMapper mapper;
 
     public SubscriptionServiceImpl(SubscriptionRepository repository,
-                                   @Qualifier("userServiceImpl") CRUDService<User> userService,
+                                   UserService userService,
                                    SubscriptionMapper mapper) {
         super(repository);
         this.userService = userService;
@@ -51,7 +52,6 @@ public class SubscriptionServiceImpl extends AbstractService<Subscription, Subsc
         Subscription savedSubscription = repository.save(subscription);
 
         user.getSubscriptions().add(savedSubscription);
-        userService.save(user);
 
         return mapper.subscriptionToSubscriptionDto(savedSubscription);
     }

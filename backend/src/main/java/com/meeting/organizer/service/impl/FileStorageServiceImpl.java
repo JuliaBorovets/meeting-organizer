@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -31,6 +32,7 @@ public class FileStorageServiceImpl implements FileStorageService {
                 .toAbsolutePath().normalize();
     }
 
+    @Transactional
     @Override
     public String storeFile(MultipartFile file) {
         if (Objects.isNull(file.getOriginalFilename())) {
@@ -50,6 +52,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
+    @Transactional
     @Override
     public void deleteFile(String fileName) {
         try {

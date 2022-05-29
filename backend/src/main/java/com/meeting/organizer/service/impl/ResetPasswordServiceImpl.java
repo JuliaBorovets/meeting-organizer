@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Slf4j
@@ -17,7 +18,6 @@ import java.util.UUID;
 public class ResetPasswordServiceImpl implements ResetPasswordService {
 
     private final UserService userService;
-    private final CRUDService<User> userCRUDService;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private final VerificationTokenService verificationTokenService;
@@ -26,12 +26,10 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     private String resetPasswordLink;
 
     public ResetPasswordServiceImpl(UserService userService,
-                                    @Qualifier("userServiceImpl") CRUDService<User> userCRUDService,
                                     PasswordEncoder passwordEncoder,
                                     MailService mailService,
                                     VerificationTokenService verificationTokenService) {
         this.userService = userService;
-        this.userCRUDService = userCRUDService;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
         this.verificationTokenService = verificationTokenService;
@@ -51,6 +49,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         mailService.sendResetPasswordLinkMail(user, String.format(resetPasswordLink, token.getToken()));
     }
 
+    @Transactional
     @Override
     public void processPasswordReset(String userEmail, String newUserPassword) {
         User user = userService.findByEmail(userEmail);
@@ -60,13 +59,12 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
 
         user.setPassword(passwordEncoder.encode(newUserPassword));
-        userCRUDService.save(user);
         mailService.sendPasswordUpdateMail(user);
     }
 
     @Override
     public String validatePasswordResetToken(String token) {
         VerificationToken verificationToken = verificationTokenService.validateVerificationToken(token);
-        return userCRUDService.findById(verificationToken.getUser().getUserId()).getEmail();
+        return userService.findById(verificationToken.getUser().getUserId()).getEmail();
     }
 }

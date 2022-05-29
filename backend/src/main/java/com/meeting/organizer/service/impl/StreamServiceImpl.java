@@ -5,9 +5,7 @@ import com.meeting.organizer.model.Event;
 import com.meeting.organizer.model.Library;
 import com.meeting.organizer.model.Stream;
 import com.meeting.organizer.repository.StreamRepository;
-import com.meeting.organizer.service.AbstractService;
-import com.meeting.organizer.service.CRUDService;
-import com.meeting.organizer.service.StreamService;
+import com.meeting.organizer.service.*;
 import com.meeting.organizer.web.dto.v1.event.AddEventToStreamDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamCreateDto;
 import com.meeting.organizer.web.dto.v1.stream.StreamDto;
@@ -28,13 +26,13 @@ import java.util.stream.Collectors;
 public class StreamServiceImpl extends AbstractService<Stream, StreamRepository> implements StreamService {
 
     private final StreamMapper streamMapper;
-    private final CRUDService<Library> libraryService;
-    private final CRUDService<Event> eventService;
+    private final LibraryService libraryService;
+    private final EventService eventService;
 
     public StreamServiceImpl(StreamRepository repository,
                              StreamMapper streamMapper,
-                             @Qualifier("libraryServiceImpl") CRUDService<Library> libraryService,
-                             @Qualifier("eventServiceImpl") CRUDService<Event> eventService) {
+                             LibraryService libraryService,
+                             EventService eventService) {
         super(repository);
         this.streamMapper = streamMapper;
         this.libraryService = libraryService;
@@ -44,13 +42,11 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
     @Transactional
     @Override
     public StreamDto createNewStream(StreamCreateDto createDto) {
-        log.info("Creating new Stream: {}", createDto);
 
         Stream streamEntity = streamMapper.streamCreateDtoToStream(createDto);
         Library library = libraryService.findById(createDto.getLibraryId());
         streamEntity.setLibrary(library);
         Stream createdEntity = repository.save(streamEntity);
-        log.info("created stream {}", createdEntity);
 
         library.getStreams().add(createdEntity);
         libraryService.save(library);
@@ -64,13 +60,6 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
         stream.setName(updateDto.getName());
         repository.save(stream);
         return streamToStreamDto(stream);
-    }
-
-    //todo add onDelete relation configuration to delete all inner events
-    @Transactional
-    @Override
-    public void deleteStreamById(Long id) {
-        super.deleteById(id);
     }
 
     @Override
@@ -108,11 +97,8 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
                 .peek(event -> event.setStream(stream))
                 .collect(Collectors.toList());
 
-        log.info("{}", eventList);
         stream.getEvents().addAll(eventList);
 
-        repository.save(stream);
-        eventList.forEach(eventService::save);
         return streamToStreamDto(stream);
     }
 
@@ -125,8 +111,6 @@ public class StreamServiceImpl extends AbstractService<Stream, StreamRepository>
         stream.getEvents().remove(event);
         event.setStream(null);
 
-        repository.save(stream);
-        eventService.save(event);
         return streamToStreamDto(stream);
     }
 

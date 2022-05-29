@@ -22,7 +22,6 @@ public class LocationServiceImpl extends AbstractService<Location, LocationRepos
     private final LocationMapper locationMapper;
 
     public LocationServiceImpl(LocationRepository repository,
-                               LocationRepository locationRepository,
                                LocationMapper locationMapper) {
         super(repository);
         this.locationMapper = locationMapper;
@@ -32,7 +31,6 @@ public class LocationServiceImpl extends AbstractService<Location, LocationRepos
     @Override
     public LocationDto saveNewLocationDto(LocationCreateDto locationDto) {
         Location location = locationMapper.locationCreateDtoToLocation(locationDto);
-        log.debug("Creating new location: {}", location);
         return locationMapper.locationToLocationDto(
                 super.save(location)
         );
@@ -51,7 +49,6 @@ public class LocationServiceImpl extends AbstractService<Location, LocationRepos
         location.setCity(locationDto.getCity());
         location.setCountry(locationDto.getCountry());
 
-        log.debug("Updating location: {}", location);
         return locationMapper.locationToLocationDto(
                 super.save(location)
         );

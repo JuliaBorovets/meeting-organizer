@@ -25,21 +25,18 @@ import java.util.stream.Collectors;
 public class LibraryServiceImpl extends AbstractService<Library, LibraryRepository> implements LibraryService {
 
     private final LibraryMapper libraryMapper;
-    private final CRUDService<User> userCRUDService;
     private final UserService userService;
     private final MailService mailService;
-    private final CRUDService<Event> eventService;
+    private final EventService eventService;
 
     public LibraryServiceImpl(LibraryRepository libraryRepository,
                               LibraryMapper libraryMapper,
-                              @Qualifier("userServiceImpl") CRUDService<User> userCRUDService,
                               UserService userService,
-                              @Lazy @Qualifier("eventServiceImpl") CRUDService<Event> eventService,
+                              EventService eventService,
                               MailService mailService
     ) {
         super(libraryRepository);
         this.libraryMapper = libraryMapper;
-        this.userCRUDService = userCRUDService;
         this.userService = userService;
         this.mailService = mailService;
         this.eventService = eventService;
@@ -50,15 +47,13 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
     public LibraryDto createLibrary(LibraryCreateDto libraryDto) {
         log.info("create library: {}", libraryDto);
         Library convertedEntity = libraryMapper.libraryCreateDtoToLibrary(libraryDto);
-        User user = userCRUDService.findById(libraryDto.getUserId());
+        User user = userService.findById(libraryDto.getUserId());
         convertedEntity.setUser(user);
         convertedEntity.setAccessToken(UUID.randomUUID().toString());
 
         Library createdLibrary = repository.save(convertedEntity);
         user.getLibraries().add(createdLibrary);
-        userCRUDService.save(user);
 
-        log.info("created library: {}", createdLibrary);
         return libraryMapper.libraryToLibraryDto(createdLibrary);
     }
 
@@ -74,15 +69,6 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
         repository.save(updatedLibrary);
 
         return libraryMapper.libraryToLibraryDto(updatedLibrary);
-    }
-
-    //todo add on delete to model relations to delete all streams and events
-    @Transactional
-    @Override
-    public void deleteLibrary(Long id) {
-
-        log.info("deleting library with id={}", id);
-        super.deleteById(id);
     }
 
     @Override
@@ -112,7 +98,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
     @Override
     public LibraryResponse getLibraryListPaginated(Long userId, String libraryName, Pageable pageable) {
         LibraryResponse response = new LibraryResponse();
-        User user = userCRUDService.findById(userId);
+        User user = userService.findById(userId);
         String libraryNamePattern = libraryName + "%";
 
         List<LibraryDto> libraryDtoList = repository.findLibrariesByIsPrivateAndNameLikeOrGivenAccessListContainsAndNameLikeOrUserAndNameLike(false, libraryNamePattern, user, libraryNamePattern, user, libraryNamePattern, pageable)
@@ -125,28 +111,28 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
         return response;
     }
 
+    @Transactional
     @Override
     public LibraryDto addLibraryToFavorites(Long libraryId, Long userId) {
         Library library = findById(libraryId);
-        User user = userCRUDService.findById(userId);
+        User user = userService.findById(userId);
 
         library.getUsersFavorite().add(user);
         user.getFavoriteLibraries().add(library);
         repository.save(library);
-        userCRUDService.save(user);
 
         return convertToDto(library, userId);
     }
 
+    @Transactional
     @Override
     public LibraryDto removeLibraryFromFavorites(Long libraryId, Long userId) {
         Library library = findById(libraryId);
-        User user = userCRUDService.findById(userId);
+        User user = userService.findById(userId);
 
         library.getUsersFavorite().remove(user);
         user.getFavoriteLibraries().remove(library);
         repository.save(library);
-        userCRUDService.save(user);
 
         return convertToDto(library, userId);
     }
@@ -166,6 +152,7 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
         return libraryResponse;
     }
 
+    @Transactional
     @Override
     public LibraryDto addAccessToLibraryByUserEmail(AddLibraryAccessDto addLibraryAccessDto) {
         Library library = findById(addLibraryAccessDto.getLibraryId());
@@ -177,13 +164,13 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
         library.getGivenAccessList().addAll(users);
         users.forEach(u -> {
             u.getGivenAccessLibraries().add(library);
-            userCRUDService.save(u);
             mailService.sendAddLibraryAccessMail(u, library);
         });
 
         return convertToDto(repository.save(library));
     }
 
+    @Transactional
     @Override
     public LibraryDto removeAccessToLibraryByUserEmail(List<String> emailList, Long libraryId) {
         Library library = findById(libraryId);
@@ -196,24 +183,22 @@ public class LibraryServiceImpl extends AbstractService<Library, LibraryReposito
                 .removeAll(users);
         users.forEach(u -> {
             u.getGivenAccessLibraries().remove(library);
-            userCRUDService.save(u);
             mailService.sendRemoveLibraryAccessMail(u, library);
         });
 
         return convertToDto(repository.save(library));
     }
 
+    @Transactional
     @Override
     public LibraryDto addAccessToLibraryByToken(AddLibraryAccessByTokenDto addLibraryAccessDto) {
         Library library = repository.findByAccessToken(addLibraryAccessDto.getAccessToken())
                 .orElseThrow(() -> new LibraryNotFoundException("Cannot find library by token=" + addLibraryAccessDto.getAccessToken()));
 
-        User user = userCRUDService.findById(addLibraryAccessDto.getUserId());
+        User user = userService.findById(addLibraryAccessDto.getUserId());
 
         library.getGivenAccessList().add(user);
         user.getGivenAccessLibraries().add(library);
-
-        userCRUDService.save(user);
 
         mailService.sendAddLibraryAccessMail(user, library);
 

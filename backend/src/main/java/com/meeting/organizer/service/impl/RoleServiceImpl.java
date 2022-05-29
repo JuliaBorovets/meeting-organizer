@@ -34,33 +34,23 @@ public class RoleServiceImpl extends AbstractService<Role, RoleRepository> imple
     @Transactional
     @Override
     public void addRoleToUser(Long userId, Long roleId) {
-        log.debug("RoleServiceImpl addRoleToUser, userId={}, roleId={}", userId, roleId);
         Role role = findById(roleId);
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
         user.getRoles().add(role);
         role.getUsers().add(user);
-        userRepository.save(user);
-        super.save(role);
-
-        log.debug("roleId={} was added to userId={}", roleId, userId);
     }
 
     @Transactional
     @Override
     public void deleteRoleToUser(Long userId, Long roleId) {
-        log.debug("RoleServiceImpl deleteRoleToUser, userId={}, roleId={}", userId, roleId);
         Role role = findById(roleId);
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
         user.getRoles().remove(role);
         role.getUsers().remove(user);
-        userRepository.save(user);
-        super.save(role);
-
-        log.debug("roleId={} was deleted from userId={}", roleId, userId);
     }
 
     @Override

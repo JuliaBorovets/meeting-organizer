@@ -24,7 +24,7 @@ import com.meeting.organizer.web.dto.v1.event.zoom.ZoomEventUpdateDto;
 import com.meeting.organizer.web.mapper.v1.EventMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.apache.commons.validator.GenericValidator;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,9 +47,8 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     private final ZoomClientService zoomClientService;
     private final WebexClientService webexClientService;
     private final EventMapper eventMapper;
-    private final CRUDService<Library> libraryService;
-    private final CRUDService<Stream> streamService;
-    private final CRUDService<User> userCRUDService;
+    private final LibraryService libraryService;
+    private final StreamService streamService;
     private final UserService userService;
     private final MailService mailService;
     private final FileStorageService fileStorageService;
@@ -59,11 +58,10 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                             ZoomClientService zoomClientService,
                             WebexClientService webexClientService,
                             EventMapper eventMapper,
-                            @Qualifier("libraryServiceImpl") CRUDService<Library> libraryService,
-                            @Lazy @Qualifier("streamServiceImpl") CRUDService<Stream> streamService,
-                            @Qualifier("userServiceImpl") CRUDService<User> userCRUDService,
-                            FileStorageService fileStorageService,
+                            @Lazy LibraryService libraryService,
+                            @Lazy StreamService streamService,
                             UserService userService,
+                            FileStorageService fileStorageService,
                             MailService mailService,
                             ExecutorService executorService) {
         super(eventRepository);
@@ -72,7 +70,6 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         this.eventMapper = eventMapper;
         this.libraryService = libraryService;
         this.streamService = streamService;
-        this.userCRUDService = userCRUDService;
         this.userService = userService;
         this.mailService = mailService;
         this.fileStorageService = fileStorageService;
@@ -86,7 +83,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         event.setAccessToken(UUID.randomUUID().toString());
         event.setStartDate(event.getStartDate().plus(2, ChronoUnit.HOURS));
         event.setEndDate(event.getStartDate().plus(eventCreateDto.getDurationInMinutes(), ChronoUnit.MINUTES));
-        User user = userCRUDService.findById(eventCreateDto.getUserId());
+        User user = userService.findById(eventCreateDto.getUserId());
         event.setUser(user);
         event.getVisitors().add(user);
         user.getVisitedEvents().add(event);
@@ -114,7 +111,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
         Event savedEvent = repository.save(event);
 
-        userCRUDService.save(user);
+        userService.save(user);
 
         if (Objects.nonNull(stream)) {
             streamService.save(stream);
@@ -124,7 +121,6 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         return eventMapper.eventToEventDto(savedEvent);
     }
 
-    //todo
     @Transactional
     @Override
     public EventDto updateEvent(EventUpdateDto eventUpdateDto) {
@@ -194,7 +190,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     @Override
     public EventResponse findAll(Long userId, String eventName, Pageable pageable) {
         EventResponse eventResponse = new EventResponse();
-        User user = userCRUDService.findById(userId);
+        User user = userService.findById(userId);
 
         String eventNamePattern = eventName + "%";
 
@@ -209,7 +205,6 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         return eventResponse;
     }
 
-    //todo add not only creator, but also participant
     @Override
     public List<Event> findAllByUser(Long userId) {
         return repository.findAllByUser_UserIdAndNameLikeOrderByCreationDateDesc(userId, "%", null);
@@ -274,28 +269,26 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public EventDto addEventToFavorites(Long eventId, Long userId) {
         Event event = findById(eventId);
-        User user = userCRUDService.findById(userId);
+        User user = userService.findById(userId);
 
         event.getUsersFavorite().add(user);
         user.getFavoriteEvents().add(event);
-        repository.save(event);
-        userCRUDService.save(user);
 
         return convertToDto(event, userId);
     }
 
+    @Transactional
     @Override
     public EventDto removeEventFromFavorites(Long eventId, Long userId) {
         Event event = findById(eventId);
-        User user = userCRUDService.findById(userId);
+        User user = userService.findById(userId);
 
         event.getUsersFavorite().remove(user);
         user.getFavoriteEvents().remove(event);
-        repository.save(event);
-        userCRUDService.save(user);
 
         return convertToDto(event, userId);
     }
@@ -331,6 +324,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         return eventResponse;
     }
 
+    @Transactional
     @Override
     public EventDto addAccessToEventByUserEmail(AddEventAccessDto addEventAccessDto) {
         Event event = findById(addEventAccessDto.getEventId());
@@ -341,13 +335,13 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         event.getGivenAccessList().addAll(users);
         users.forEach(u -> {
             u.getGivenAccessEvents().add(event);
-            userCRUDService.save(u);
             mailService.sendAddEventAccessMail(u, event);
         });
 
         return convertToDto(repository.save(event));
     }
 
+    @Transactional
     @Override
     public EventDto removeAccessFromEventByUserEmail(List<String> emailList, Long eventId) {
         Event event = findById(eventId);
@@ -360,24 +354,22 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 .removeAll(users);
         users.forEach(u -> {
             u.getGivenAccessEvents().remove(event);
-            userCRUDService.save(u);
             mailService.sendRemoveEventAccessMail(u, event);
         });
 
         return convertToDto(repository.save(event));
     }
 
+    @Transactional
     @Override
     public EventDto addAccessToEventByToken(AddEventAccessByTokenDto addEventAccessDto) {
         Event event = repository.findByAccessToken(addEventAccessDto.getAccessToken())
                 .orElseThrow(() -> new MeetingNotFoundException("Cannot find event by token=" + addEventAccessDto.getAccessToken()));
 
-        User user = userCRUDService.findById(addEventAccessDto.getUserId());
+        User user = userService.findById(addEventAccessDto.getUserId());
 
         event.getGivenAccessList().add(user);
         user.getGivenAccessEvents().add(event);
-
-        userCRUDService.save(user);
 
         mailService.sendAddEventAccessMail(user, event);
 
@@ -388,7 +380,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     @Override
     public EventDto addVisitorToEvent(Long eventId, Long userId) {
         Event event = findById(eventId);
-        User user = userCRUDService.findById(userId);
+        User user = userService.findById(userId);
 
         event.getVisitors().add(user);
         user.getVisitedEvents().add(event);
@@ -400,7 +392,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     @Override
     public EventDto deleteVisitorFromEvent(Long eventId, Long userId) {
         Event event = findById(eventId);
-        User user = userCRUDService.findById(userId);
+        User user = userService.findById(userId);
 
         event.getVisitors().remove(user);
         user.getVisitedEvents().remove(event);
@@ -452,6 +444,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
     }
 
+    @Transactional
     @SneakyThrows
     private void createMeetingByType(MeetingType type, Object meetingDto, Event event) {
         ObjectMapper mapper = new ObjectMapper();
@@ -461,13 +454,9 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
 
             ZoomMeeting zoomMeeting = eventMapper.zoomMeetingCreateDtoToMeeting(zoomEventCreateDto);
 
-            DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
-            zoomMeeting.setStart_time(LocalDateTime.parse(zoomMeeting.getStart_time(), FORMATTER)
-                    .plus(2, ChronoUnit.HOURS)
-                    .toString()
+            zoomMeeting.setStart_time(
+                    parseLocalDate(zoomMeeting.getStart_time()).toString()
             );
-
-            log.info("zoomMeeting {}", zoomMeeting);
 
             ZoomMeeting createdMeeting = zoomClientService.createMeeting(zoomMeeting);
             event.setExternalMeetingId(createdMeeting.getId().toString());
@@ -478,13 +467,11 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         if (type.equals(MeetingType.WEBEX) && Objects.nonNull(meetingDto)) {
             WebexEventCreateDto webexEventCreateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), WebexEventCreateDto.class);
 
-
-            DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
-            String end = LocalDateTime.parse(webexEventCreateDto.getStart(), FORMATTER)
+            WebexCreateMeeting webexMeeting = eventMapper.webexMeetingCreateDtoToMeeting(webexEventCreateDto);
+            webexMeeting.setStart(parseLocalDate(webexEventCreateDto.getStart()).toString());
+            String end = parseLocalDate(webexEventCreateDto.getStart())
                     .plus(webexEventCreateDto.getDurationInMinutes(), ChronoUnit.MINUTES)
                     .toString();
-
-            WebexCreateMeeting webexMeeting = eventMapper.webexMeetingCreateDtoToMeeting(webexEventCreateDto);
             webexMeeting.setEnd(end);
 
             WebexMeeting createdMeeting = webexClientService.createMeeting(webexMeeting);
@@ -496,6 +483,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         throw new UnsupportedEventException("Not supported type for event " + type.name());
     }
 
+    @Transactional
     @SneakyThrows
     private void updateMeetingByType(MeetingType type, Object meetingDto, String externalMeetingId) {
         ObjectMapper mapper = new ObjectMapper();
@@ -503,36 +491,25 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         if (type.equals(MeetingType.ZOOM) && Objects.nonNull(meetingDto)) {
             ZoomEventUpdateDto zoomEventUpdateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), ZoomEventUpdateDto.class);
             ZoomMeeting zoomMeeting = eventMapper.zoomMeetingUpdateDtoToMeeting(zoomEventUpdateDto);
-            DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
-            zoomMeeting.setStart_time(LocalDateTime.parse(zoomMeeting.getStart_time(), FORMATTER)
-                    .plus(2, ChronoUnit.HOURS)
-                    .toString()
+            zoomMeeting.setStart_time(
+                    parseLocalDate(zoomMeeting.getStart_time()).toString()
             );
             zoomClientService.updateMeeting(Long.parseLong(externalMeetingId), zoomMeeting);
         } else if (type.equals(MeetingType.WEBEX) && Objects.nonNull(meetingDto)) {
             WebexEventUpdateDto webexEventUpdateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), WebexEventUpdateDto.class);
 
-            DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-            String end;
-            try {
-                end = LocalDateTime.parse(webexEventUpdateDto.getStart(), FORMATTER)
-                        .plus(webexEventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES)
-                        .toString();
-            } catch (Exception e) {
-                FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
-                end = LocalDateTime.parse(webexEventUpdateDto.getStart(), FORMATTER)
-                        .plus(webexEventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES)
-                        .plus(2, ChronoUnit.HOURS)
-                        .toString();
-            }
-
             WebexUpdateMeeting webexMeeting = eventMapper.webexMeetingUpdateDtoToMeeting(webexEventUpdateDto);
+            webexMeeting.setStart(parseLocalDate(webexEventUpdateDto.getStart()).toString());
+            String end = parseLocalDate(webexEventUpdateDto.getStart())
+                    .plus(webexEventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES)
+                    .toString();
             webexMeeting.setEnd(end);
 
             webexClientService.updateMeeting(externalMeetingId, webexMeeting);
         }
     }
 
+    @Transactional
     private void deleteMeetingByType(MeetingType type, Long meetingId) {
         if (type.equals(MeetingType.ZOOM)) {
             zoomClientService.deleteMeeting(meetingId);
@@ -561,6 +538,20 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         Duration duration = Duration.between(event.getStartDate(), event.getEndDate());
         eventDto.setDurationInMinutes(duration.toMinutes());
         return eventDto;
+    }
+
+    private LocalDateTime parseLocalDate(String date) {
+        DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn");
+
+        LocalDateTime parsedTime;
+        try {
+            parsedTime = LocalDateTime.parse(date, FORMATTER);
+        } catch (Exception e) {
+            FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
+            parsedTime = LocalDateTime.parse(date, FORMATTER)
+                    .plus(2, ChronoUnit.HOURS);
+        }
+        return parsedTime;
     }
 
 }

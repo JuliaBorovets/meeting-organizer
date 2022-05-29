@@ -5,16 +5,13 @@ import com.meeting.organizer.model.Comment;
 import com.meeting.organizer.model.Event;
 import com.meeting.organizer.model.user.User;
 import com.meeting.organizer.repository.CommentRepository;
-import com.meeting.organizer.service.AbstractService;
-import com.meeting.organizer.service.CRUDService;
-import com.meeting.organizer.service.CommentService;
+import com.meeting.organizer.service.*;
 import com.meeting.organizer.web.dto.v1.reaction.CommentCreateDto;
 import com.meeting.organizer.web.dto.v1.reaction.CommentDto;
 import com.meeting.organizer.web.dto.v1.reaction.CommentResponse;
 import com.meeting.organizer.web.dto.v1.reaction.CommentUpdateDto;
 import com.meeting.organizer.web.mapper.v1.CommentMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,26 +24,25 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl extends AbstractService<Comment, CommentRepository> implements CommentService {
 
     private final CommentMapper commentMapper;
-    private final CRUDService<User> userCRUDService;
-    private final CRUDService<Event> eventCRUDService;
-
+    private final UserService userService;
+    private final EventService eventService;
 
     public CommentServiceImpl(CommentRepository repository,
                               CommentMapper commentMapper,
-                              @Qualifier("userServiceImpl") CRUDService<User> userCRUDService,
-                              @Qualifier("eventServiceImpl") CRUDService<Event> eventCRUDService) {
+                              UserService userService,
+                              EventService eventService) {
         super(repository);
         this.commentMapper = commentMapper;
-        this.userCRUDService = userCRUDService;
-        this.eventCRUDService = eventCRUDService;
+        this.userService = userService;
+        this.eventService = eventService;
     }
 
-
+    @Transactional
     @Override
     public CommentDto createComment(CommentCreateDto commentCreateDto) {
         Comment comment = commentMapper.commentDtoToComment(commentCreateDto);
-        User user = userCRUDService.findById(commentCreateDto.getUserId());
-        Event event = eventCRUDService.findById(commentCreateDto.getEventId());
+        User user = userService.findById(commentCreateDto.getUserId());
+        Event event = eventService.findById(commentCreateDto.getEventId());
 
         comment.setUser(user);
         comment.setEvent(event);
@@ -54,12 +50,7 @@ public class CommentServiceImpl extends AbstractService<Comment, CommentReposito
         event.getComments().add(comment);
         user.getComments().add(comment);
 
-        Comment savedComment = repository.save(comment);
-
-        userCRUDService.save(user);
-        eventCRUDService.save(event);
-
-        return convertToDto(savedComment);
+        return convertToDto(repository.save(comment));
     }
 
     @Transactional

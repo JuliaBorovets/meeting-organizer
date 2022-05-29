@@ -40,3 +40,4 @@ dist-schema/
 
 # IDEs
 jsconfig.json
+/file-system/

@@ -26,4 +26,6 @@ public interface MailService {
     void sendAddEventAccessMail(User user, Event event);
 
     void sendRemoveEventAccessMail(User user, Event event);
+
+    void sendEventNotificationMail(User user, Event event, long minutes);
 }

@@ -28,6 +28,7 @@ import {FavoritesModule} from './modules/favorite/favorites.module';
 import {ProfileModule} from './modules/profile/profile.module';
 import {CalendarModule} from './modules/calendar/calendar.module';
 import {MeetingModule} from './modules/meeting/meeting.module';
+import {MAT_DATE_LOCALE} from "@angular/material/core";
 
 
 @NgModule({

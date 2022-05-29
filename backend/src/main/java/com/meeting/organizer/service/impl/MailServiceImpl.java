@@ -126,6 +126,18 @@ public class MailServiceImpl implements MailService {
                         "user", user));
     }
 
+    @Override
+    public void sendEventNotificationMail(User user, Event event, long minutes) {
+        log.info("------{}", user.getEmail());
+        sendMessage(user.getEmail(),
+                MailConstants.EVENT_NOTIFICATION_MAIL_SUBJECT,
+                MailConstants.EVENT_NOTIFICATION_MAIL_TEMPLATE,
+                Map.of("event", event,
+                        "user", user,
+                        "minutes", minutes
+                        ));
+    }
+
     private void sendMessage(String email, String subject, String template, Map<String, Object> params) {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);

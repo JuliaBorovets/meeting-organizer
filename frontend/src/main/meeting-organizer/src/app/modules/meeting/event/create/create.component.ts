@@ -195,7 +195,6 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   }
 
   isWebexTypeSelected(): boolean {
-    console.log('===', this.f.meetingType.value);
     return this.f.meetingType.value === MeetingType.WEBEX;
   }
 

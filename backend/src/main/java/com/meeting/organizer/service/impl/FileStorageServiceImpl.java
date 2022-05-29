@@ -53,7 +53,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public void deleteFile(String fileName) {
         try {
-            if (Objects.equals(fileName, "")) {
+            if (Objects.isNull(fileName) || Objects.equals(fileName, "")) {
                 return;
             }
             Path filePath = this.fileStorageLocation.resolve(fileName);

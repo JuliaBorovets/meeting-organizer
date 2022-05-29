@@ -50,4 +50,7 @@ public interface EventService {
     EventDto deleteVisitorFromEvent(Long eventId, Long userId);
 
     List<EventDto> findAllByNameAndLibraryNotContaining(Long userId, Long libraryId, String eventName, Pageable pageable);
+
+    Boolean eventExists(Long id);
+
 }

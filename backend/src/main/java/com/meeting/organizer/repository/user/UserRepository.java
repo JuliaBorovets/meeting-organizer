@@ -20,4 +20,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     Long countAllByVisitedEvents_EventId(Long eventId);
 
+    List<User> findAllByVisitedEvents_EventId(Long eventId);
+
 }

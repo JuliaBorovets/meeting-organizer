@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class HazelcastConfig {
 
     private final static String TOKENS_MAP = "tokens";
+    private final static String TASKS_MAP = "tasks";
 
     @Bean
     public Config config() {
@@ -19,12 +20,13 @@ public class HazelcastConfig {
 
         config.setInstanceName("meeting-organizer-instance")
                 .setManagedContext(managedContext())
+                .addMapConfig(tasksConfig())
                 .addMapConfig(tokensConfig());
 
         return config;
     }
 
-    @Bean
+    @Bean("hzInstance")
     public HazelcastInstance hazelcastInstance(Config hazelCastConfig) {
         return Hazelcast.newHazelcastInstance(hazelCastConfig);
     }
@@ -36,6 +38,12 @@ public class HazelcastConfig {
 
     private MapConfig tokensConfig() {
         MapConfig mapConfig = new MapConfig(TOKENS_MAP);
+        mapConfig.setTimeToLiveSeconds(0); //infinity
+        return mapConfig;
+    }
+
+    private MapConfig tasksConfig() {
+        MapConfig mapConfig = new MapConfig(TASKS_MAP);
         mapConfig.setTimeToLiveSeconds(0); //infinity
         return mapConfig;
     }

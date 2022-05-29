@@ -8,6 +8,8 @@ import com.meeting.organizer.web.dto.v1.user.UserUpdateDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface UserService {
 
     UserDto saveNewUserDto(UserCreateDto userDto);
@@ -23,6 +25,8 @@ public interface UserService {
     UserDto update(UserUpdateDto userUpdateDto);
 
     UserResponse getEventVisitors(Long eventId, String username, Pageable pageable);
+
+    List<User> getEventVisitors(Long eventId);
 
     UserDto uploadUserImage(Long userId, MultipartFile image);
 

@@ -141,6 +141,11 @@ public class UserServiceImpl extends AbstractService<User, UserRepository> imple
         return response;
     }
 
+    @Override
+    public List<User> getEventVisitors(Long eventId) {
+        return repository.findAllByVisitedEvents_EventId(eventId);
+    }
+
     @Transactional
     @Override
     public UserDto uploadUserImage(Long userId, MultipartFile image) {

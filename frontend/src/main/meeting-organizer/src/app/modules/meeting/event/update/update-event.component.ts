@@ -7,7 +7,6 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog
 import {EventService} from '../../../../services/event/event.service';
 import {StorageService} from '../../../../services/auth/storage.service';
 import {State} from '../../../../models/event/state.model';
-import {EventModel} from '../../../../models/event/event.model';
 
 @Component({
   selector: 'app-event-update',
@@ -72,7 +71,6 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
   }
 
   createUpdateForm(): void {
-    console.log(this.eventItem);
     this.updateForm = this.formBuilder.group({
       name: [this.eventItem.name, null],
       description: [this.eventItem.description, null],

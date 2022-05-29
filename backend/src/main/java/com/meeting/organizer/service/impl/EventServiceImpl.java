@@ -53,6 +53,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     private final UserService userService;
     private final MailService mailService;
     private final FileStorageService fileStorageService;
+    private final ExecutorService executorService;
 
     public EventServiceImpl(EventRepository eventRepository,
                             ZoomClientService zoomClientService,
@@ -63,7 +64,8 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                             @Qualifier("userServiceImpl") CRUDService<User> userCRUDService,
                             FileStorageService fileStorageService,
                             UserService userService,
-                            MailService mailService) {
+                            MailService mailService,
+                            ExecutorService executorService) {
         super(eventRepository);
         this.zoomClientService = zoomClientService;
         this.webexClientService = webexClientService;
@@ -74,6 +76,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         this.userService = userService;
         this.mailService = mailService;
         this.fileStorageService = fileStorageService;
+        this.executorService = executorService;
     }
 
     @Transactional
@@ -81,6 +84,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     public EventDto createEvent(EventCreateDto eventCreateDto) {
         Event event = eventMapper.eventFromCreateDto(eventCreateDto);
         event.setAccessToken(UUID.randomUUID().toString());
+        event.setStartDate(event.getStartDate().plus(2, ChronoUnit.HOURS));
         event.setEndDate(event.getStartDate().plus(eventCreateDto.getDurationInMinutes(), ChronoUnit.MINUTES));
         User user = userCRUDService.findById(eventCreateDto.getUserId());
         event.setUser(user);
@@ -116,6 +120,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
             streamService.save(stream);
         }
 
+        this.executorService.scheduleEventNotificationTask(savedEvent);
         return eventMapper.eventToEventDto(savedEvent);
     }
 
@@ -130,12 +135,15 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         updatedEvent.setName(eventUpdateDto.getName());
         updatedEvent.setDescription(eventUpdateDto.getDescription());
         updatedEvent.setMeetingType(eventUpdateDto.getMeetingType());
-        updatedEvent.setEndDate(eventUpdateDto.getStartDate().plus(eventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES));
+        updatedEvent.setStartDate(updatedEvent.getStartDate().plus(2, ChronoUnit.HOURS));
+        updatedEvent.setEndDate(eventUpdateDto.getStartDate().plus(eventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES).plus(2, ChronoUnit.HOURS));
         if (Objects.isNull(updatedEvent.getExternalMeetingId())) {
             updatedEvent.setJoinUrl(eventUpdateDto.getJoinUrl());
         } else {
             updateMeetingByType(eventUpdateDto.getMeetingType(), eventUpdateDto.getMeetingEntity(), updatedEvent.getExternalMeetingId());
         }
+        this.executorService.cancelEventNotificationTask(updatedEvent);
+        this.executorService.scheduleEventNotificationTask(updatedEvent);
         return eventMapper.eventToEventDto(updatedEvent);
     }
 
@@ -163,6 +171,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 webexClientService.deleteMeeting(event.getExternalMeetingId());
             }
         }
+        this.executorService.cancelEventNotificationTask(event);
         super.deleteById(id);
     }
 
@@ -188,8 +197,6 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         User user = userCRUDService.findById(userId);
 
         String eventNamePattern = eventName + "%";
-
-        log.info(eventNamePattern);
 
         List<EventDto> eventDtoList = repository.findEventsByNameLikeAndIsPrivateOrGivenAccessListContainsAndNameLikeOrUserAndNameLikeOrderByCreationDateDesc(eventNamePattern, false, user, eventNamePattern, user, eventNamePattern, pageable)
                 .stream()
@@ -413,6 +420,11 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Boolean eventExists(Long id) {
+        return repository.findById(id).isPresent();
+    }
+
     private void setExternalMeetingByType(EventDto eventDto) {
         if (Objects.isNull(eventDto.getExternalMeetingId())) {
             return;
@@ -448,6 +460,12 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
             ZoomEventCreateDto zoomEventCreateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), ZoomEventCreateDto.class);
 
             ZoomMeeting zoomMeeting = eventMapper.zoomMeetingCreateDtoToMeeting(zoomEventCreateDto);
+
+            DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
+            zoomMeeting.setStart_time(LocalDateTime.parse(zoomMeeting.getStart_time(), FORMATTER)
+                    .plus(2, ChronoUnit.HOURS)
+                    .toString()
+            );
 
             log.info("zoomMeeting {}", zoomMeeting);
 
@@ -485,6 +503,11 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         if (type.equals(MeetingType.ZOOM) && Objects.nonNull(meetingDto)) {
             ZoomEventUpdateDto zoomEventUpdateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), ZoomEventUpdateDto.class);
             ZoomMeeting zoomMeeting = eventMapper.zoomMeetingUpdateDtoToMeeting(zoomEventUpdateDto);
+            DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
+            zoomMeeting.setStart_time(LocalDateTime.parse(zoomMeeting.getStart_time(), FORMATTER)
+                    .plus(2, ChronoUnit.HOURS)
+                    .toString()
+            );
             zoomClientService.updateMeeting(Long.parseLong(externalMeetingId), zoomMeeting);
         } else if (type.equals(MeetingType.WEBEX) && Objects.nonNull(meetingDto)) {
             WebexEventUpdateDto webexEventUpdateDto = mapper.readValue(mapper.writeValueAsString(meetingDto), WebexEventUpdateDto.class);
@@ -499,6 +522,7 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
                 FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
                 end = LocalDateTime.parse(webexEventUpdateDto.getStart(), FORMATTER)
                         .plus(webexEventUpdateDto.getDurationInMinutes(), ChronoUnit.MINUTES)
+                        .plus(2, ChronoUnit.HOURS)
                         .toString();
             }
 

@@ -128,7 +128,6 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendEventNotificationMail(User user, Event event, long minutes) {
-        log.info("------{}", user.getEmail());
         sendMessage(user.getEmail(),
                 MailConstants.EVENT_NOTIFICATION_MAIL_SUBJECT,
                 MailConstants.EVENT_NOTIFICATION_MAIL_TEMPLATE,

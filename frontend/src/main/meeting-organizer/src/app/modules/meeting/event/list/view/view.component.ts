@@ -20,6 +20,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   @Input() eventModel: EventModel;
   @Output() updateEventEvent = new EventEmitter();
+  @Input() isGrantedEventItem = false;
 
   private subscription: Subscription = new Subscription();
   public isError = false;
@@ -162,6 +163,26 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   isCreator(): boolean {
     return this.userId === this.eventModel.user.userId;
+  }
+
+  deleteAccess(): void {
+    this.dialogService.confirmDialog({
+      title: 'Confirm deletion',
+      message: 'Do you want to confirm this action?',
+      confirmCaption: 'Confirm',
+      cancelCaption: 'Cancel',
+    })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.eventService.removeAccessToEventEventByUserEmail([this.storageService.getUser.email], this.eventModel.eventId).subscribe(
+            () => {
+              this.toastrService.success('Success!', 'Deleted!');
+              this.updateEventEvent.emit();
+            },
+            () => this.toastrService.error('Error!', 'Deletion failed!')
+          );
+        }
+      });
   }
 
   ngOnDestroy(): void {

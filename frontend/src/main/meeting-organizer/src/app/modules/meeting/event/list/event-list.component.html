@@ -39,6 +39,7 @@
     <div fxLayoutAlign="center stretch" fxLayout="column" class="view">
       <app-event-view *ngFor="let result of eventList"
                       [eventModel]="result"
+                      [isGrantedEventItem]="isFindAccessSelected()"
                       (updateEventEvent)="findEvents()"
       >
       </app-event-view>

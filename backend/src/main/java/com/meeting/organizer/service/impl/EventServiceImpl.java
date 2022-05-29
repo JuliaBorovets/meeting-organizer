@@ -33,6 +33,7 @@ import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
@@ -540,10 +541,16 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
         LocalDateTime parsedTime;
         try {
             parsedTime = LocalDateTime.parse(date, FORMATTER);
-        } catch (Exception e) {
-            FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
-            parsedTime = LocalDateTime.parse(date, FORMATTER)
-                    .plus(2, ChronoUnit.HOURS);
+        } catch (DateTimeParseException e) {
+            try {
+                FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.nnn'Z'");
+                parsedTime = LocalDateTime.parse(date, FORMATTER)
+                        .plus(2, ChronoUnit.HOURS);
+            } catch (Exception ex) {
+                FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                parsedTime = LocalDateTime.parse(date, FORMATTER)
+                        .plus(2, ChronoUnit.HOURS);
+            }
         }
         return parsedTime;
     }

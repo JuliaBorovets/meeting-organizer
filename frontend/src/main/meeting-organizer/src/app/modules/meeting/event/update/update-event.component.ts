@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MeetingType} from '../../../../models/event/meeting-type.model';
 import {EventType} from '../../../../models/event/event-type.model';
@@ -7,6 +7,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog
 import {EventService} from '../../../../services/event/event.service';
 import {StorageService} from '../../../../services/auth/storage.service';
 import {State} from '../../../../models/event/state.model';
+import {CustomValidator} from '../../../../services/custom-validator.service';
 
 @Component({
   selector: 'app-event-update',
@@ -105,7 +106,36 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
       webexHostEmail: [this.eventItem.meetingEntity?.hostEmail, null],
       webexEnabledAutoRecordMeeting: [this.eventItem.meetingEntity?.enabledAutoRecordMeeting, null],
       webexEnabledJoinBeforeHost: [this.eventItem.meetingEntity?.enabledJoinBeforeHost, null],
+    }, {
+      validator: CustomValidator.notEquals('webexPassword', ['password', 'passwd', 'pass', 'passw'])
     });
+
+    if (this.isWebexTypeSelected()) {
+      console.log('----');
+      this.setWebexValidators();
+      // this.f.generateMeeting.valueChanges.subscribe(
+      //   () => {
+      //     this.setWebexValidators();
+      //   }
+      // );
+    }
+  }
+
+  setWebexValidators() {
+    if (this.isWebexTypeSelected()) {
+      this.f.webexTitle.setValidators([Validators.required]);
+      this.f.webexPassword.setValidators([Validators.required, Validators.minLength(4),
+        Validators.maxLength(15)]);
+      if (this.f.startDate.value !== this.eventItem.startDate) {
+        console.log('-----jkjk');
+        this.f.startDate.setValidators([CustomValidator.datePickerValidator(6)]);
+      }
+    } else {
+      this.f.webexTitle.setValidators(null);
+      this.f.webexPassword.setValidators(null);
+      this.f.startDate.setValidators(null);
+    }
+    this.updateForm.updateValueAndValidity();
   }
 
   get f() {

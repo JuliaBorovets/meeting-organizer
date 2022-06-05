@@ -68,7 +68,7 @@
     <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
       <mat-form-field class="full-width-event-input" appearance="outline">
         <mat-label>Meeting Type</mat-label>
-        <mat-select id="meetingType" formControlName="meetingType" required>
+        <mat-select id="meetingType" formControlName="meetingType" required (selectionChange)="setWebexValidators()">
           <mat-option *ngFor="let type of meetingTypes" [value]="type">
             {{type}}
           </mat-option>
@@ -81,6 +81,7 @@
     <div fxLayout="raw" fxLayoutAlign="center center" class="form-input">
       <div>
         <mat-slide-toggle
+          (toggleChange)="setWebexValidators()"
           formControlName="generateMeeting"
           [color]="'accent'">
         </mat-slide-toggle>
@@ -224,6 +225,9 @@
           <input matInput [type]="hidePasswordField ? 'password' : 'text'" id="webexPassword" class="form-control" name="webexPassword"
                  formControlName="webexPassword"
                  [ngClass]="{ 'is-invalid': submitted && f.webexPassword.errors }">
+<!--          <mat-error *ngIf="submitted && f.webexPassword.errors" class="invalid-input">-->
+<!--            <mat-error *ngIf="f.webexPassword.errors.required">Field is required</mat-error>-->
+<!--          </mat-error>-->
           <mat-icon matSuffix (click)="hidePasswordField = !hidePasswordField">
             {{hidePasswordField ? 'visibility_off' : 'visibility'}}
           </mat-icon>

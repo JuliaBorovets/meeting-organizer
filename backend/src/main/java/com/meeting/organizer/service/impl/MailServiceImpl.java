@@ -16,6 +16,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Map;
 
@@ -147,6 +149,7 @@ public class MailServiceImpl implements MailService {
 
         try {
             helper.setTo(email);
+            helper.setFrom("juliaborovets2001@gmail.com");
             helper.setSubject(subject);
             helper.setText(text, true);
 

@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {EventService} from '../../../../services/event/event.service';
@@ -7,6 +7,7 @@ import {EventType} from '../../../../models/event/event-type.model';
 import {State} from '../../../../models/event/state.model';
 import {MeetingType} from '../../../../models/event/meeting-type.model';
 import {StorageService} from '../../../../services/auth/storage.service';
+import {CustomValidator} from '../../../../services/custom-validator.service';
 
 @Component({
   selector: 'app-create',
@@ -65,41 +66,61 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
   createCreateForm(): void {
     this.createForm = this.formBuilder.group({
-      name: ['', null],
-      description: ['', null],
-      startDate: ['', null],
-      durationInMinutes: [30, null],
+        name: ['', null],
+        description: ['', null],
+        startDate: ['', null],
+        durationInMinutes: [30, null],
 
-      maxNumberParticipants: [10, null],
-      eventType: [EventType.CONFERENCE, null],
+        maxNumberParticipants: [10, null],
+        eventType: [EventType.CONFERENCE, null],
 
-      meetingType: [MeetingType.ZOOM, null],
-      photo: [null, null],
+        meetingType: [MeetingType.ZOOM, null],
+        photo: [null, null],
 
-      agenda: ['', null],
-      password: ['', null],
-      allowMultipleDevices: [true, null],
-      hostVideo: [false, null],
-      meetingAuthentication: [false, null],
+        agenda: ['', null],
+        password: ['', null],
+        allowMultipleDevices: [true, null],
+        hostVideo: [false, null],
+        meetingAuthentication: [false, null],
 
-      muteUponEntry: [true, null],
-      participantVideo: [false, null],
-      waitingRoom: [false, null],
+        muteUponEntry: [true, null],
+        participantVideo: [false, null],
+        waitingRoom: [false, null],
 
-      generateMeeting: [false, null],
-      isPrivate: [false, null],
+        generateMeeting: [false, null],
+        isPrivate: [false, null],
 
-      joinUrl: ['', null],
+        joinUrl: ['', null],
 
-      webexTitle: ['', null],
-      webexAgenda: ['', null],
-      webexPassword: ['', null],
-      webexStart: ['', null],
-      webexDurationInMinutes: [30, null],
-      webexHostEmail: ['', null],
-      webexEnabledAutoRecordMeeting: [false, null],
-      webexEnabledJoinBeforeHost: [true, null],
-    });
+        webexTitle: ['', null],
+        webexAgenda: ['', null],
+        webexPassword: ['', null],
+        webexStart: ['', null],
+        webexDurationInMinutes: [30, null],
+        webexHostEmail: ['', null],
+        webexEnabledAutoRecordMeeting: [false, null],
+        webexEnabledJoinBeforeHost: [true, null],
+      }, {
+        validator: CustomValidator.notEquals('webexPassword', ['password', 'passwd', 'pass', 'passw'])
+      }
+    );
+    this.f.generateMeeting.valueChanges.subscribe(
+      () => {
+        this.setWebexValidators();
+      }
+    );
+  }
+
+  setWebexValidators() {
+    if (this.isWebexTypeSelected() && this.isGenerateNewEventSelected()) {
+      this.f.webexTitle.setValidators([Validators.required]);
+      this.f.webexPassword.setValidators([Validators.required, Validators.minLength(4),
+        Validators.maxLength(15)]);
+    } else {
+      this.f.webexTitle.setValidators(null);
+      this.f.webexPassword.setValidators(null);
+    }
+    this.createForm.updateValueAndValidity();
   }
 
   get f() {

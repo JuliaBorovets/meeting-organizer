@@ -8,8 +8,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface StreamMapper {
 
-    Stream streamDtoToStream(StreamDto streamDto);
-
     StreamDto streamToStreamDto(Stream stream);
 
     Stream streamCreateDtoToStream(StreamCreateDto createDto);

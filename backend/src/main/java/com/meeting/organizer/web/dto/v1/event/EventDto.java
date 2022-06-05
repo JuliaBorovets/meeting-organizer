@@ -8,8 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -34,10 +33,6 @@ public class EventDto {
     private EventType eventType;
 
     private State state;
-
-    private List<Tag> tags = new ArrayList<>();
-
-    private Location location;
 
     private MeetingType meetingType;
 

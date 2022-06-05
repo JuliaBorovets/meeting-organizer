@@ -2,18 +2,10 @@ DROP TABLE IF EXISTS authority CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS verification_token CASCADE;
-DROP TABLE IF EXISTS actions CASCADE;
 DROP TABLE IF EXISTS comments CASCADE;
 DROP TABLE IF EXISTS events CASCADE;
 DROP TABLE IF EXISTS libraries CASCADE;
-DROP TABLE IF EXISTS locations CASCADE;
-DROP TABLE IF EXISTS notifications CASCADE;
-DROP TABLE IF EXISTS rating CASCADE;
-DROP TABLE IF EXISTS reactions CASCADE;
 DROP TABLE IF EXISTS streams CASCADE;
-DROP TABLE IF EXISTS subscriptions CASCADE;
-DROP TABLE IF EXISTS tags CASCADE;
-DROP TABLE IF EXISTS tag_event CASCADE;
 DROP TABLE IF EXISTS user_role CASCADE;
 DROP TABLE IF EXISTS role_authority CASCADE;
 DROP TABLE IF EXISTS event_user_fav CASCADE;
@@ -58,7 +50,6 @@ CREATE TABLE users
     account_non_locked      BOOLEAN   DEFAULT true,
     credentials_non_expired BOOLEAN   DEFAULT true,
     enabled                 BOOLEAN   DEFAULT false,
-    location_id             BIGINT,
 
     CONSTRAINT users_pkey PRIMARY KEY (user_id)
 );
@@ -71,17 +62,6 @@ CREATE TABLE verification_token
     user_id               BIGINT,
 
     CONSTRAINT verification_token_pkey PRIMARY KEY (verification_token_id)
-);
-
-CREATE TABLE actions
-(
-    action_id   BIGSERIAL,
-    action_type VARCHAR(255),
-    user_id     BIGINT,
-    event_id    BIGINT,
-    description VARCHAR(255),
-
-    CONSTRAINT actions_pkey PRIMARY KEY (action_id)
 );
 
 CREATE TABLE comments
@@ -112,7 +92,6 @@ CREATE TABLE events
     external_meeting_id     VARCHAR(255),
     library_id              BIGINT,
     user_id                 BIGINT,
-    location_id             BIGINT,
     stream_id               BIGINT,
     join_url                VARCHAR(255),
     access_token            VARCHAR(255),
@@ -135,40 +114,6 @@ CREATE TABLE libraries
     CONSTRAINT libraries_pkey PRIMARY KEY (library_id)
 );
 
-CREATE TABLE locations
-(
-    location_id   BIGSERIAL,
-    country       VARCHAR(255),
-    city          VARCHAR(255),
-    creation_date TIMESTAMP,
-
-    CONSTRAINT locations_pkey PRIMARY KEY (location_id)
-);
-
-CREATE TABLE notifications
-(
-    notification_id BIGSERIAL,
-    text            VARCHAR(255),
-    is_read         BOOLEAN,
-    event_id        BIGINT,
-    user_id         BIGINT,
-
-    CONSTRAINT notifications_pkey PRIMARY KEY (notification_id)
-);
-
-CREATE TABLE rating
-(
-    rating_id     BIGSERIAL,
-    username      VARCHAR(255),
-    score         INTEGER NOT NULL,
-    creation_date TIMESTAMP,
-    event_id      BIGINT,
-    user_id       BIGINT,
-
-    CONSTRAINT rating_pkey PRIMARY KEY (rating_id)
-);
-
-
 CREATE TABLE streams
 (
     stream_id  BIGSERIAL,
@@ -176,31 +121,6 @@ CREATE TABLE streams
     library_id BIGINT,
 
     CONSTRAINT streams_pkey PRIMARY KEY (stream_id)
-);
-
-CREATE TABLE subscriptions
-(
-    subscription_id BIGSERIAL,
-    user_id         BIGINT,
-
-    CONSTRAINT subscriptions_pkey PRIMARY KEY (subscription_id)
-);
-
-CREATE TABLE tags
-(
-    tag_id BIGSERIAL,
-    name   VARCHAR(255),
-
-    CONSTRAINT tags_pkey PRIMARY KEY (tag_id)
-);
-
-
-CREATE TABLE tag_event
-(
-    tag_id   BIGINT,
-    event_id BIGINT,
-
-    PRIMARY KEY (tag_id, event_id)
 );
 
 CREATE TABLE user_role
@@ -259,45 +179,19 @@ CREATE TABLE library_user_access
     PRIMARY KEY (library_id, user_id)
 );
 
-ALTER TABLE users
-    ADD CONSTRAINT user_location_id_fk FOREIGN KEY (location_id) REFERENCES locations (location_id) ON DELETE SET NULL;
-
 ALTER TABLE verification_token
     ADD CONSTRAINT token_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
 
-ALTER TABLE actions
-    ADD CONSTRAINT action_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL,
-    ADD CONSTRAINT action_event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL;
-
 ALTER TABLE events
     ADD CONSTRAINT event_library_id_fk FOREIGN KEY (library_id) REFERENCES libraries (library_id) ON DELETE SET NULL,
-    ADD CONSTRAINT event_location_id_fk FOREIGN KEY (location_id) REFERENCES locations (location_id) ON DELETE SET NULL,
     ADD CONSTRAINT event_stream_id_fk FOREIGN KEY (stream_id) REFERENCES streams (stream_id) ON DELETE SET NULL,
     ADD CONSTRAINT event_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
-
 
 ALTER TABLE libraries
     ADD CONSTRAINT library_stream_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
 
-ALTER TABLE notifications
-    ADD CONSTRAINT notification_event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL,
-    ADD CONSTRAINT notification_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
-
-
-ALTER TABLE rating
-    ADD CONSTRAINT rating_event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL,
-    ADD CONSTRAINT rating_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
-
 ALTER TABLE streams
     ADD CONSTRAINT stream_library_id_fk FOREIGN KEY (library_id) REFERENCES libraries (library_id) ON DELETE SET NULL;
-
-ALTER TABLE subscriptions
-    ADD CONSTRAINT subscription_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL;
-
-ALTER TABLE tag_event
-    ADD CONSTRAINT tag_event_tag_id_fk FOREIGN KEY (tag_id) REFERENCES tags (tag_id) ON DELETE SET NULL,
-    ADD CONSTRAINT tag_event_event_id_fk FOREIGN KEY (event_id) REFERENCES events (event_id) ON DELETE SET NULL;
-
 
 ALTER TABLE role_authority
     ADD CONSTRAINT role_authority_role_id_fk FOREIGN KEY (role_id) REFERENCES roles (role_id) ON DELETE SET NULL,

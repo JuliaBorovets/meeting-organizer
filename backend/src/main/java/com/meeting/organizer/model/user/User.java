@@ -91,14 +91,6 @@ public class User implements UserDetails, CredentialsContainer {
     @Builder.Default
     private Boolean enabled = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
-    private Location location;
-
-    @OneToMany(mappedBy = "user")
-    @Builder.Default
-    private List<Subscription> subscriptions = new ArrayList<>();
-
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Library> libraries = new ArrayList<>();
@@ -106,10 +98,6 @@ public class User implements UserDetails, CredentialsContainer {
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Event> events = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    @Builder.Default
-    private List<Notification> notifications = new ArrayList<>();
 
     @Builder.Default
     @ManyToMany(mappedBy = "usersFavorite")
@@ -126,10 +114,6 @@ public class User implements UserDetails, CredentialsContainer {
     @Builder.Default
     @ManyToMany(mappedBy = "usersFavorite")
     private List<Event> favoriteEvents = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    @Builder.Default
-    private List<Rating> ratings = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     @Builder.Default

@@ -1,6 +1,5 @@
 package com.meeting.organizer.web.dto.v1.event;
 
-import com.meeting.organizer.model.Location;
 import com.meeting.organizer.model.MeetingType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +27,6 @@ public class EventUpdateDto {
     private String description;
 
     private String imagePath;
-
-    private Location location;
 
     private MeetingType meetingType;
 

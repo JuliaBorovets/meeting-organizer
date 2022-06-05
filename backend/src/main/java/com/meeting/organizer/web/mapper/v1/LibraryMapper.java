@@ -10,11 +10,7 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface LibraryMapper {
 
-    LibraryDto libraryDtoToLibrary(LibraryCreateDto libraryCreateDto);
-
     Library libraryCreateDtoToLibrary(LibraryCreateDto libraryCreateDto);
-
-    Library libraryDtoToLibrary(LibraryDto libraryDto);
 
     @Mappings({
             @Mapping(target = "userId", source = "library.user.userId"),

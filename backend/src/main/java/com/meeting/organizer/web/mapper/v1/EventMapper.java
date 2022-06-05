@@ -22,8 +22,6 @@ public interface EventMapper {
 
     Event eventFromCreateDto(EventCreateDto createDto);
 
-    Event eventFromEventDto(EventDto eventDto);
-
     @Mappings({
             @Mapping(target = "streamId", source = "event.stream.streamId"),
     })
@@ -36,10 +34,6 @@ public interface EventMapper {
     WebexCreateMeeting webexMeetingCreateDtoToMeeting(WebexEventCreateDto createDto);
 
     WebexUpdateMeeting webexMeetingUpdateDtoToMeeting(WebexEventUpdateDto eventUpdateDto);
-
-    ZoomMeeting zoomMeetingDtoToMeeting(ZoomEventDto zoomEventDto);
-
-    WebexMeeting zoomMeetingDtoToMeeting(WebexEventDto eventDto);
 
     ZoomEventDto metingToZoomMeetingDto(ZoomMeeting zoomMeeting);
 

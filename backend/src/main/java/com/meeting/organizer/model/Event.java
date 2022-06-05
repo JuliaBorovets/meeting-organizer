@@ -59,18 +59,6 @@ public class Event {
     @Builder.Default
     private Boolean isPrivate = false;
 
-    @Builder.Default
-    @ManyToMany(mappedBy = "events")
-    private List<Tag> tags = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
-    private Location location;
-
-    @OneToMany(mappedBy = "user")
-    @Builder.Default
-    private List<Notification> notifications = new ArrayList<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "library_id")
     private Library library;
@@ -86,10 +74,6 @@ public class Event {
     @OneToMany(mappedBy = "event")
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "event")
-    @Builder.Default
-    private List<Rating> ratings = new ArrayList<>();
 
     @ManyToMany
     @Builder.Default

@@ -403,8 +403,8 @@ public class EventServiceImpl extends AbstractService<Event, EventRepository> im
     public List<EventDto> findAllByNameAndLibraryNotContaining(Long userId, Long libraryId, String eventName, Pageable pageable) {
         String eventNamePattern = eventName + "%";
 
-        List<Event> result = repository.findByLibrary_LibraryIdAndNameLikeOrderByCreationDateDesc(
-                null, eventNamePattern, pageable);
+        List<Event> result = repository.findByLibrary_LibraryIdAndNameLikeAndUser_UserIdOrderByCreationDateDesc(
+                null, eventNamePattern, userId, pageable);
 
         return result.stream()
                 .map(e -> convertToDto(e, userId))

@@ -144,6 +144,12 @@
                 <div>
                   <b><p class="info">Description</p></b>
                   <p class="info">{{eventModel.description}}</p>
+                  <br>
+                </div>
+                <div *ngIf="eventModel && eventModel.accessToken && isUserHost()">
+                  <b><p class="info">Access token</p></b>
+                  <p class="info">{{eventModel.accessToken}}</p>
+                  <br>
                 </div>
               </div>
             </mat-card-content>

@@ -21,6 +21,7 @@ export class EventModel {
   meetingEntity?: MeetingEntity;
   isFavorite?: boolean;
   joinUrl?: string;
+  accessToken?: string;
   isPrivate?: boolean;
   participantCount?: number;
   user?: UserModel;

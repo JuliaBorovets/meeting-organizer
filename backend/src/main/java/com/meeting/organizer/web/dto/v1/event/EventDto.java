@@ -48,6 +48,8 @@ public class EventDto {
 
     private String joinUrl;
 
+    private String accessToken;
+
     private Long participantCount;
 
     private UserDto user;

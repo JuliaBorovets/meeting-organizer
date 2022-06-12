@@ -6,4 +6,5 @@ export class LibraryModel {
   isPrivate?: boolean;
   userId?: number;
   isFavorite?: boolean;
+  accessToken?: string;
 }

@@ -36,5 +36,5 @@ public interface EventRepository extends PagingAndSortingRepository<Event, Long>
 
     Optional<Event> findByAccessToken(String accessToken);
 
-    List<Event> findByLibrary_LibraryIdAndNameLikeOrderByCreationDateDesc(Long libraryId, String eventName, Pageable pageable);
+    List<Event> findByLibrary_LibraryIdAndNameLikeAndUser_UserIdOrderByCreationDateDesc(Long libraryId, String eventName, Long userId, Pageable pageable);
 }

@@ -209,9 +209,12 @@
       <div fxLayout="column" fxLayoutAlign="center center" class="form-input">
         <mat-form-field class="full-width-event-input" appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput type="text" id="webexPassword" class="form-control" name="webexPassword"
+          <input matInput [type]="hideWebexPasswordField ? 'password' : 'text'" id="webexPassword" class="form-control" name="webexPassword"
                  formControlName="webexPassword"
                  [ngClass]="{ 'is-invalid': submitted && f.webexPassword.errors }">
+          <mat-icon matSuffix (click)="hideWebexPasswordField = !hideWebexPasswordField">
+            {{hideWebexPasswordField ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
         </mat-form-field>
       </div>
 

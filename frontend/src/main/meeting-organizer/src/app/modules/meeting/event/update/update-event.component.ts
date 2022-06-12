@@ -26,6 +26,7 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
   eventId: number;
   eventItem: any;
   hidePasswordField = true;
+  hideWebexPasswordField = true;
   isLoading = true;
 
   private subscription: Subscription;
@@ -107,17 +108,11 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
       webexEnabledAutoRecordMeeting: [this.eventItem.meetingEntity?.enabledAutoRecordMeeting, null],
       webexEnabledJoinBeforeHost: [this.eventItem.meetingEntity?.enabledJoinBeforeHost, null],
     }, {
-      validator: CustomValidator.notEquals('webexPassword', ['password', 'passwd', 'pass', 'passw'])
+      validator: this.eventItem.meetingType === MeetingType.WEBEX ? CustomValidator.notEquals('webexPassword', ['password', 'passwd', 'pass', 'passw']): null
     });
 
     if (this.isWebexTypeSelected()) {
-      console.log('----');
       this.setWebexValidators();
-      // this.f.generateMeeting.valueChanges.subscribe(
-      //   () => {
-      //     this.setWebexValidators();
-      //   }
-      // );
     }
   }
 
@@ -127,7 +122,6 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
       this.f.webexPassword.setValidators([Validators.required, Validators.minLength(4),
         Validators.maxLength(15)]);
       if (this.f.startDate.value !== this.eventItem.startDate) {
-        console.log('-----jkjk');
         this.f.startDate.setValidators([CustomValidator.datePickerValidator(6)]);
       }
     } else {
@@ -145,6 +139,7 @@ export class UpdateEventComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.submitted = true;
     if (this.updateForm.invalid) {
+      console.log('invalid', this.updateForm.errors);
       return;
     }
 

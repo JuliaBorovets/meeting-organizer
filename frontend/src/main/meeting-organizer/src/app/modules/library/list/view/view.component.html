@@ -29,6 +29,16 @@
                 <p>{{libraryItem.description | slice:0:90}}{{libraryItem.description.length > 90 ? '...' : ''}}</p>
               </div>
             </div>
+
+            <br>
+
+            <div fxFlex="row" *ngIf="isLibraryOwner() && libraryItem.accessToken">
+              <div fxLayout="column" fxFlex style="margin-top: 10px; margin-left: 10px; word-break: break-all">
+                <mat-card-subtitle>Access token:</mat-card-subtitle>
+                <br>
+                <p>{{libraryItem.accessToken}}</p>
+              </div>
+            </div>
           </div>
         </div>
 
